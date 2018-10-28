@@ -1,0 +1,14 @@
+docs:
+  - title: Getting Started
+    children:
+      - title: "Quick-Start Guide"
+        url: /installation-guide/
+      - title: "Structure"
+        url: /installation-guide/
+
+  - title: Azure
+    children:
+      - title: "Notes"
+        url: /azure/az-speedtest-analytics/
+      - title: "More notes"
+        url: /azure/az-speedtest-analytics/
