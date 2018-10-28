@@ -4,5 +4,5 @@ In this workshop you'll make your own over-engineered system for monitoring inte
 
 Installation guide
 ------------------
-Head on over to the [installation guide](installation-guide) for detailed information about what you should install before starting on the workshop.
+Head on over to the [installation guide](https://cx-cloud-101.github.io/speedtest-workshop/installation-guide) for detailed information about what you should install before starting on the workshop.
 
