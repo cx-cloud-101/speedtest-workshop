@@ -1,19 +1,31 @@
 This guide assumes that you have Jetbrains IntelliJ Ultimate, if you don't have that you can use IntelliJ Community edition (or your prefered Java IDE) and [Spring Initializr](https://start.spring.io/) as replacement.
 
 1. Create a new Project in IntelliJ
-1. Select *Spring Initializr* from the sidebar and continue
-   [[/images/create-project-1.png]]
-1. Select `Gradle` as *Type* and `War` (**Important**) as *Packaging*. On the Spring Initializr website you must click on *Switch to the full version*.
-   [[/images/create-project-2.png]]
-1. Add Spring Web dependency
-   [[/images/create-project-3.png]]
-1. Add Spring Cloud GCP Messaging dependency
-   [[/images/create-project-4.png]]
-1. Click on finish. On the Spring Initializr website you will get a zip-file, extract it and open it as a project in your IDE.
-   [[/images/create-project-5.png]]
-1. Modify `gradle.build` so that it can be deployed as a GCP Appengine Standard Java app
-   [[/images/create-project-6.png]]
-1. Add the following files to `/src/webapp/WEB-INF`
+2. Select *Spring Initializr* from the sidebar and continue
+
+![](images/create-project-1.png)
+
+3. Select `Gradle` as *Type* and `War` (**Important**) as *Packaging*. On the Spring Initializr website you must click on *Switch to the full version*.
+
+![](images/create-project-2.png)
+
+4. Add Spring Web dependency
+
+![](images/create-project-3.png)
+
+5. Add Spring Cloud GCP Messaging dependency
+
+![](images/create-project-4.png)
+
+6. Click on finish. On the Spring Initializr website you will get a zip-file, extract it and open it as a project in your IDE.
+
+![](images/create-project-5.png)
+
+7. Modify `gradle.build` so that it can be deployed as a GCP Appengine Standard Java app
+   
+![](images/create-project-6.png)
+
+8. Add the following files to `/src/webapp/WEB-INF`
    1. appengine-web.xml
    ```xml
     <?xml version="1.0" encoding="UTF-8"?>
