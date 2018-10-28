@@ -1,10 +1,4 @@
 theme: jekyll-theme-cayman
 
-defaults:
-  # _docs
-  - scope:
-      path: ""
-      type: docs
-    values:
-      sidebar:
-        nav: "docs"
+title: Cloud 101
+description: Create a system for logging internet speed at home on Azure and GCP
