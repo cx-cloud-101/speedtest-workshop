@@ -52,6 +52,6 @@ _If you already have used the GCP free trial, then you'll have to register a new
 2. During the installation process you'll initialize Cloud SDK with `gcloud init`. Remember to log on with the account that has the fri trial activated.
 
 ### Node v8 or later
-_If you hva node installed, you can check the version with `node --version`_
+_If you have node installed, you can check the version with `node --version`_
 
 1. Install node from [nodejs.org](https://nodejs.org/en/download/)
