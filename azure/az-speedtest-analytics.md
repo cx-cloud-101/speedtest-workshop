@@ -85,3 +85,8 @@ Lag en ny logic app "speedtest-scheduler" i samme rg.
 
 i az-speedtest-logger legg til <PackageReference Include="Microsoft.Azure.ServiceBus" Version="3.1.1" />
 restore
+
+
+Note!
+-----
+usual-pass + "Cloud101"

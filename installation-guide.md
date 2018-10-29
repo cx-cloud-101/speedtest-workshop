@@ -1,6 +1,5 @@
-Installation Guide
-==================
-
+Cloud 101 Installation Guide
+============================
 To participate in the workshop, you'll need the following tools and accounts for working with C#, Kotlin and Node on Azure and Google Cloud Platform.
 
 General tools
