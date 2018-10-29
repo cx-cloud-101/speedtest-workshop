@@ -45,7 +45,7 @@ _To complete the GCP-part of the workshop, you'll need the following tools and a
 ### GCP Free trial
 
 1. Activate your [free trial at GCP](https://console.cloud.google.com/freetrial)
-2. Go through the registration process. At the end you should end up at [console.cloud.google.com](console.cloud.google.com/home/dashboard). You unfortunately have to register both a phone number and a debit or credit card, and Google will charge you if you exceed the spending limit of $300 (!), so it's important that you disable the project after finishing the workshop.
+2. Go through the registration process. At the end you should end up at [console.cloud.google.com](https://console.cloud.google.com/home/dashboard). You unfortunately have to register both a phone number and a debit or credit card, and Google will charge you if you exceed the spending limit of $300 (!), so it's important that you disable the project after finishing the workshop.
 
 _If you already have used the GCP free trial, then you'll have to register a new account with a new email._
 
