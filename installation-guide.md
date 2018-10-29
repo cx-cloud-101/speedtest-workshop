@@ -3,14 +3,18 @@ Installation Guide
 
 To participate in the workshop, you'll need the following tools and accounts for working with C#, Kotlin and Node on Azure and Google Cloud Platform.
 
-Git and GitHub
---------------
+General tools
+-------------
+
+### Git and GitHub
 You'll need git installed and a GitHub account to complete both the Azure and GCP -part of the workshop.
 
 1. Create a new GitHub account [here](https://github.com/join)
 2. Download and install git following [these instructions](https://git-scm.com/downloads)
 3. When git is installed, you should be able to [set your username](https://help.github.com/articles/setting-your-username-in-git/) and [commit email address](https://help.github.com/articles/setting-your-commit-email-address-in-git/). Use the same email that you registered at GitHub.
 
+### Postman
+You'll create at least one API, so it's nice to have a tool to test it. [Postman](https://www.getpostman.com/apps) is quite nice, and available on all platforms.
 
 Azure and C#
 ------------
