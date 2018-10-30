@@ -1,4 +1,4 @@
-Measuring speed
+Measuring Speed
 ===============
 _At the heart of any decent distributed internet speed logging system, there's a program measuring internet speed. Let's start by making the SpeedTestLogger!_
 
@@ -33,8 +33,8 @@ Checking connectivity... done.
 
 At this point you should have an almost empty repo named az-speedtest-logger on your computer.
 
-Create console app
-------------------
+Creating a Console app
+-----------------------
 Now we'll start on creating the logger application. Move into the `az-speedtest-logger/`-folder, and execute the following command to create a new .NET Core console application named SpeedTestLogger.
 
 ```shell
@@ -51,6 +51,7 @@ Running 'dotnet restore' on SpeedTestLogger/SpeedTestLogger.csproj...
 
 Restore succeeded.
 ```
+
 Try out your new console application by moving into the `SpeedTestLogger/`-folder and executing `dotnet run`.
 
 ```shell
@@ -627,8 +628,8 @@ static void Main(string[] args)
 
 Try out SpeedTestLogger again with `dotnet run` and check that everything works as expected.
 
-Checking in the final code
---------------------------
+Wrapping up
+-----------
 If you're happy with the SpeedTestLogger, create a file at the root of the repository (directly under `az-speedtest-logger`) called `.gitignore`. Add to it the following:
 
 ```
