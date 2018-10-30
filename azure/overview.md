@@ -10,7 +10,7 @@ Measuring speed
 3. Create basic logger in Program.cs
 4. Add configuration
 5. Refactor into SpeedTestRunner.cs (This introduces TestResult.cs)
-6. Switch to using fake test-results, so you don't overload the notwork
+6. Switch to using fake test-results, so you don't overload the network
 
 An API for all things
 ---------------------
@@ -29,6 +29,7 @@ It's alive!
 
 Receiving speeds
 ----------------
+0. Switch to using fake test-results, so you don't overload the network
 1. Create `UploadSpeedTest()` and TestResult.cs with restrictions. Print results to console and return something fake.
 2. Add fake authentication. This introduces appsettings.Development.json
 3. Push to master and test on Azure.
