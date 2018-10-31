@@ -1,5 +1,5 @@
-Receiving speeds
-================
+[Home](index) > Receiving speeds
+================================
 _Previously we have made a console application capable of running speedtests, and an API that's deployed to Azure. Now er want to connect the two together._
 
 A class for storing speedtests
@@ -437,4 +437,4 @@ What should we do with the TestResult?
 --------------------------------------
 Congratulations! We managed to get a TestResult from our local logger to our API on Azure, but the question remains. What to do with it?
 
-In the next section we'll publish the TestResult to Azure Event Hub, possibly make it available to other applications.
+In [the next section](events-events) we'll publish the TestResult to Azure Event Hub, possibly make it available to other applications.

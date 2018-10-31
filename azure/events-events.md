@@ -1,5 +1,5 @@
-Events! Events! Events!
-=======================
+[Home](index) > Events! Events! Events!
+=======================================
 _We've managed to POST TestResults to Azure, but what should we do with them? In this section we'll publish them to Azure Event Hub._
 
 ### Why not just dump the TestResults in a Database?
@@ -208,4 +208,4 @@ Commit all code, and push a new version of SpeedTestApi to master, deploying the
 
 What can we do with the events?
 -------------------------------
-Publishing TestResult-events to event hub, opens up a lot of possibilities when it comes to consuming the events in different applications. Next we'll look at Time Series Insights, and how we can visualize speedtests over time.
+Publishing TestResult-events to event hub, opens up a lot of possibilities when it comes to consuming the events in different applications. [Next we'll look at Time Series Insights](adding-analytics), and how we can visualize speedtests over time.

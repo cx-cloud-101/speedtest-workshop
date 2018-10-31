@@ -1,5 +1,5 @@
-An API for All Things
----------------------
+[Home](index) > An API for All Things
+=====================================
 _How do we get our speedtests up to the cloud? We need an API!_
 
 Create another git repository
@@ -242,4 +242,4 @@ Wohoo! Congratulations, you just deployed an API on Azure!
 
 Now what?
 ---------
-We haven't received any speedtests from the logger, and we've just scratched the surface of Azure. In the next part we'll connect the logger and the api, and maybe start to do something interesting with all the data we're collecting.
+We haven't received any speedtests from the logger, and we've just scratched the surface of Azure. In [the next part](receiving-speeds) we'll connect the logger and the api, and maybe start to do something interesting with all the data we're collecting.

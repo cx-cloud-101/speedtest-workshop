@@ -1,5 +1,5 @@
-Measuring Speed
-===============
+[Home](index) > Measuring Speed
+===============================
 _At the heart of any decent distributed internet speed logging system, there's a program measuring internet speed. Let's start by making the SpeedTestLogger!_
 
 Create git repo
@@ -686,4 +686,4 @@ To https://github.com/cloud-101-testuser/az-speedtest-logger.git
 
 What now?
 ---------
-This section probably left more questions that it answered. Whats the stuff with all the TestResult? Why spend so much time on configuration? Why haven't we done anything Azure-related yet? Fear not! All this, and more will be explained in the next sections.
+This section probably left more questions that it answered. Whats the stuff with all the TestResult? Why spend so much time on configuration? Why haven't we done anything Azure-related yet? Fear not! All this, and more will be explained in the [next sections](an-api-for-all-things).

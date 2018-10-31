@@ -6,3 +6,10 @@ Installation guide
 ------------------
 Head on over to the [installation guide](https://cx-cloud-101.github.io/speedtest-workshop/installation-guide) for detailed information about what you should install before starting on the workshop.
 
+Azure workshop
+--------------
+Head on over to [Azure Worshop Home](azure/index)
+
+Google Cloud Platform workshop
+------------------------------
+Head on over to [GCP Worshop Home](gcp/index)
