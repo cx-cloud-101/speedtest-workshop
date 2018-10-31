@@ -1,6 +1,6 @@
 Events! Events! Events!
 =======================
-_We've managed to POSt TestResults to Azure, but what should we do with them? In this section we'll publish them to Azure Event Hub._
+_We've managed to POST TestResults to Azure, but what should we do with them? In this section we'll publish them to Azure Event Hub._
 
 ### Why not just dump the TestResults in a Database?
 Although this might be a more suitable solution for a simple speedtest application, using a data streaming component like Event Hub enables several applications read the data received by SpeedTestApi, without having to share a database, or be dependent on routes in SpeedTestApi. Simply put, we make the TestResults available to many different applications, without a lot of dependencies on what SpeedTestApi looks like.
