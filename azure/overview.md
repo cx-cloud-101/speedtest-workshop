@@ -31,15 +31,15 @@ Receiving speeds
 ----------------
 0. Switch to using fake test-results, so you don't overload the network
 1. Create `UploadSpeedTest()` and TestResult.cs with restrictions. Print results to console and return something fake.
-2. Add fake authentication. This introduces appsettings.Development.json
-3. Push to master and test on Azure.
+2. Push to master and test on Azure.
 
 Events, events, events
 ----------------------
 1. Create new event hub on Azure (use standard tier)
 2. Add Microsoft.Azure.EventHubs and create SpeedTestEvents
 3. Test locally, and note event added to hub.
-4. Push and test again.
+4. Add fake authentication. This introduces appsettings.Development.json
+5. Push and test again.
 
 Analytics!
 ----------
