@@ -78,61 +78,59 @@ This guide assumes that you have Jetbrains IntelliJ Ultimate, if you don't have 
 
 8. Add the following files to `/src/webapp/WEB-INF`
    1. appengine-web.xml
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
-    <threadsafe>true</threadsafe>
-    <runtime>java8</runtime>
-    <sessions-enabled>true</sessions-enabled>
-    <warmup-requests-enabled>true</warmup-requests-enabled>
-    <env-variables>
-        <env-var name="DEFAULT_ENCODING" value="UTF-8"/>
-    </env-variables>
-</appengine-web-app>
-```
+   ```xml
+   <?xml version="1.0" encoding="UTF-8"?>
+   <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+       <threadsafe>true</threadsafe>
+       <runtime>java8</runtime>
+       <sessions-enabled>true</sessions-enabled>
+       <warmup-requests-enabled>true</warmup-requests-enabled>
+       <env-variables>
+           <env-var name="DEFAULT_ENCODING" value="UTF-8"/>
+       </env-variables>
+   </appengine-web-app>
+   ```
 
    2. web.xml
+   ```xml
+   <?xml version="1.0" encoding="utf-8"?>
+   <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+               http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+               version="3.1">
 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
-            http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-            version="3.1">
+       <servlet>
+           <servlet-name>speedtest-api</servlet-name>
+           <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+           <init-param>
+               <param-name>contextAttribute</param-name>
+               <param-value>org.springframework.web.context.WebApplicationContext.ROOT</param-value>
+           </init-param>
+           <load-on-startup>1</load-on-startup>
+       </servlet>
 
-    <servlet>
-        <servlet-name>speedtest-api</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextAttribute</param-name>
-            <param-value>org.springframework.web.context.WebApplicationContext.ROOT</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+       <servlet-mapping>
+           <servlet-name>speedtest-api</servlet-name>
+           <url-pattern>/*</url-pattern>
+       </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>speedtest-api</servlet-name>
-        <url-pattern>/*</url-pattern>
-    </servlet-mapping>
+       <welcome-file-list>
+           <welcome-file>index.html</welcome-file>
+       </welcome-file-list>
 
-    <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-    </welcome-file-list>
+       <security-constraint>
+           <web-resource-collection>
+               <web-resource-name>all</web-resource-name>
+               <url-pattern>/*</url-pattern>
+           </web-resource-collection>
+           <user-data-constraint>
+               <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+           </user-data-constraint>
+       </security-constraint>
 
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>all</web-resource-name>
-            <url-pattern>/*</url-pattern>
-        </web-resource-collection>
-        <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-        </user-data-constraint>
-    </security-constraint>
-
-</web-app>
-```
+   </web-app>
+   ```
 
 Testing the API
 ---------------
