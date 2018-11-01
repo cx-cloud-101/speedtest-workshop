@@ -1,5 +1,5 @@
-[Home](index) > Events! Events! Events!
-=======================================
+[Home](../README) > [Azure](index) > Events! Events! Events!
+============================================================
 _We've managed to POST TestResults to Azure, but what should we do with them? In this section we'll publish them to Azure Event Hub._
 
 ### Why not just dump the TestResults in a Database?

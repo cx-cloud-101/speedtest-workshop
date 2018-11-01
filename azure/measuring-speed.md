@@ -1,5 +1,5 @@
-[Home](index) > Measuring Speed
-===============================
+[Home](../README) > [Azure](index) > Measuring Speed
+====================================================
 _At the heart of any decent distributed internet speed logging system, there's a program measuring internet speed. Let's start by making the SpeedTestLogger!_
 
 Create git repo

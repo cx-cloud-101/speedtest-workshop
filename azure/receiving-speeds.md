@@ -1,5 +1,5 @@
-[Home](index) > Receiving speeds
-================================
+[Home](../README) > [Azure](index) > Receiving speeds
+=====================================================
 _Previously we have made a console application capable of running speedtests, and an API that's deployed to Azure. Now er want to connect the two together._
 
 A class for storing speedtests

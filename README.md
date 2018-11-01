@@ -15,3 +15,7 @@ Head on over to [Azure Worshop Home](azure/index)
 Google Cloud Platform workshop
 ------------------------------
 Head on over to [GCP Worshop Home](gcp/index)
+
+Example implementation
+----------------------
+This workshop has already been completed by our most trusted colleague: Cloud 101 Testuser! If you at any time want to have a look at an example of how the different components in this workshop can be implemented, have a look at [Cloud 101 Testusers GitHub profile](https://github.com/cloud-101-testuser).

@@ -1,7 +1,8 @@
-Azure Worshop Home
-==================
+[Home](../README) > Azure Workshop
+==================================
 
-Index:
+Index
+-----
 1. [Measuring Speed](measuring-speed)
 2. [An API for All Things](an-api-for-all-things)
 3. [Receiving speeds](receiving-speeds)

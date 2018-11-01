@@ -1,5 +1,5 @@
-[Home](index) > Adding Analytics
-================================
+[Home](../README) > [Azure](index) > Adding Analytics
+=====================================================
 _When needing to analyze data, its often worth having a quick look after suitable BI-tools instead of implementing a custom application. In this section we'll visualize speedtests using [Time Series Insights](https://docs.microsoft.com/en-us/azure/time-series-insights/time-series-insights-overview)._
 
 

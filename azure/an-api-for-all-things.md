@@ -1,5 +1,5 @@
-[Home](index) > An API for All Things
-=====================================
+[Home](../README) > [Azure](index) > An API for All Things
+==========================================================
 _How do we get our speedtests up to the cloud? We need an API!_
 
 Create another git repository
