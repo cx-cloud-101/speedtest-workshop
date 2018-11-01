@@ -94,7 +94,8 @@ This guide assumes that you have Jetbrains IntelliJ Ultimate, if you don't have 
 
    2. web.xml
 
-```xml    <?xml version="1.0" encoding="utf-8"?>
+```xml
+<?xml version="1.0" encoding="utf-8"?>
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
@@ -141,6 +142,7 @@ You can easily test your API both locally and by deploying it to your GCP projec
 Create a new class with a simple response
 
 **Example**
+
 ```kotlin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
