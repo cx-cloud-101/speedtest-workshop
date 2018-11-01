@@ -45,16 +45,17 @@ _To complete the GCP-part of the workshop, you'll need the following tools and a
 ### GCP Free trial
 
 1. Activate your [free trial at GCP](https://console.cloud.google.com/freetrial)
-2. Go through the registration process. At the end you should end up at [console.cloud.google.com](https://console.cloud.google.com/home/dashboard). You unfortunately have to register both a phone number and a debit or credit card, and Google will charge you if you exceed the spending limit of $300 (!), so it's important that you disable the project after finishing the workshop.
+2. Go through the registration process. At the end you should end up at [console.cloud.google.com](https://console.cloud.google.com/home/dashboard). You unfortunately have to register both a phone number and a debit or credit card. The GCP project will continue charging towards your free trial credits, so if you wish to retain the credits left after the workshop you should disable the project after finishing the workshop. (Google will not charge your credit card without an upgrade action).
 
-_If you already have used the GCP free trial, then you'll have to register a new account with a new email._
+_If you already have used the GCP free trial, then you'll have to register a new account with a new email (and possibly another credit card)._
 
 ### Cloud SDK
 
 1. Install the [Cloud SDK](https://cloud.google.com/sdk/)
-2. During the installation process you'll initialize Cloud SDK with `gcloud init`. Remember to log on with the account that has the fri trial activated.
+2. During the installation process you'll initialize Cloud SDK with `gcloud init`. Remember to log on with the account that has the free trial activated.
 
-### Node v8 or later
+### Node v8 (latest)
 _If you have node installed, you can check the version with `node --version`_
+_Note that the GCP Cloud Function node runtime only supports v8.x.x_
 
 1. Install node from [nodejs.org](https://nodejs.org/en/download/)
