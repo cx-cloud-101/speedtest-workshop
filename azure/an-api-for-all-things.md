@@ -1,4 +1,4 @@
-[Home](../README) > [Azure](index) > An API for All Things
+[Home](../) > [Azure](index) > An API for All Things
 ==========================================================
 _How do we get our speedtests up to the cloud? We need an API!_
 

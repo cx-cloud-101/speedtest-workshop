@@ -1,4 +1,4 @@
-[Home](../README) > [GCP](index) > Triggering Speedtests
+[Home](../) > [GCP](index) > Triggering Speedtests
 ========================================================
 _As an optional step you can add a feature to trigger running Speedtest loggers. This step should not be done before you've created both a [Speedtest Logger](https://github.com/cx-cloud-101/gcp-speedtest-logger/wiki) that is triggerable through Pub/Sub and an [Event Writer](https://github.com/cx-cloud-101/gcp-event-writer/wiki)._
 

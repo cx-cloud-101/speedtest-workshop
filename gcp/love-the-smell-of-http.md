@@ -1,4 +1,4 @@
-[Home](../README) > [GCP](index) > Love the smell of HTTP in the morning
+[Home](../) > [GCP](index) > Love the smell of HTTP in the morning
 ========================================================================
 _This time we'll start with the API. The GCP Speedtest API application is an HTTP API that receives speedtest events and publishes them as Pub/Sub messages to be further processed by other applications._
 

@@ -1,4 +1,4 @@
-[Home](../README) > Azure Workshop
+[Home](../) > Azure Workshop
 ==================================
 
 Index

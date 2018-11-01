@@ -1,4 +1,4 @@
-[Home](../README) > [GCP](index) > Writing all the events
+[Home](../) > [GCP](index) > Writing all the events
 =========================================================
 _The GCP Event Writer is a cloud function that subscribes to Speedtest Event messages on a Pub/Sub topic and writes them as rows in a BigQuery table._
 

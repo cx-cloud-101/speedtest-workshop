@@ -1,4 +1,4 @@
-[Home](../README) > GCP Workshop 
+[Home](../) > GCP Workshop 
 ================================
 
 Index

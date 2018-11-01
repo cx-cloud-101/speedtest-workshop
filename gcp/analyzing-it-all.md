@@ -1,4 +1,4 @@
-[Home](../README) > [GCP](index) > Analyzing it all
+[Home](../) > [GCP](index) > Analyzing it all
 ===================================================
 _In this section we'll analyze the speedtests stored in Big Query and create a report using [Data Studio](https://datastudio.google.com/)._
 

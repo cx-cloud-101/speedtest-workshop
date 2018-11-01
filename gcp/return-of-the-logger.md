@@ -1,4 +1,4 @@
-[Home](../README) > [GCP](index) > Return of the Logger
+[Home](../) > [GCP](index) > Return of the Logger
 =======================================================
 _The GCP Speedtest Logger is an application that runs a connection speedtest to speedtest.net for a device and publishes the results to [gcp-speedtest-api](love-the-smell-of-http)._ You should be able to run the application with `user` and `device` as arguments such that the application can be run on different devices.
 

@@ -1,4 +1,4 @@
-[Home](../README) > [GCP](index) > Automate the API Build!
+[Home](../) > [GCP](index) > Automate the API Build!
 ==========================================================
 _It's nice not to have to manually build and deploy our API every time we make a change. Let's automate it!_
 
