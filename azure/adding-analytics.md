@@ -56,5 +56,5 @@ You've now made a completed system for measuring, logging, receiving, storing an
 
 Fom here on out, you have several options for what to continue with:
 * Would you like to be able to schedule and trigger SpeedTestLogger from Azure, and [learn about Service Bus and Logic Apps](scheduling-speedtests)?
-* Would you like to add another consumer-application, store data in Table Storage, and view them in [a webapplication](the-web-page)?
 * Would you like to turn Console.WriteLine() into proper logging with [Application Insights](application-insights)?
+* Would you like to add another consumer-application, store data in Table Storage, and view them in [a webapplication](the-web-page)?

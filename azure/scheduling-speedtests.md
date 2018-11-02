@@ -6,9 +6,9 @@ In this section we'll try to let you figure out more on your. Some relevant docu
 
 Creating a new Service Bus
 --------------------------
-_The Service Bus will deliver run-speedtest messages to SpeedTestLogger, telling it to run a test_
+The service bus will deliver run-speedtest messages to SpeedTestLogger, telling it to run a test.
 
-1. Create a [new Service Bus namespace](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-dotnet-how-to-use-topics-subscriptions) named speedtest-commands, with a topic called run-speedtest. Use standard pricing tier.
+1. Create a [new service bus namespace](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-dotnet-how-to-use-topics-subscriptions) named speedtest-commands, with a topic called run-speedtest. Use standard pricing tier.
 
 ![scheduling-speedtests-1](images/scheduling-speedtests-1.png)
 
@@ -17,7 +17,7 @@ _The Service Bus will deliver run-speedtest messages to SpeedTestLogger, telling
 
 Scheduling speedtests
 ---------------------
-_We need something that can trigger new run-speedtest messages at a recurring schedule. A Logic App is an easy way to do this._
+We need something that can trigger new run-speedtest messages at a recurring schedule. A Logic App is an easy way to do this.
 
 1. Create a new [Logic App](https://docs.microsoft.com/en-us/azure/logic-apps/quickstart-create-first-logic-app-workflow) named speedtest-scheduler.
 2. Open the Logic App Designer and start with a Recurrence trigger. It's nice to start with a short interval when developing. Maybe 5 min?
@@ -27,8 +27,8 @@ _We need something that can trigger new run-speedtest messages at a recurring sc
 
 Read RUN_SPEEDTEST
 ------------------
-_Finally we need to update SpeedTestLogger to trigger a new speedtest when given a run-speedtest message from the service bus._
+Finally we need to update SpeedTestLogger to trigger a new speedtest when given a run-speedtest message from the service bus.
 
 1. Add the package Microsoft.Azure.ServiceBus to SpeedTestLogger with `dotnet add package Microsoft.Azure.ServiceBus --version 3.1.1`
 2. Update SpeedTestLogger to trigger speedtests when it receives a "RUN_SPEEDTEST"-message. [This section in the documentation](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-dotnet-how-to-use-topics-subscriptions#5-receive-messages-from-the-subscription) describes how you can go about receiving messages from service bus. If you're stuck, have a quick look at [this example implementation](https://github.com/cx-cloud-101/az-speedtest-logger/blob/master/SpeedTestLogger/Program.cs).
-3. You might want to update LoggerConfiguration to handle the Service Bus connection string.
+3. You might want to update LoggerConfiguration to handle the service bus connection string.
