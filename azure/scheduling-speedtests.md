@@ -1,6 +1,6 @@
-[Home](../) > [Azure](index) > Scheduling SpeedTests
-====================================================
-_Its tedious to run SpeedTestLogger manually all the time. Let's fix that by making a system that schedules speedtests._
+[Home](../) > [Azure](index) > Scheduling Speed Tests
+=====================================================
+_It's tedious to run SpeedTestLogger manually all the time. Let's fix that by making a system that schedules speedtests._
 
 In this section we'll try to let you figure out more on your. Some relevant documentation is linked in the text, and the basic outline of what you need to do is described below.
 
