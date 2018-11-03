@@ -373,7 +373,7 @@ public class LoggerConfiguration
 }
 ```
 
-An avid reader might have spotted that we're missing something essential. We don't have an "appsettings.json" file yet! Lets create it. Make a nev file called `SpeedTestLogger/appsettings.json`, containing the following.
+An avid reader might have spotted that we're missing something essential. We don't have an "appsettings.json" file yet! Lets create it. Make a new file called `SpeedTestLogger/appsettings.json`, containing the following.
 
 ```json
 {
