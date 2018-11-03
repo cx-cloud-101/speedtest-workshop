@@ -432,7 +432,7 @@ Big, Bigger, Biggest Data
 -------------------------
 Can we get more information from a our SpeedTestClient than just download and upload -speed? Yes we can!
 
-We're going to organize this data into a class called TestResult, containing TestData, and some metadata about the speedtest. Start by creating a new folder `Models/`, containing a new file called `SpeedTestLogger/Models/TestResult.cs`. In order not to bore you with the details of writing a large model, the contents of `TestResults.cs` have been supplied for you below.
+We're going to organize this data into a class called TestResult, containing TestData, and some metadata about the speedtest. Start by creating a new folder `Models/`, containing a new file called `SpeedTestLogger/Models/TestResult.cs`. In order not to bore you with the details of writing a large model, the contents of `TestResult.cs` have been supplied for you below.
 
 ```csharp
 using System;
