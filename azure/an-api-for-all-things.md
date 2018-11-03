@@ -226,7 +226,7 @@ Navigate to the resource group, and open "testuser-speedtest-api".
 
 ![api-app-4](images/api-app-6.png)
 
-Make a note of your URL, displayed towards the top left corner. This will be the base path of your new API on Azure.
+Make a note of your URL, displayed towards the top right corner. This will be the base path of your new API on Azure.
 
 ![api-app-4](images/api-app-7.png)
 
