@@ -432,7 +432,7 @@ Big, Bigger, Biggest Data
 -------------------------
 Can we get more information from a our SpeedTestClient than just download and upload -speed? Yes we can!
 
-We're going to organize this data into a class called TestResult, containing TestData, and some metadata about the speedtest. Start by creating a new folder `Models/`, containing a new file called `SpeedTestLogger/Models/TestResult.cs`. In order not to bore you with the details of writing a large model, the contents of `TestResult.cs` have been supplied for you below.
+We're going to organize this data into a class called TestResult, containing TestData, and some metadata about the speedtest. Start by creating a new folder `Models/`, containing a new file called `SpeedTestLogger/Models/TestResult.cs`. In order not to bore you with the details of writing a large model, the contents of `TestResults.cs` have been supplied for you below.
 
 ```csharp
 using System;
@@ -486,7 +486,7 @@ namespace SpeedTestLogger.Models
 _Notice how the classes are located in the namespace `SpeedTestLogger.Models`, matching the folder structure we just created?_
 
 ### Filling TestResult and TestData with data
-The mail idea is that our SpeedTestRunner will create the TestData object, and return it when we run a speedtest. Then `Main()` will be responsible for populating the metadata in TestResult and adding in the TestData created by SpeedTestRunner.
+The main idea is that our SpeedTestRunner will create the TestData object, and return it when we run a speedtest. Then `Main()` will be responsible for populating the metadata in TestResult and adding in the TestData created by SpeedTestRunner.
 
 Let's start by rewriting `RunSpeedTest()` in SpeedTestRunner. Add a using statement at the top of `SpeedTestRunner.cs` to declare that we're going to use the models from `TestResult.cs`: `using SpeedTestLogger.Models;`, then update `RunSpeedTest()` with the following:
 
