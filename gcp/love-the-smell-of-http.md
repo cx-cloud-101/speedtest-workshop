@@ -78,18 +78,18 @@ This guide assumes that you have Jetbrains IntelliJ Ultimate, if you don't have 
 
 8. Add the following files to `/src/webapp/WEB-INF`
    1. appengine-web.xml
-   ```xml
-   <?xml version="1.0" encoding="UTF-8"?>
-   <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
-       <threadsafe>true</threadsafe>
-       <runtime>java8</runtime>
-       <sessions-enabled>true</sessions-enabled>
-       <warmup-requests-enabled>true</warmup-requests-enabled>
-       <env-variables>
-           <env-var name="DEFAULT_ENCODING" value="UTF-8"/>
-       </env-variables>
-   </appengine-web-app>
-   ```
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+    <threadsafe>true</threadsafe>
+    <runtime>java8</runtime>
+    <sessions-enabled>true</sessions-enabled>
+    <warmup-requests-enabled>true</warmup-requests-enabled>
+    <env-variables>
+        <env-var name="DEFAULT_ENCODING" value="UTF-8"/>
+    </env-variables>
+</appengine-web-app>
+```
 
    2. web.xml
    ```xml
