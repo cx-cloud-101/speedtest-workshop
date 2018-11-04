@@ -173,8 +173,23 @@ Implementing gcp-speedtest-api
 The Speedtest API should have an endpoint as described above under "Suggested implementation" and publish the received speedtest events to a Pub/Sub topic.
 
 1. Create pubsub topic `gcloud pubsub topics create speedtest`
-2. Read about publishing messages to Pub/Sub topic with Spring Cloud: [Messaging with Google Cloud Pub/Sub](https://spring.io/guides/gs/messaging-gcp-pubsub/)
+2. Read about publishing messages to Pub/Sub topic with Spring Cloud below.
 3. Implement the endpoint
+
+Publish messages to Pub/Sub
+---------------------------
+With the Spring GCP Pub/Sub library you can easily publish messages to a topic.
+
+Spring will automatically inject a bean into the `pubSub` field in the class `MyPubSubMessages` below. You can achieve the same in Java by creating a class with the field `private final PubSubTemplate pubSub;` and a constructor that has a `PubSubTemplate` parameter that is assigned to the field.
+```kotlin
+class MyPubSubMessages(val pubSub: PubSubTemplate) {
+   
+   public void publish(String myMessage) {
+      this.pubSub.publish("the_topic_name", myMessage) 
+   }
+   
+}
+```
 
 You have an API on GCP. What now?
 ---------------------------------
