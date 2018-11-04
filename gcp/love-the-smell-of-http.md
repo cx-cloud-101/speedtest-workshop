@@ -56,7 +56,7 @@ This guide assumes that you have Jetbrains IntelliJ Ultimate, if you don't have 
 
 ![](images/create-project-1.png)
 
-3. Select `Gradle` as *Type* and `War` (**Important**) as *Packaging*. On the Spring Initializr website you must click on *Switch to the full version*.
+3. Select `Gradle` as *Type* and `War` (**Important**) as *Packaging*.
 
 ![](images/create-project-2.png)
 
