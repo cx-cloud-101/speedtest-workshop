@@ -195,7 +195,7 @@ Spring will automatically inject a bean into the `pubSub` field in the class `My
 ```kotlin
 class MyPubSubMessages(val pubSub: PubSubTemplate) {
    
-   public void publish(String myMessage) {
+   fun publish(myMessage: String) {
       this.pubSub.publish("the_topic_name", myMessage) 
    }
    
