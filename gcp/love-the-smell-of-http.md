@@ -81,8 +81,8 @@ This guide assumes that you have Jetbrains IntelliJ Ultimate, if you don't have 
 ```
 appengine {
     deploy {
-        version = "GCLOUD_CONFIG"
-        projectId = "cx-cloud-101"
+        version = 'GCLOUD_CONFIG'
+        projectId = 'GCLOUD_CONFIG'
     }
 }
 ```
