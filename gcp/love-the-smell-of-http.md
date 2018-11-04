@@ -76,7 +76,18 @@ This guide assumes that you have Jetbrains IntelliJ Ultimate, if you don't have 
    
 ![](images/create-project-6.png)
 
-8. Add the following files to `/src/webapp/WEB-INF`
+8. You also need to add a section in `gradle.build` specifying version and projectId. Version can be "GCLOUD_CONFIG", and projectId should be the name of your project on GCP e.g. "cx-cloud-101".
+
+```
+appengine {
+    deploy {
+        version = 'GCLOUD_CONFIG'
+        projectId = 'GCLOUD_CONFIG'
+    }
+}
+```
+
+9. Add the following files to `/src/webapp/WEB-INF`
    1. appengine-web.xml
    
 ```xml
