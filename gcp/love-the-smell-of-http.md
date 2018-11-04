@@ -72,11 +72,11 @@ This guide assumes that you have Jetbrains IntelliJ Ultimate, if you don't have 
 
 ![](images/create-project-5.png)
 
-7. Modify `gradle.build` so that it can be deployed as a GCP Appengine Standard Java app
+7. Modify `build.gradle` so that it can be deployed as a GCP Appengine Standard Java app
    
 ![](images/create-project-6.png)
 
-8. You also need to add a section in `gradle.build` specifying version and projectId. Version can be "GCLOUD_CONFIG", and projectId should be the name of your project on GCP e.g. "cx-cloud-101".
+8. You also need to add a section in `build.gradle` specifying version and projectId. Version can be "GCLOUD_CONFIG", and projectId should be the name of your project on GCP e.g. "cx-cloud-101".
 
 ```
 appengine {
