@@ -12,9 +12,19 @@ Suggested solution
 Setup
 -----
 1. Create a trigger Pub/Sub topic: `gcloud pubsub topics create speedtest-trigger`
-2. Create Datastore
-   1. Goto Datastore in your project
-   2. Click on create datastore and select Cloud Datastore
+1. Create Datastore
+    1. Goto [Datastore](https://console.cloud.google.com/datastore) in your project
+    1. Click on create Datastore and select Datastore Mode 
+1. Add `spring-cloud-gcp-starter-data-datastore` as a dependency in your `speedtest-api` (`build.gradle.kts`)
+    ```kotlin
+    //...
+    dependencies {
+       //...
+       implementation("org.springframework.cloud:spring-cloud-gcp-starter-data-datastore")
+       //...
+    }
+    //...
+    ```
 
 Suggested API
 -------------
@@ -70,9 +80,7 @@ Removes registration for a device on the specified user.
 
 Implementation
 --------------
-If you followed the "Getting started"-guide you should already have added the `org.springframework.cloud:spring-cloud-gcp-starter-data-datastore` dependency.
-
-This library builds on the concepts from Spring Data and makes it very simple to add repositories that access Datastore.
+We will use the spring-cloud-gcp-starter-data-datastore library (which you should have added in the `Setup` step. This library builds on the concepts from Spring Data and makes it very simple to add repositories that access Datastore.
 
 ### Create an entity class
 ```kotlin
@@ -83,11 +91,14 @@ import org.springframework.cloud.gcp.data.datastore.core.mapping.Field
 import org.springframework.data.annotation.Id
 import java.io.Serializable
 
-@Entity(name = "someName") // The entity kind in Datastore (analogous to SQL tables)
-data class SomeName @JsonCreator constructor(
+@Entity(name = "user") // The entity kind in Datastore (analogous to SQL tables)
+data class User(
         @Id
         @Field(name = "name")
-        val someField: String,
+        val name: String,
+        
+        @Field(name = "devices")
+        val devices: Set<Int> = emptySet()
 ) : Serializable
 ```
 
@@ -97,7 +108,7 @@ Add the following attribute to `application.properties`: `spring.cloud.gcp.datas
 ```kotlin
 import org.springframework.cloud.gcp.data.datastore.repository.DatastoreRepository
 
-interface UserRepository: DatastoreRepository<SomeName, String>
+interface UserRepository: DatastoreRepository<User, String>
 ```
 
 Cron job

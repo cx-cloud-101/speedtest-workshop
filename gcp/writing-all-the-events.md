@@ -61,9 +61,6 @@ The Node.js runtime expects that you have an `index.js` at the root of the proje
   },
   "author": "Alexander Hoem Rosbach",
   "license": "MIT",
-  "devDependencies": {
-    "uuid": "^3.3.2"
-  },
   "dependencies": {
     "@google-cloud/bigquery": "^1.3.0"
   }
