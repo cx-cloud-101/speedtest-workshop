@@ -90,7 +90,7 @@ We recommend that you structure your code in a way that facilitates easy manual 
 Getting Started
 ---------------
 ### Setup
-1. Create pubsub topic gcloud pubsub topics create speedtest
+1. If you've not already done so, create a pubsub topic `gcloud pubsub topics create speedtest`
 1. Create a BigQuery dataset named `speedtest`
 1. Create a table in the created dataset using either the suggested schema or your own
 
@@ -207,13 +207,14 @@ Deploying the event writer
 To deploy a cloud function to Google Cloud Platform you run: 
 
 ```shell
-gcloud functions deploy processSpeedtestEvent --trigger-resource speedtest --trigger-event google.pubsub.topic.publish --runtime nodejs8 --region europe-west1
+gcloud functions deploy processSpeedtestEvent --trigger-topic speedtest --runtime nodejs8 --region europe-west1
 ```
 
 Where
 * `processSpeedtestEvent` is the name the function will have in your GCP project, and when `--entry-point` is not specified it must also be the name of a function exported in `index.js`
-* `--trigger-resource`, in the case of Pub/Sub triggered functions, is the topic that it shall subscribe to
-* `--trigger-event google.pubsub.topic.publish` states that the function shall be triggered by Pub/Sub messages
+* `--trigger-topic <topic>` specifies that this is a cloud function triggered by messages to the given Pub/Sub topic
+* `--runtime nodejs8` specifies that the function shall be executed using nodejs-8
+* `--entry-point <name>` specifies that the function exported from `index.js` with name `<name>` shall be deployed
 
 Declared dependencies in `package.json` will be installed automatically when you deploy the function.
 

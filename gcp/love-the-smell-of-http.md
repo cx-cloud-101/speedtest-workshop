@@ -67,7 +67,7 @@ Use [Spring Initializr](https://start.spring.io/) to generate your project.
 
 1. Uncheck `Create separate module per source set` and click `OK`. ![](images/create-project-4.png)
 
-1. Modify `settings.gradle.kts` so that Gradle can find the appengine plugin.
+1. Modify `pluginManagement` in `settings.gradle.kts` so that Gradle can find the appengine plugin.
     ```kotlin
     pluginManagement {
        repositories {
@@ -99,9 +99,9 @@ Use [Spring Initializr](https://start.spring.io/) to generate your project.
 1. Modify `dependencies` in `build.gradle.kts` to exclude tomcat so that it can be deployed to appengine (which uses jetty).
     ```kotlin
     dependencies {
-       implementation("org.springframework.boot:spring-boot-starter-web") {
-    		     exclude("org.springframework.boot", "spring-boot-starter-tomcat")
- 		    }
+        implementation("org.springframework.boot:spring-boot-starter-web") {
+           exclude("org.springframework.boot", "spring-boot-starter-tomcat")
+        }
     }
     ```
 
