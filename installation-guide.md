@@ -38,9 +38,8 @@ _To complete the GCP-part of the workshop, you'll need the following tools and a
 
 ### Java Developer Kit 8, Gradle and IntelliJ IDEA
 
-1. You'll need version 8 of the Java Developer Kit (JDK 8). Have a look at [Oracle Java SE downloads](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html). Open JDK is an alternative for Linux users.
-2. Gradle is used in the examples, so [install gradle as well](https://gradle.org/install/).
-3. It you don't have a Java IDE and Spring Boot installed, you should download [IntelliJ IDEA Ultimate](https://www.jetbrains.com/idea/download/). It's not free, but it has a 30 day trial and includes Spring Boot.
+1. You'll need a recent version of the Java Developer Kit (JDK). [Oracle Java SE downloads](https://www.oracle.com/technetwork/java/javase/downloads/index.html) is usually a good place to start.
+1. It you don't have a Java IDE and Spring Boot installed, you should download [IntelliJ IDEA Ultimate](https://www.jetbrains.com/idea/download/). It's not free, but it has a 30 day trial and includes Spring Boot.
 
 ### GCP Free trial
 
@@ -56,6 +55,6 @@ _If you already have used the GCP free trial, then you'll have to register a new
 
 ### Node v8 (latest)
 _If you have node installed, you can check the version with `node --version`._
-_Note that the GCP Cloud Function node runtime only supports v8.x.x._
+_Note that the GCP Cloud Function node runtime only supports v8.15.0._
 
 1. Install node from [nodejs.org](https://nodejs.org/en/download/)

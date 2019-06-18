@@ -7,11 +7,14 @@ Suggested implementation
 We suggest that you implement the Speedtest API as a GCP Appengine Standard Java app using Spring Boot and Spring Cloud. The [reference application](https://github.com/cx-cloud-101/gcp-speedtest-api) is implemented using Kotlin and Gradle as the build tool, you may chose Java 8 and/or maven if you prefer.
 
 ### API
+Implement the following API.
 
-__GET /ping__
+#### GET /ping
+
 Should respond with PONG or something similar.
 
-__POST /speedtest__
+#### POST /speedtest
+
 _Request body:_
 ```json
 {
@@ -46,104 +49,127 @@ _Request body:_
 Versioning the code
 -------------------
 You'll probably want to version your code, so start off by creating a new repo named gcp-speedtest-api.
+```bash
+git init gcp-speedtest-api
+```
 
 Getting Started
 ---------------
-This guide assumes that you have Jetbrains IntelliJ Ultimate, if you don't have that you can use IntelliJ Community edition (or your preferred Java IDE) and [Spring Initializr](https://start.spring.io/) as replacement.
+Use [Spring Initializr](https://start.spring.io/) to generate your project.
 
-1. Create a new Project in IntelliJ
-2. Select *Spring Initializr* from the sidebar and continue
+1. Select setup of build tool and language. Our examples use Kotlin and Gradle, but you can choose between Java or Kotlin and Gradle or Maven if you prefer something else. Notice the selections in **bold**, especially **war** packaging. ![](images/create-project-1.png)
 
-![](images/create-project-1.png)
+1. Add dependencies: `Spring Web Starter` and `GCP Messaging` ![](images/create-project-2.png)
 
-3. Select `Gradle` as *Type* and `War` (**Important**) as *Packaging*.
+1. Generate project and unzip the downloaded archive.
 
-![](images/create-project-2.png)
+1. Open IntelliJ, click on File -> Open and select the unzipped generated project. ![](images/create-project-3.png)
 
-4. Add Spring Web dependency
+1. Uncheck `Create separate module per source set` and click `OK`. ![](images/create-project-4.png)
 
-![](images/create-project-3.png)
-
-5. Add Spring Cloud GCP Messaging dependency
-
-![](images/create-project-4.png)
-
-6. Click on finish. On the Spring Initializr website you will get a zip-file, extract it and open it as a project in your IDE.
-
-![](images/create-project-5.png)
-
-7. Modify `gradle.build` so that it can be deployed as a GCP Appengine Standard Java app
-   
-![](images/create-project-6.png)
-
-8. You also need to add a section in `gradle.build` specifying version and projectId. Version can be "GCLOUD_CONFIG", and projectId should be the name of your project on GCP e.g. "cx-cloud-101".
-
-```
-appengine {
-    deploy {
-        version = 'GCLOUD_CONFIG'
-        project = 'GCLOUD_CONFIG'
+1. Modify `settings.gradle.kts` so that Gradle can find the appengine plugin.
+    ```kotlin
+    pluginManagement {
+       repositories {
+           gradlePluginPortal()
+           mavenCentral()
+       }
+       resolutionStrategy {
+           eachPlugin {
+               if (requested.id.namespace == "com.google.cloud.tools") {
+                   useModule("com.google.cloud.tools:appengine-gradle-plugin:${requested.version}")
+               }
+           }
+       }
     }
-}
-```
+    ```
 
-9. Add the following files to `/src/webapp/WEB-INF`
-   1. appengine-web.xml
-   
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
-    <threadsafe>true</threadsafe>
-    <runtime>java8</runtime>
-    <sessions-enabled>true</sessions-enabled>
-    <warmup-requests-enabled>true</warmup-requests-enabled>
-    <env-variables>
-        <env-var name="DEFAULT_ENCODING" value="UTF-8"/>
-    </env-variables>
-</appengine-web-app>
-```
+1. Modify `build.gradle.kts` to invoke the appengine plugin (Add the last line to the `plugins`-section).
+    ```kotlin
+    plugins {
+        id("org.springframework.boot") version "2.1.5.RELEASE"
+        id("io.spring.dependency-management") version "1.0.7.RELEASE"
+        war
+        kotlin("jvm") version "1.2.71"
+        kotlin("plugin.spring") version "1.2.71"
+        id("com.google.cloud.tools.appengine") version "2.0.1"
+    }
+    ```
+    
+1. Modify `dependencies` in `build.gradle.kts` to exclude tomcat so that it can be deployed to appengine (which uses jetty).
+    ```kotlin
+    dependencies {
+       implementation("org.springframework.boot:spring-boot-starter-web") {
+    		     exclude("org.springframework.boot", "spring-boot-starter-tomcat")
+ 		    }
+    }
+    ```
 
-   2. web.xml
-   
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
-            http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-            version="3.1">
+1. Add the following to the end of `build.gradle.kts` to configure appengine. (Replace <your-project-id> with the ID of your Google Cloud Project).
+    ```
+    appengine {
+        deploy {
+            version = "GCLOUD_CONFIG"
+            project = "<your-project-id>"
+        }
+    }
+    ```
 
-    <servlet>
-        <servlet-name>speedtest-api</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextAttribute</param-name>
-            <param-value>org.springframework.web.context.WebApplicationContext.ROOT</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+1. Add the following files to `/src/main/webapp/WEB-INF`
+    1. appengine-web.xml
+        ```xml
+        <?xml version="1.0" encoding="UTF-8"?>
+        <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+            <threadsafe>true</threadsafe>
+            <runtime>java8</runtime>
+            <sessions-enabled>true</sessions-enabled>
+            <warmup-requests-enabled>true</warmup-requests-enabled>
+            <env-variables>
+                <env-var name="DEFAULT_ENCODING" value="UTF-8"/>
+            </env-variables>
+        </appengine-web-app>
+        ```
 
-    <servlet-mapping>
-        <servlet-name>speedtest-api</servlet-name>
-        <url-pattern>/*</url-pattern>
-    </servlet-mapping>
-
-    <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-    </welcome-file-list>
-
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>all</web-resource-name>
-            <url-pattern>/*</url-pattern>
-        </web-resource-collection>
-        <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-        </user-data-constraint>
-    </security-constraint>
-
-</web-app>
-```
+   1. web.xml
+        ```xml
+        <?xml version="1.0" encoding="utf-8"?>
+        <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                    http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+                    version="3.1">
+        
+            <servlet>
+                <servlet-name>speedtest-api</servlet-name>
+                <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+                <init-param>
+                    <param-name>contextAttribute</param-name>
+                    <param-value>org.springframework.web.context.WebApplicationContext.ROOT</param-value>
+                </init-param>
+                <load-on-startup>1</load-on-startup>
+            </servlet>
+        
+            <servlet-mapping>
+                <servlet-name>speedtest-api</servlet-name>
+                <url-pattern>/*</url-pattern>
+            </servlet-mapping>
+        
+            <welcome-file-list>
+                <welcome-file>index.html</welcome-file>
+            </welcome-file-list>
+        
+            <security-constraint>
+                <web-resource-collection>
+                    <web-resource-name>all</web-resource-name>
+                    <url-pattern>/*</url-pattern>
+                </web-resource-collection>
+                <user-data-constraint>
+                    <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+                </user-data-constraint>
+            </security-constraint>
+        
+        </web-app>
+        ```
 
 Testing the API
 ---------------
@@ -174,10 +200,15 @@ Start the application either by running the `*Application` class in your IDE, or
 * `./gradlew bootRun`
 * `./gradlew appengineRun`
 
+(All the three ways of starting the application should work, and it is preferable that you test them all).
+
 Open: [http://localhost:8080/hello/alex](http://localhost:8080/hello/alex)
 
 ### Deploy to GCP
-Run `./gradlew appengineDeploy` and open [https://your-project.appspot.com/hello/alex](https://your-project.appspot.com/hello/alex)
+1. Create an Appengine Application in your GCP Project: `gcloud app create`
+    1. Select `europe-west` as region.
+    
+1. Run `./gradlew appengineDeploy` and open [https://your-project.appspot.com/hello/alex](https://your-project.appspot.com/hello/alex)
 
 Implementing gcp-speedtest-api
 ------------------------------
@@ -186,6 +217,16 @@ The Speedtest API should have an endpoint as described above under "Suggested im
 1. Create pubsub topic `gcloud pubsub topics create speedtest`
 2. Read about publishing messages to Pub/Sub topic with Spring Cloud below.
 3. Implement the endpoint
+    1. Note that you can use kotlin `data class` to represent the request body
+        ```kotlin
+        data class User(val name: String, val email: String, val telephone: String)
+ 
+        @PostMapping
+        fun createUser(@RequestBody user: User) {
+           // Do something with the user ...
+           // This endpoint will accept a json payload like: { "name": "Alex", "email": "email@email.com", "telephone": "12345678" }
+        }
+        ``` 
 
 Publish messages to Pub/Sub
 ---------------------------
