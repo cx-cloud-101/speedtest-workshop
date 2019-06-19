@@ -20,12 +20,30 @@ See https://github.com/pypa/pipenv#installation
 #### Windows
 ??
 
+#### Using virtual env
+
+```bash
+pip install --user --upgrade virtualenv
+```
+
+```bash
+virtualenv cmle-env
+source cmle-env/bin/activate
+```
+
 ### Installing dependencies with `pipenv`
 
 When we have `pipenv` installed we can activate the `pipenv` environment and install the dependencies:
 ```bash
 pipenv shell
 pipenv install --dev
+```
+
+### Installing dependencies with `pip`
+
+An alternative to using `pipenv` is using `pip` to install our dependencies
+```bash
+pip install -r requirements.txt
 ```
 
 ## Setup gcloud config
