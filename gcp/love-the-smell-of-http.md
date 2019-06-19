@@ -27,20 +27,20 @@ _Request body:_
             "upload": "NUMBER"
         },
         "client": {
-            "ip": "STRING",
-            "lat": "NUMBER",
-            "lon": "NUMBER",
-            "isp": "STRING",
-            "country": "STRING" // (ISO 3166-1_alpha2)
+            "ip": "STRING?",
+            "lat": "NUMBER?",
+            "lon": "NUMBER?",
+            "isp": "STRING?",
+            "country": "STRING?" // (ISO 3166-1_alpha2)
         },
         "server": {
-            "host": "STRING",
-            "lat": "NUMBER",
-            "lon": "NUMBER",
-            "country": "STRING", // (ISO 3166-1_alpha2)
-            "distance": "NUMBER",
-            "ping": "NUMBER",
-            "id": "STRING"
+            "host": "STRING?",
+            "lat": "NUMBER?",
+            "lon": "NUMBER?",
+            "country": "STRING?", // (ISO 3166-1_alpha2)
+            "distance": "NUMBER?",
+            "ping": "NUMBER?",
+            "id": "STRING?"
         }
     }
 }

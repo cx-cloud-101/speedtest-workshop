@@ -36,7 +36,7 @@ Google Cloud Platform (GCP) and Kotlin
 --------------------------------------
 _To complete the GCP-part of the workshop, you'll need the following tools and accounts._
 
-### Java Developer Kit 8, Gradle and IntelliJ IDEA
+### Java Developer Kit 8 and IntelliJ IDEA
 
 1. You'll need a recent version of the Java Developer Kit (JDK). [Oracle Java SE downloads](https://www.oracle.com/technetwork/java/javase/downloads/index.html) is usually a good place to start.
 1. If you don't have a Java IDE and Spring Boot installed, you should download [IntelliJ IDEA Ultimate](https://www.jetbrains.com/idea/download/). It's not free, but it has a 30 day trial and includes Spring Boot.
