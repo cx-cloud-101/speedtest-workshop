@@ -53,7 +53,7 @@ Lets create a bucket in our gcp project where we will store our job(s)
 The bucket name has to be unique across google cloud storage, but so does our gcp-project-id need to be, so lets use our project-id and some extra name, to name our bucket.
 ```bash
 PROJECT_ID=$(gcloud config list project --format "value(core.project)")
-BUCKET_NAME=${PROJECT_ID}-mlengine
+BUCKET_NAME=${PROJECT_ID}-ai-platform
 ```
 
 Then we can set a region, which we want our bucket to live in. This one can not be regional.
