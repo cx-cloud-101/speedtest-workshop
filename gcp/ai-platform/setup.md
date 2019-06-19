@@ -5,7 +5,7 @@
 Lets start by `cloning` a repository containing a model which uses `Keras` to train on the United States Census data.
 
 ```bash
-git clone REPO
+git clone https://github.com/cx-cloud-101/gcp-ai-platform.git
 ```
 
 ## Install dependencies
