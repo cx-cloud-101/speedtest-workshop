@@ -46,23 +46,6 @@ An alternative to using `pipenv` is using `pip` to install our dependencies
 pip install -r requirements.txt
 ```
 
-## Setup gcloud config
-
-To be able to communicate with our gcp-project with the correct configurations, we can create a `gcloud` configurations setup.
-
-```bash
-# Change with what you want to call the configuration
-GCLOUD_CONFIG_NAME="a_config_name"
-# Change with the user you want to use to communicate with gcloud with (probably your .@computas.com mail)
-EMAIL_ACCOUNT="e@mail.com"
-# Change with the id of your gcp project
-PROJECT_ID="gcp-project-id"
-
-gcloud config configurations create "$GCLOUD_CONFIG_NAME"
-gcloud config set account "$EMAIL_ACCOUNT"
-gcloud config set project "$PROJECT_ID"
-```
-
 ## Create bucket
 
 Lets create a bucket in our gcp project where we will store our job(s)
@@ -73,7 +56,7 @@ PROJECT_ID=$(gcloud config list project --format "value(core.project)")
 BUCKET_NAME=${PROJECT_ID}-mlengine
 ```
 
-Then we can set a region, which we want our bucket to live in. This one can not be reginal.
+Then we can set a region, which we want our bucket to live in. This one can not be regional.
 See here for options: https://cloud.google.com/ml-engine/docs/tensorflow/regions
 
 `europe-west1` seems to have the options we would want, and is relatively close.
