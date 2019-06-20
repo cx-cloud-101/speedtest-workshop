@@ -75,3 +75,5 @@ gcloud ai-platform versions create $MODEL_VERSION \
   --framework tensorflow \
   --origin $SAVED_MODEL_PATH
 ```
+
+# Let move over to [predicting](predicting)

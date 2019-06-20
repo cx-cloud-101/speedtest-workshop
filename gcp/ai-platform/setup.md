@@ -68,3 +68,5 @@ With this set up, we can create our bucket.
 ```bash
 gsutil mb -l $REGION gs://$BUCKET_NAME
 ```
+
+# Let move over to [the model](model)
