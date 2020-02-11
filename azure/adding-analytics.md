@@ -2,17 +2,12 @@
 ===============================================
 _When needing to analyze data, its often worth having a quick look after suitable BI-tools instead of implementing a custom application. In this section we'll visualize speedtests using [Time Series Insights](https://docs.microsoft.com/en-us/azure/time-series-insights/time-series-insights-overview)._
 
-Creating Time Series Insights
------------------------------
-Log on to [portal.azure.com](https://portal.azure.com), navigate to the cx-cloud-101 resource group, and add a new "Time Series Insights" resource.
+Preparing the Event Hub
+-----------------------
 
-![time-series-1](images/time-series-1.png)
+Before we can connect Time Series Insights to our Event Hub, we need to add a new consumer group and a new access policy.
 
-Name the environment speedtest-analytics and use the existing resource group cx-cloud-101.
-
-![time-series-2](images/time-series-2.png)
-
-While it's creating, open speedtest-events and add a new [consumer group](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-features#consumer-groups) named SpeedTestAnalyticsIngress. In essence, we're telling event hub that there's going to be an application/consumer that'll need it's own view of the events we're publishing.
+Open speedtest-events and add a new [consumer group](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-features#consumer-groups) named SpeedTestAnalyticsIngress. In essence, we're telling event hub that there's going to be an application/consumer that'll need it's own view of the events we're publishing.
 
 ![time-series-5](images/time-series-5.png)
 
@@ -20,25 +15,24 @@ We should also create a new access policy named SpeedTestAnalyticsIngress for ou
 
 ![time-series-6](images/time-series-6.png)
 
-When speedtest-analytics has been created, open it an navigate to "Event Sources".
+Creating Time Series Insights
+-----------------------------
 
-![time-series-3](images/time-series-3.png)
+With all that out of the way, navigate to the cx-cloud-101 resource group, and add a new "Time Series Insights" resource.
 
-Add a new event source named speedtest-analytics-ingress. It should use the Event hub policy SpeedTestAnalyticsIngress and speedtestanalyticsingress consumer group that we just created.
+![time-series-1](images/time-series-1.png)
 
-Finally we'll have to tell Time Series Insights that our events are JSON-serialized, and that "Timestamp" is the timestamp property.
+Name the environment speedtest-analytics and use the existing resource group cx-cloud-101.
 
-![time-series-7](images/time-series-7.png)
+![time-series-2](images/time-series-2.png)
 
-We also have to configure a data access policy for our data. This is basically a list of users that can access the data stored in Time Series Insights.
+Click on "Next: Event Source" and configure an event source using your existing Event Hub. Use the access policy and consumer group you just created, and use `Timestamp` as the timestamp property name (casing is important!). Finally click on "Review + create" and "Create".
 
-![time-series-8](images/time-series-8.png)
+![event-source](images/event-source-1.png)
 
-Add your own user as a "Reader" and "Contributor".
+_Why are we using `Timestamp` as the timestamp property name? Time Series Insights wants to know when the speedtests where recorded, and we have stored that information in a property called timestamp within TestResult._
 
-![time-series-9](images/time-series-9.png)
-
-Finally we can go to the overview page and go to the Time Series Insights environment.
+Finally we can go to the overview page and open the Time Series Insights environment.
 
 ![time-series-10](images/time-series-10.png)
 
