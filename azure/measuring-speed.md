@@ -39,7 +39,7 @@ Now we'll start on creating the logger application. Move into the `az-speedtest-
 
 ```shell
 $> cd az-speedtest-logger
-$> dotnet new console -o SpeedTestLogger
+$ az-speedtest-logger> dotnet new console -o SpeedTestLogger
 The template "Console Application" was created successfully.
 
 Processing post-creation actions...
@@ -55,8 +55,8 @@ Restore succeeded.
 Try out your new console application by moving into the `SpeedTestLogger/`-folder and executing `dotnet run`.
 
 ```shell
-$> cd SpeedTestLogger
-$> dotnet run
+$ az-speedtest-logger> cd SpeedTestLogger
+$ az-speedtest-logger/SpeedTestLogger> dotnet run
 Hello World!
 ```
 
@@ -64,20 +64,19 @@ Nothing interesting going on here, so let's continue by actually measuring inter
 
 Measuring internet speed with Speedtest.net
 -------------------------------------------
-[Speedtest.net](http://www.speedtest.net/) is a site used by many (including major ISP's like Get) to measure internet speed from a user machine. Reliably measuring internet speed can be a tricky subject, as you need to download and upload a bunch of different files to measure the actual speed with any kind of repeatability. Luckily we can use the open source package [SpeedTest.Net](https://www.nuget.org/packages/SpeedTest.Net/), that replicates the test performed by speedtest.net, using their test-servers.
+[Speedtest.net](http://www.speedtest.net/) is a site used by many (including major ISP's like Get) to measure internet speed from a user machine. Reliably measuring internet speed can be a tricky subject, as you need to download and upload a bunch of different files to measure the actual speed with any kind of repeatability. Luckily we can use the open source package [SpeedTest](https://www.nuget.org/packages/SpeedTest/), that replicates the test performed by speedtest.net, using their test-servers.
 
-Start by adding the SpeedTest.Net package and resolving all dependencies:
+Start by adding the SpeedTest package and resolving all dependencies:
 
 ```shell
-$> dotnet add package SpeedTest.Net --version 1.2.0
-$> dotnet restore
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package SpeedTest --version 1.4.0-build5
 ```
 
 Open the `az-speedtest-logger/`-folder in VS Code, or any other preferred C# editor, and find `SpeedTestLogger/SpeedTestLogger.csproj`. Note that you now have a reference to the SpeedTest.Net package.
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="SpeedTest.Net" Version="1.2.0" />
+    <PackageReference Include="SpeedTest" Version="1.4.0-build5" />
 </ItemGroup>
 ```
 
@@ -96,7 +95,7 @@ static void Main(string[] args)
 
     var client = new SpeedTestClient();
     var settings = client.GetSettings();
-    
+
     // Code continues here
 }
 ```
@@ -133,6 +132,8 @@ static void Main(string[] args)
 
 On the way you'll probably have added using statements for System.Globalization and System.Linq.
 
+_Tip: Depending on your editor, you can usually get suggestions on which using statements you're missing by hovering over the keywords marked with red squiggly lines._
+
 Now that we have a suitable test-server, we can continue by testing the download and upload -speed. The number we are given by SpeedTest.Net is bytes per second, but usually we want megabytes per second (Mbps), so we'll convert the speeds into that unit of measure.
 
 ```csharp
@@ -153,7 +154,7 @@ static void Main(string[] args)
 Finally we're ready to test our SpeedTestLogger! Run it with `dotnet run`, and you should get something similar to the listing below.
 
 ```shell
-$> dotnet run
+$ az-speedtest-logger/SpeedTestLogger> dotnet run
 Hello SpeedTestLogger!
 Finding best test servers
 Testing download speed
@@ -184,7 +185,7 @@ namespace SpeedTestLogger
 }
 ```
 
-We'll probably create some private variables for the SpeedTestClient, settings, and the location of our logger, as well as initializing these variables when constructing a new SpeedTestRunner.
+We'll probably need to create some private variables for the SpeedTestClient, settings, and the location of our logger, as well as initializing these variables when constructing a new SpeedTestRunner.
 
 ```csharp
 // Omitting namespace
@@ -226,7 +227,7 @@ public class SpeedTestRunner
                 return s;
             })
             .OrderBy(s => s.Latency);
-        
+
         return serversOrdersByLatency.First();
     }
 
@@ -245,7 +246,7 @@ public class SpeedTestRunner
     private double TestDownloadSpeed(Server server)
     {
         var downloadSpeed = _client.TestDownloadSpeed(server, _settings.Download.ThreadsPerUrl);
-        
+
         return ConvertSpeedToMbps(downloadSpeed);
     }
 
@@ -302,17 +303,17 @@ Now we only have to rewrite `Main()` in Program.cs to use the new SpeedTestRunne
 static void Main(string[] args)
 {
     Console.WriteLine("Hello SpeedTestLogger!");
-    
+
     var location = new RegionInfo("nb-NO");
     var runner = new SpeedTestRunner(location);
     runner.RunSpeedTest();
 }
 ```
 
-Let's test or refactored SpeedTestLogger. With eny luck it should do pretty much the same as before.
+Let's test our refactored SpeedTestLogger. With any luck it should do pretty much the same as before.
 
 ```shell
-$> dotnet run
+$ az-speedtest-logger/SpeedTestLogger> dotnet run
 Hello SpeedTestLogger!
 Finding best test servers
 Testing download speed
@@ -328,10 +329,9 @@ We might want to add some configuration to our logger. At the moment all we real
 Let's start by adding some .NET Core packages for handling configuration.
 
 ```shell
-$> dotnet add package Microsoft.Extensions.Configuration --version 2.1.1
-$> dotnet add package Microsoft.Extensions.Configuration.FileExtensions --version 2.1.1
-$> dotnet add package Microsoft.Extensions.Configuration.Json --version 2.1.1
-$> dotnet restore
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration --version 3.1.1
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration.FileExtensions --version 3.1.1
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration.Json --version 3.1.1
 ```
 
 Then create a LoggerConfiguration class in a new file called `SpeedTestLogger/LoggerConfiguration.cs` using, among others the configuration packages.
@@ -408,7 +408,7 @@ Let's update `Main()` in Program.cs to use the new LoggerConfiguration.
 static void Main(string[] args)
 {
     Console.WriteLine("Hello SpeedTestLogger!");
-    
+
     var config = new LoggerConfiguration();
     var runner = new SpeedTestRunner(config.LoggerLocation);
     runner.RunSpeedTest();
@@ -418,7 +418,7 @@ static void Main(string[] args)
 Let's test the SpeedTestLogger again. This time we should print the logger location.
 
 ```shell
-$> dotnet run
+$ az-speedtest-logger/SpeedTestLogger> dotnet run
 Hello SpeedTestLogger!
 Logger located in Norway
 Finding best test servers
@@ -532,18 +532,18 @@ private string GetISORegionNameFromEnglishName(string englishName)
 {
     // Wondering why this culture isn't supported? https://stackoverflow.com/a/41879861/840453
     var unsupportedCultureLCID = 4096;
-    
+
     var allRegions = CultureInfo
         .GetCultures(CultureTypes.SpecificCultures)
         .Select(culture => culture.LCID)
         .Where(lcid => lcid != unsupportedCultureLCID)
         .Select(lcid => new RegionInfo(lcid));
-    
+
     var region = allRegions.FirstOrDefault(c =>
     {
         return String.Equals(c.EnglishName, englishName, StringComparison.OrdinalIgnoreCase);
     });
-    
+
     if (region == null)
     {
         var unknownISORegionName = "XX";
@@ -562,7 +562,7 @@ Now we have to update `Main()` again. Add a using-statement to get the classes i
 static void Main(string[] args)
 {
     // Omitting old code
-    
+
     var testData = runner.RunSpeedTest();
     var results = new TestResult
     {
@@ -602,7 +602,7 @@ public class LoggerConfiguration
         // Omitting old code
 
         UserId = configuration["userId"];
-        LoggerId = Int32.Parse(configuration["loggerId"]);
+        LoggerId = int32.Parse(configuration["loggerId"]);
     }
 }
 ```
@@ -641,7 +641,7 @@ If you're happy with the SpeedTestLogger, create a file at the root of the repos
 This makes sure that git won't track the build output-files. Run `git status -u` at the root of the repository to check that `.gitignore` was set up correctly.
 
 ```shell
-$> git status -u
+$ az-speedtest-logger> git status -u
 On branch master
 Your branch is up-to-date with 'origin/master'.
 Untracked files:
@@ -661,8 +661,8 @@ nothing added to commit but untracked files present (use "git add" to track)
 Then add all files to git with `git add --all`, commit the code with `git commit -m "My first SpeedTestLogger!"` and push it to GitHub using `git push origin master`:
 
 ```shell
-$> git add --all
-$> git commit -m "My first SpeedTestLogger!"
+$ az-speedtest-logger> git add --all
+$ az-speedtest-logger> git commit -m "My first SpeedTestLogger!"
 [master 0cfa1f3] My first SpeedTestLogger!
  7 files changed, 250 insertions(+)
  create mode 100644 .gitignore
@@ -672,9 +672,9 @@ $> git commit -m "My first SpeedTestLogger!"
  create mode 100644 SpeedTestLogger/SpeedTestLogger.csproj
  create mode 100644 SpeedTestLogger/SpeedTestRunner.cs
  create mode 100644 SpeedTestLogger/appsettings.json
-$> git push origin master
+$ az-speedtest-logger> git push origin master
 Username for 'https://github.com': cloud-101-testuser
-Password for 'https://cloud-101-testuser@github.com': 
+Password for 'https://cloud-101-testuser@github.com':
 Counting objects: 11, done.
 Delta compression using up to 8 threads.
 Compressing objects: 100% (9/9), done.
