@@ -43,14 +43,16 @@ Try out your new API by moving into the `SpeedTestApi/`-folder and executing `do
 ```shell
 $ az-speedtest-api> cd SpeedTestApi
 $ az-speedtest-api/SpeedTestApi> dotnet run
-Using launch settings from /home/teodoran/cloud-101/testuser/az-speedtest-api/SpeedTestApi/Properties/launchSettings.json...
-info: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[0]
-      User profile is available. Using '/home/teodoran/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
-Hosting environment: Development
-Content root path: /home/teodoran/cloud-101/testuser/az-speedtest-api/SpeedTestApi
-Now listening on: https://localhost:5001
-Now listening on: http://localhost:5000
-Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Now listening on: https://localhost:5001
+info: Microsoft.Hosting.Lifetime[0]
+      Now listening on: http://localhost:5000
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /home/teodoran/cloud-101/testuser/az-speedtest-api/SpeedTestApi
 ```
 
 _Notice how ASP.NET Core creates two endpoints? One for http and one for https requests? This is quite useful as it enables https-redirection and http support, but when we develop locally, its definitely easiest to just use the http endpoint._
