@@ -113,7 +113,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.EventHubs;
-using Newtonsoft.Json;
+using Newtonsoft.Json; // TODO: Should be updated to use System.Text.Json
 using SpeedTestApi.Models;
 
 namespace SpeedTestApi.Services
@@ -178,7 +178,7 @@ Finally we need to use SpeedTestEvents in SpeedTestController. Use SpeedTestApi.
 
 ```csharp
 private readonly ISpeedTestEvents _eventHub;
-        
+
 public SpeedTestController(ISpeedTestEvents eventHub)
 {
     _eventHub = eventHub;
@@ -191,7 +191,7 @@ Now we can use _eventHub in UploadSpeedTest. To do that, UploadSpeedTest needs t
 public async Task<ActionResult<string>> UploadSpeedTest([FromBody] TestResult speedTest)
 {
     await _eventHub.PublishSpeedTest(speedTest);
-    
+
     var speedTestData = $"Got a TestResult from { speedTest.User } with download { speedTest.Data.Speeds.Download } Mbps.";
 
     return Ok(speedTestData);
