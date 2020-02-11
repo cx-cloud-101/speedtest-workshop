@@ -25,7 +25,7 @@ Now we'll start on creating the API. Move into the `az-speedtest-api/`-folder, a
 
 ```shell
 $> cd az-speedtest-api
-$> dotnet new webapi -o SpeedTestApi
+$ az-speedtest-api> dotnet new webapi -o SpeedTestApi
 The template "ASP.NET Core Web API" was created successfully.
 
 Processing post-creation actions...
@@ -41,8 +41,8 @@ Restore succeeded.
 Try out your new API by moving into the `SpeedTestApi/`-folder and executing `dotnet run`.
 
 ```shell
-$> cd SpeedTestApi
-$> dotnet run
+$ az-speedtest-api> cd SpeedTestApi
+$ az-speedtest-api/SpeedTestApi> dotnet run
 Using launch settings from /home/teodoran/cloud-101/testuser/az-speedtest-api/SpeedTestApi/Properties/launchSettings.json...
 info: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[0]
       User profile is available. Using '/home/teodoran/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
@@ -55,12 +55,12 @@ Application started. Press Ctrl+C to shut down.
 
 _Notice how ASP.NET Core creates two endpoints? One for http and one for https requests? This is quite useful as it enables https-redirection and http support, but when we develop locally, its definitely easiest to just use the http endpoint._
 
-Open [http://localhost:5000/api/values](http://localhost:5000/api/values) in your favorite browser. Notice how we got redirected to [https://localhost:5001/api/values](https://localhost:5001/api/values) and that the browser complains about an insecure connection? This is because we're forcing traffic on http to be upgraded to https if possible, but we don't have a valid certificate installed that enables our machine to make a true https connection. Here's one way we can fix this.
+Open [http://localhost:5000/WeatherForecast](http://localhost:5000/WeatherForecast) in your favorite browser. Notice how we got redirected to [https://localhost:5001/WeatherForecast](https://localhost:5001/WeatherForecast) and that the browser complains about an insecure connection? This is because we're forcing traffic on http to be upgraded to https if possible, but we don't have a valid certificate installed that enables our machine to make a true https connection. Here's one way we can fix this.
 
-Locate the file `Startup.cs`. This file contains, among other things, configuration and dependency injection in an ASP.NET Core API. There you'll find the method `Configure`. It's currently executing `app.UseHttpsRedirection();` in both development and production mode, so move this line up into the section only executed when the app is not in development.
+Locate the file `Startup.cs`. This file contains, among other things, configuration and dependency injection in an ASP.NET Core API. There you'll find the method `Configure`. It's currently executing `app.UseHttpsRedirection();` in both development and production mode, so move this line in an else-statement, so it's only executed when the app is not in development.
 
 ```csharp
-public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
     if (env.IsDevelopment())
     {
@@ -68,31 +68,37 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     }
     else
     {
-        app.UseHsts();
         app.UseHttpsRedirection();
     }
 
-    app.UseMvc();
+    app.UseRouting();
+
+    app.UseAuthorization();
+
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+    });
 }
 ```
 
-Stop and start SpeedTestApi with `dotnet run`, and open [http://localhost:5000/api/values](http://localhost:5000/api/values) again. This time we're not redircted to https and we don't get any warnings, but we'll still use https-redirection when running in production.
+Stop and start SpeedTestApi with `dotnet run`, and open [http://localhost:5000/WeatherForecast](http://localhost:5000/WeatherForecast) again. This time we're not redircted to https and we don't get any warnings, but we'll still use https-redirection when running in production.
 
-_Open question: Should you use https-redirection when developing "real" applications?_
+_Open question: Should you use https-redirection in development when working on "real" applications?_
 
 Playing Ping Pong
 -----------------
 So, we got an API up and running, let's make the famous ping-route!
 
-Start by deleting the `SpeedTestApi/wwwroot`-folder. We won't be needing that. Then we can rename `SpeedTestApi/Controllers/ValuesController.cs` to `SpeedTestApi/Controllers/SpeedTestController.cs`. Update the class name and constructor name as well, and remove all methods/routes from the class.
+Start by deleting the `SpeedTestApi/WeatherForecast.cs`-file. We won't be needing that. Then we can rename `SpeedTestApi/Controllers/ValuesController.cs` to `SpeedTestApi/Controllers/SpeedTestController.cs`. Update the class name and constructor name as well, and remove all methods/routes from the class.
 
 ```csharp
 using Microsoft.AspNetCore.Mvc;
 
 namespace SpeedTestApi.Controllers
 {
-    [Route("[controller]")]
     [ApiController]
+    [Route("[controller]")]
     public class SpeedTestController : ControllerBase
     {
 
@@ -102,10 +108,9 @@ namespace SpeedTestApi.Controllers
 
 _Whats a route? A route is a pattern that matches one or more URL's. Typically the controller has a base-route/path that'll get prefixed to all routes handled by methods in that controller. Then every route-handling method in that controller handles a sub-route/path._
 
-First we'll change the base route for this controller from `[Route("api/[controller]")]` to `[Route("[controller]")]`. This means that all routes in this controller will start with `speedtest/...`, since this is the name of the controller.
+The base route for this controller is `[Route("[controller]")]`. This means that all routes in this controller will start with `speedtest/...`, since that's the name of the controller.
 
-Then we'll add a single route "ping"
-
+Now we'll add a single route "ping":
 
 ```csharp
 using Microsoft.AspNetCore.Mvc;
@@ -119,15 +124,13 @@ namespace SpeedTestApi.Controllers
         // GET speedtest/ping
         [Route("ping")]
         [HttpGet]
-        public ActionResult<string> Ping()
+        public string Ping()
         {
-            return Ok("PONG");
+            return "PONG";
         }
     }
 }
 ```
-
-_Note how we're returning an `ActionResult<string>` by using `Ok("PONG")`? The response to an http-request is usually not just a string, usually you e.g. get a status code like "200 OK". By using `Ok("PONG")`, we'll make sure that we're returning a "200 OK" response, containing the string "PONG", and not just PONG._
 
 Now we can test our ping-route. Restart SpeedTestApi, and open [http://localhost:5000/speedtest/ping](http://localhost:5000/speedtest/ping). It should display PONG.
 
@@ -138,7 +141,7 @@ Getting it on GitHub
 As we did for SpeedTestLogger, commit everything, and push it to GitHub.
 
 ```shell
-$> git status -u
+$ az-speedtest-api> git status -u
 On branch master
 Your branch is up-to-date with 'origin/master'.
 Untracked files:
@@ -152,8 +155,8 @@ Untracked files:
 	appsettings.json
 
 nothing added to commit but untracked files present (use "git add" to track)
-$> git add --all
-$> git commit -m "Added /speedtest/ping"
+$ az-speedtest-api> git add --all
+$ az-speedtest-api> git commit -m "Added /speedtest/ping"
 [master c432a72] Added /speedtest/ping
  6 files changed, 119 insertions(+)
  create mode 100644 .gitignore
@@ -162,10 +165,10 @@ $> git commit -m "Added /speedtest/ping"
  create mode 100644 SpeedTestApi/SpeedTestApi.csproj
  create mode 100644 SpeedTestApi/Startup.cs
  create mode 100644 SpeedTestApi/appsettings.json
-✔ ~/cloud-101/testuser/az-speedtest-api/SpeedTestApi [master ↑·1|✔] 
-$> git push origin master
+✔ ~/cloud-101/testuser/az-speedtest-api/SpeedTestApi [master ↑·1|✔]
+$ az-speedtest-api> git push origin master
 Username for 'https://github.com': cloud-101-testuser
-Password for 'https://cloud-101-testuser@github.com': 
+Password for 'https://cloud-101-testuser@github.com':
 Counting objects: 10, done.
 Delta compression using up to 8 threads.
 Compressing objects: 100% (10/10), done.
@@ -230,11 +233,11 @@ Make a note of your URL, displayed towards the top right corner. This will be th
 
 ![api-app-4](images/api-app-7.png)
 
-Go to "Deployment option", and select GitHub. Authenticate, and select the az-speedtest-api project and master-branch as your deployment source. Then press "Ok".
+Go to "Deployment Center", select GitHub and then authenticate with your GitHub user. Choose "Azure Pipelines (Preview)", select the az-speedtest-api project and master-branch as your deployment source, and give your DevOps organization a decent name. Then continue to the summary-page, and press "Finish".
 
-![api-app-4](images/api-app-8.png)
+![api-app-4](images/api-app-7-az.png)
 
-Wait for a little bit, and then visit [https://testuser-speedtest-api.azurewebsites.net/speedtest/ping](https://testuser-speedtest-api.azurewebsites.net/speedtest/ping) (Replace https://testuser-speedtest-api.azurewebsites.net with tha URL from your APP Service/API App)
+Wait until the deployment finishes, and then visit [https://testuser-speedtest-api.azurewebsites.net/speedtest/ping](https://testuser-speedtest-api.azurewebsites.net/speedtest/ping) (Replace https://testuser-speedtest-api.azurewebsites.net with tha URL from your APP Service/API App)
 
 ![azure-ping-pong](images/azure-ping-pong.png)
 
