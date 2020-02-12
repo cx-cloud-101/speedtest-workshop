@@ -18,7 +18,7 @@ We are here using `pipenv` to install our `python` dependencies.
 See https://github.com/pypa/pipenv#installation
 
 #### Windows
-??
+See https://www.jetbrains.com/help/pycharm/pipenv.html
 
 #### Using virtual env
 
