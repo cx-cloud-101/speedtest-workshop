@@ -32,7 +32,7 @@ Now that we have a table for storing speedtests, we need something to read event
 
 3. Create a new Logic App named speedtest-web-ingress.
 4. Create a new consumer group in the event hub named speedtest-web.
-5. Start with a blank template, and create an event hub trigger. Use advanced options, so you can specify that it should use the speedtest-web consumer group. Then parse the body of the event to JSON. Note: When parsing JSON, Content should be used, not Body as illustrated below.
+5. Start with a blank template, and create an event hub trigger, using the speedtest-web consumer group and content type "application/json". Then parse the body of the event to JSON. Note: When parsing JSON, Content should be used, not Body as illustrated below.
 
 ![speedtest-web-3](images/speedtest-web-3.png)
 
@@ -130,8 +130,12 @@ Run the SpeedTestLogger a couple of times, and check if the logic app is able to
 
 A route for viewing speeds
 --------------------------
-Update SpeedTestApi with a new route for getting speedtests. GET /speedtest is probably the obvious option for what route to choose. Have a look at [this guide](https://docs.microsoft.com/en-us/azure/cosmos-db/table-storage-how-to-use-dotnet) to get a feel of how you'll read data from table storage.
+You'll need something that can serve the stored speedtests from table storage to the web-page. One option is to update SpeedTestApi with a new route for getting speedtests. GET /speedtest is probably the obvious option for what route to choose. Have a look at [this guide](https://docs.microsoft.com/en-us/azure/cosmos-db/table-storage-how-to-use-dotnet) to get a feel of how you'll read data from table storage.
+
+Another option is to use yet another logic app with a HTTP request trigger. The option is yours.
 
 The Web Page
 ------------
-Now you only have to create a webpage to show off your data. This can be made with numerous different frameworks and tools, but one option is [d3js](https://d3js.org). Have a look at [this site](https://beta.observablehq.com/d/03d50975026c3f8e) if you want an example of whats possible.
+Now you only have to create a webpage to show off your data. This can be made with numerous different frameworks and tools, but one option is [d3js](https://d3js.org). Have a look at [this site](https://taespeedtestwebstorage.z6.web.core.windows.net/) if you want an example of one way of displaying speedtests using d3js.
+
+Finally you'll need to decide how to host your website. The possibilities are endless, but one simple solution is to use [static website hosting in Azure Storage](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website), from the same storage container that contains the table storage instance.
