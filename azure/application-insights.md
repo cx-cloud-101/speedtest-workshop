@@ -4,11 +4,29 @@ _Console.WriteLine isn't so hot for real logging. When shit hits the fan, the la
 
 Adding Insights
 ---------------
-Start by navigating to SpeedTestApi in the Azure portal. Open Application Insights and choose "Setup Application Insights".
+Start by adding the package `Microsoft.ApplicationInsights.AspNetCore` to SpeedTestApi.
+
+```shell
+$ az-speedtest-api/SpeedTestApi> dotnet add package Microsoft.ApplicationInsights.AspNetCore --version 2.12.1
+```
+
+Then you need to add Application Insights in Startup.cs, by adding it to the service collection in `ConfigureServices(...)`.
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddApplicationInsightsTelemetry();
+    services.AddControllers();
+
+    // Code omitted
+}
+```
+
+Check that SpeedTestLoger still builds, commit the changes and push to GitHub. While the new version of SpeedTestApi is deploying, we'll navigate to SpeedTestApi in the Azure portal. Open Application Insights and choose "Turn on Application Insights".
 
 ![application-insights-1](images/application-insights-1.png)
 
-Create a new resource named speedtest-insights (we might want to use it for more speedtest-related logging than just SpeedTestApi). Choose ASP.NET Core as your runtime environment.
+Create a new resource named speedtest-insights (we might want to use it for more speedtest-related logging than just SpeedTestApi). Choose ASP.NET Core under the section "Instrument your application".
 
 ![application-insights-2](images/application-insights-2.png)
 
@@ -16,7 +34,7 @@ Wait until the Application Insights setup is done, and then make some requests t
 
 A quick look at dependencies, performance and transactions
 ----------------------------------------------------------
-Open speedtest-insights and navigate to Application map. This shows the dependency graph for SpeedTestApi. Click on the blue arrow in the graph, and select "Investigate performance".
+Open speedtest-insights and navigate to Application map. This shows the dependency graph for SpeedTestApi. Click on the circle representing the SpeedTestApi, and select "Investigate performance".
 
 ![application-insights-3](images/application-insights-3.png)
 
@@ -30,4 +48,4 @@ Now you'll get information about the transaction details for that specific reque
 
 Onwards and upwards!
 --------------------
-Application Insights can do a lot more than wat we just covered. Play around with it and see it you can discover more interesting metrics or dashboards. Did you know that Application Insights also can monitor [local console applications](https://docs.microsoft.com/en-us/azure/application-insights/application-insights-console?toc=/azure/azure-monitor/toc.json)?
+Application Insights can do a lot more than wat we just covered. Play around with it and see it you can discover more interesting metrics or dashboards. Did you know that Application Insights also can monitor [local console applications](https://docs.microsoft.com/en-us/azure/application-insights/application-insights-console?toc=/azure/azure-monitor/toc.json)? You could also configure a local instance of SpeedTestApi to connect to Application Insights. In addition, you could swap out `ILogger` with a logger that sends custom log messages to Application Insights.
