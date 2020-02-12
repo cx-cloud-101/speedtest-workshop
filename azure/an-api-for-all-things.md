@@ -92,7 +92,7 @@ Playing Ping Pong
 -----------------
 So, we got an API up and running, let's make the famous ping-route!
 
-Start by deleting the `SpeedTestApi/WeatherForecast.cs`-file. We won't be needing that. Then we can rename `SpeedTestApi/Controllers/ValuesController.cs` to `SpeedTestApi/Controllers/SpeedTestController.cs`. Update the class name and constructor name as well, and remove all methods/routes from the class.
+Start by deleting the `SpeedTestApi/WeatherForecast.cs`-file. We won't be needing that. Then we can rename `SpeedTestApi/Controllers/WeatherForecastController.cs` to `SpeedTestApi/Controllers/SpeedTestController.cs`. Update the class name and constructor name as well, and remove all methods/routes from the class.
 
 ```csharp
 using Microsoft.AspNetCore.Mvc;
