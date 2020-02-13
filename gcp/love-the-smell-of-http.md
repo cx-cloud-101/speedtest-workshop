@@ -84,7 +84,7 @@ Use [Spring Initializr](https://start.spring.io/) to generate your project.
                }
            }
        }
-}
+    }
     ```
     
 1. Modify `build.gradle.kts` to invoke the appengine plugin (Add the last line to the `plugins`-section).
@@ -134,8 +134,8 @@ Use [Spring Initializr](https://start.spring.io/) to generate your project.
             <env-variables>
                 <env-var name="DEFAULT_ENCODING" value="UTF-8"/>
             </env-variables>
-    </appengine-web-app>
-```
+        </appengine-web-app>
+        ```
 
    1. `web.xml`
       
