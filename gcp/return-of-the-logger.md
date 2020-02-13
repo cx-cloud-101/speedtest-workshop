@@ -11,7 +11,7 @@ You can implement the application in any language you prefer, though you should 
 We have verified that Node.js and .Net have both a speedtest.net library that comply with the GCP Speedtest API and a Pub/Sub library.
 
 **Node.js**
-* speedtest.net library: speedtest-net
+* speedtest.net library: [speedtest-net](https://github.com/ddsol/speedtest.net)
 * Pub/Sub library: @google-cloud/pubsub
 
 Another option is to re-purpose the SpeedTestLogger made as part of the Azure workshop.

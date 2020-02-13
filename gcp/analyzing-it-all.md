@@ -9,7 +9,7 @@ Data Studio let's you build visualizations and reports straight in the browser. 
 ### Getting a signal
 Open [Data Studio](https://datastudio.google.com/) and create an empty report. Click through the getting started prompt, if you haven't already, and open the empty report. Create a new data source, and you'll get an overview of all the different data sources that's supported by Data Studio. Since we're interested in our speedtests stored in Big Query, choose Big Query.
 
-Authorize the connection to Big Query, and find your GCP-project, the speedtest dataset and your table containing speedtest-event. Click connect to establish a connection between your report and the Big Query table.
+Authorize the connection to Big Query, and find your GCP-project, the speedtest dataset and your table containing test_results. Click connect to establish a connection between your report and the Big Query table.
 
 When the connection is established, you'll get an auto-generated overview of the different properties in your table, and a suggestion of what type of data Data Studio thinks this is.
 
