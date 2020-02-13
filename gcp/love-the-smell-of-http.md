@@ -117,8 +117,9 @@ Use [Spring Initializr](https://start.spring.io/) to generate your project.
     }
 ```
     
-    _You can find the project ID for your project by looking at the "Project info" tile shown on [console.cloud.google.com/home](https://console.cloud.google.com/home)._
-    ![](images/project-info-gcp.png)
+_You can find the project ID for your project by looking at the "Project info" tile shown on [console.cloud.google.com/home](https://console.cloud.google.com/home)._
+
+![](images/project-info-gcp.png)
     
 1. Create the folders `/src/main/webapp/` and `/src/main/webapp/WEB-INF/`. Then add the following two files to `/src/main/webapp/WEB-INF`/
     
