@@ -96,12 +96,12 @@ const speedtest = require('./speedtest');
 
 exports.processSpeedtestEvent = async (pubSubMessage) => {
   if (pubSubMessage.data) {
-      const speedtestEvent = pubSubMessage.data ? Buffer.from(pubSubMessage.data, 'base64').toString() : null;
+      const speedtestEvent = Buffer.from(pubSubMessage.data, 'base64').toString();
       await speedtest.handleSpeedtestEvent(JSON.parse(speedtestEvent));
   }
 };
 ```
-Notice how the received `pubSubMessage` is processed through `Buffer.from`. The `pubSubMessage.data` value is a base64 encoded string of the published message. 
+Notice how the received `pubSubMessage` is processed through `Buffer.from`. The `pubSubMessage.data` value is a base64 encoded string of the published message.
 
 An important concept to understand with how Cloud Functions are executed is that they are only allocated compute time as long as they are running. As soon as the function returns something the function will be terminated, which can be tricky since most operations that you perform in Node.js are asynchronous.
 
