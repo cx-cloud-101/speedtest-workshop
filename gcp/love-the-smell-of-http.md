@@ -71,7 +71,7 @@ Use [Spring Initializr](https://start.spring.io/) to generate your project.
 1. Modify `pluginManagement` in `settings.gradle.kts` so that Gradle can find the appengine plugin.
     ```kotlin
     rootProject.name = "api"
-    
+
     pluginManagement {
        repositories {
            gradlePluginPortal()
@@ -86,7 +86,7 @@ Use [Spring Initializr](https://start.spring.io/) to generate your project.
        }
     }
     ```
-    
+
 1. Modify `build.gradle.kts` to invoke the appengine plugin (Add the last line to the `plugins`-section).
     ```kotlin
     plugins {
@@ -94,7 +94,7 @@ Use [Spring Initializr](https://start.spring.io/) to generate your project.
         id("com.google.cloud.tools.appengine") version "2.0.1"
     }
     ```
-    
+
 1. Modify `dependencies` in `build.gradle.kts` to exclude tomcat so that it can be deployed to appengine (which uses jetty).
     ```kotlin
     dependencies {
@@ -105,9 +105,9 @@ Use [Spring Initializr](https://start.spring.io/) to generate your project.
     }
     ```
 ```
-    
+
 1. Add the following to the end of `build.gradle.kts` to configure appengine. (Replace <your-project-id> with the ID of your Google Cloud Project).
-    
+
 ```
     appengine {
         deploy {
@@ -116,15 +116,15 @@ Use [Spring Initializr](https://start.spring.io/) to generate your project.
         }
     }
 ```
-    
+
 _You can find the project ID for your project by looking at the "Project info" tile shown on [console.cloud.google.com/home](https://console.cloud.google.com/home)._
 
 ![](images/project-info-gcp.png)
-    
+
 1. Create the folders `/src/main/webapp/` and `/src/main/webapp/WEB-INF/`. Then add the following two files to `/src/main/webapp/WEB-INF`/
-    
+
     1. `appengine-web.xml`
-        
+
         ```xml
         <?xml version="1.0" encoding="UTF-8"?>
         <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
@@ -139,7 +139,7 @@ _You can find the project ID for your project by looking at the "Project info" t
         ```
 
    1. `web.xml`
-      
+
         ```xml
         <?xml version="1.0" encoding="utf-8"?>
         <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
@@ -147,7 +147,7 @@ _You can find the project ID for your project by looking at the "Project info" t
                     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
                     http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
                     version="3.1">
-        
+
             <servlet>
                 <servlet-name>speedtest-api</servlet-name>
                 <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -157,16 +157,16 @@ _You can find the project ID for your project by looking at the "Project info" t
                 </init-param>
                 <load-on-startup>1</load-on-startup>
             </servlet>
-        
+
             <servlet-mapping>
                 <servlet-name>speedtest-api</servlet-name>
                 <url-pattern>/*</url-pattern>
             </servlet-mapping>
-        
+
             <welcome-file-list>
                 <welcome-file>index.html</welcome-file>
             </welcome-file-list>
-        
+
             <security-constraint>
                 <web-resource-collection>
                     <web-resource-name>all</web-resource-name>
@@ -176,7 +176,7 @@ _You can find the project ID for your project by looking at the "Project info" t
                     <transport-guarantee>CONFIDENTIAL</transport-guarantee>
                 </user-data-constraint>
             </security-constraint>
-        
+
         </web-app>
         ```
 
@@ -300,7 +300,7 @@ _Tip: Remember to update the `@RequestMapping(...)` as well as the class name_
 
 ### Creating /speedtest
 
-As a start, we're going to create a simplified version of the /speedtest endpoint that only accepts a simple user model. Create another class named `HelloResource` under `/src/main/kotlin/com.speedtest.api/` and add the following code:
+As a start, we're going to create a simplified version of the /speedtest endpoint that only accepts a simple user model. Create another class named `SpeedTestResource` under `/src/main/kotlin/com.speedtest.api/` and add the following code:
 ```kotlin
 package com.speedtest.api
 
