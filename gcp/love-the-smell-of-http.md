@@ -284,8 +284,11 @@ If everything worked, you should be able to open [https://your-project-id.appspo
 
 ![](images/gcp-hello-speedtest.png)
 
+You can also take a look at [console.cloud.google.com/appengine](https://console.cloud.google.com/appengine) to view metrics and trace logs about your newly created App Engine Application.
+
 Implementing gcp-speedtest-api
 ------------------------------
+
 The Speedtest API should have an endpoint as described above under "Suggested implementation" and publish the received speedtest events to a Pub/Sub topic.
 
 ### Start with /ping
