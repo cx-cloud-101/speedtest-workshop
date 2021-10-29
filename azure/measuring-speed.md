@@ -61,77 +61,64 @@ Nothing interesting going on here, so let's continue by actually measuring inter
 
 Measuring internet speed with Speedtest.net
 -------------------------------------------
-[Speedtest.net](http://www.speedtest.net/) is a site used by many (including major ISP's like Get) to measure internet speed from a user machine. Reliably measuring internet speed can be a tricky subject, as you need to download and upload a bunch of different files to measure the actual speed with any kind of repeatability. Luckily we can use the open source package [SpeedTest](https://www.nuget.org/packages/SpeedTest/), that replicates the test performed by speedtest.net, using their test-servers.
+[Speedtest.net](http://www.speedtest.net/) is a site used by many (including major ISP's like Get) to measure internet speed from a user machine. Reliably measuring internet speed can be a tricky subject, as you need to download and upload a bunch of different files to measure the actual speed with any kind of repeatability. Luckily we can use the open source package [SpeedTest](https://www.nuget.org/packages/SpeedTest.NetCore/), that replicates the test performed by speedtest.net, using their test-servers.
 
 Start by adding the SpeedTest package and resolving all dependencies:
 
 ```shell
-$ az-speedtest-logger/SpeedTestLogger> dotnet add package SpeedTest --version 1.4.0-build5
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package SpeedTest.NetCore --version 2.1.0
 ```
 
-Open the `az-speedtest-logger/`-folder in VS Code, or any other preferred C# editor, and find `SpeedTestLogger/SpeedTestLogger.csproj`. Note that you now have a reference to the SpeedTest.Net package.
+Open the `az-speedtest-logger/`-folder in VS Code, or any other preferred C# editor, and find `SpeedTestLogger/SpeedTestLogger.csproj`. Note that you now have a reference to the SpeedTest.NetCore package.
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="SpeedTest" Version="1.4.0-build5" />
+    <PackageReference Include="SpeedTest.NetCore" Version="2.1.0" />
 </ItemGroup>
 ```
 
-Just adding a package won't get us far, so we'll quickly move on to writing some code that uses SpeedTest.Net.
+Just adding a package won't get us far, so we'll quickly move on to writing some code that uses SpeedTest.NetCore.
 
 Printing speedtests to console
 ------------------------------
 Open `SpeedTestLogger/Program.cs`. This is where `Main()` lives in most .NET console applications.
 
-Add `using SpeedTest;` and `using SpeedTest.Models;` to the top of the file, so .NET knows you want to use the SpeedTest.Net package. Then we have to create a new SpeedTestClient, and get the setting for the new client.
+Add `using SpeedTest.Net;` to the top of the file, so .NET knows you want to use the SpeedTest.Net package.
+
+Before we can test download and upload -speed, we have to find a suitable test-server. The package can find the closest server for us:
+
 
 ```csharp
 static void Main(string[] args)
 {
-    Console.WriteLine("Hello SpeedTestLogger!");
+    Console.WriteLine("Finding best test server");
 
-    var client = new SpeedTestClient();
-    var settings = client.GetSettings();
+    var server = SpeedTestClient.GetServer();
 
     // Code continues here
 }
 ```
 
-Before we can test download and upload -speed, we have to find a suitable test-server. We do this by first looking at all the test-servers in `settings.Servers`. We then select ten servers located in Norway.
-
-When we have ten servers, we test the server latency, and sort them by latency. Finally we pick the server with the lowest latency.
+If you hover over the server variable, you see the return type of `GetServer()` is a `Task<SpeedTest.Net.Models.Server>`. A Task represents ongoing work that yield type inside the `<>` when the work is finished. The standard way to do [asynchronous programming in C#](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/) is to use the `async` and `await` keywords.
 
 ```csharp
-static void Main(string[] args)
+static async Task Main(string[] args)
 {
-    // Previous code here
+    Console.WriteLine("Finding best test server");
 
-    Console.WriteLine("Finding best test servers");
-
-    var location = new RegionInfo("nb-NO");
-    var tenLocalServers = settings.Servers
-        .Where(s => s.Country.Equals(location.EnglishName))
-        .Take(10);
-
-    var serversOrdersByLatency = tenLocalServers
-        .Select(s =>
-        {
-            s.Latency = client.TestServerLatency(s);
-            return s;
-        })
-        .OrderBy(s => s.Latency);
-
-    var server = serversOrdersByLatency.First();
+    var server = await SpeedTestClient.GetServer();
 
     // Code continues here
 }
 ```
 
-On the way you'll probably have added using statements for System.Globalization and System.Linq.
+Hover over `server` now, and notice that the type has changed to `SpeedTest.Net.Models.Server`
+
+On the way you'll probably have added using statements for System.Threading.Tasks.
 
 _Tip: Depending on your editor, you can usually get suggestions on which using statements you're missing by hovering over the keywords marked with red squiggly lines._
 
-Now that we have a suitable test-server, we can continue by testing the download and upload -speed. The number we are given by SpeedTest.Net is bytes per second, but usually we want megabytes per second (Mbps), so we'll convert the speeds into that unit of measure.
+Now that we have a suitable test-server, we can continue by testing the download and upload -speed. The number we are given by SpeedTest.Net is bits per second, but usually we want megabits per second (Mbps), so we'll convert the speeds into that unit of measure.
 
 ```csharp
 static void Main(string[] args)
@@ -139,12 +126,8 @@ static void Main(string[] args)
     // Previous code here
 
     Console.WriteLine("Testing download speed");
-    var downloadSpeed = client.TestDownloadSpeed(server, settings.Download.ThreadsPerUrl);
-    Console.WriteLine("Download speed was: {0} Mbps", Math.Round(downloadSpeed / 1024, 2));
-
-    Console.WriteLine("Testing upload speed");
-    var uploadSpeed = client.TestUploadSpeed(server, settings.Upload.ThreadsPerUrl);
-    Console.WriteLine("Upload speed was: {0} Mbps", Math.Round(uploadSpeed / 1024, 2));
+    var downloadSpeed = await SpeedTestClient.GetDownloadSpeed(server, SpeedTestUnit.MegaBitsPerSecond);
+    Console.WriteLine("Download speed was: {0} Mbps", downloadSpeed);
 }
 ```
 
