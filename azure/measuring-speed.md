@@ -18,17 +18,16 @@ When the repository is created, press the "Clone or download"-button, and copy t
 
 ![](images/create-repo-3.png)
 
-Finally load up your favorite terminal, and clone the repo with `git clone`. Remember to replace "https://github.com/cloud-101-testuser/az-speedtest-logger.git" with the url from your repo.
+Finally load up your favorite terminal, [navigate](https://www.digitalcitizen.life/command-prompt-how-use-basic-commands/) to an appropriate folder, and clone the repo with `git clone`. Remember to replace the url with the url from your repo.
 
 ```shell
-$> git clone https://github.com/cloud-101-testuser/az-speedtest-logger.git
+$> git clone https://github.com/<your github name>/az-speedtest-logger.git
 Cloning into 'az-speedtest-logger'...
 remote: Enumerating objects: 4, done.
 remote: Counting objects: 100% (4/4), done.
 remote: Compressing objects: 100% (4/4), done.
 remote: Total 4 (delta 0), reused 0 (delta 0), pack-reused 0
 Unpacking objects: 100% (4/4), done.
-Checking connectivity... done.
 ```
 
 At this point you should have an almost empty repo named az-speedtest-logger on your computer.
@@ -40,15 +39,13 @@ Now we'll start on creating the logger application. Move into the `az-speedtest-
 ```shell
 $> cd az-speedtest-logger
 $ az-speedtest-logger> dotnet new console -o SpeedTestLogger
+Getting ready...
 The template "Console Application" was created successfully.
 
 Processing post-creation actions...
-Running 'dotnet restore' on SpeedTestLogger/SpeedTestLogger.csproj...
-  Restoring packages for /home/teodoran/cloud-101/testuser/az-speedtest-logger/SpeedTestLogger/SpeedTestLogger.csproj...
-  Generating MSBuild file /home/teodoran/cloud-101/testuser/az-speedtest-logger/SpeedTestLogger/obj/SpeedTestLogger.csproj.nuget.g.props.
-  Generating MSBuild file /home/teodoran/cloud-101/testuser/az-speedtest-logger/SpeedTestLogger/obj/SpeedTestLogger.csproj.nuget.g.targets.
-  Restore completed in 646.98 ms for /home/teodoran/cloud-101/testuser/az-speedtest-logger/SpeedTestLogger/SpeedTestLogger.csproj.
-
+Running 'dotnet restore' on SpeedTestLogger\SpeedTestLogger.csproj...
+  Determining projects to restore...
+  Restored C:\az-speedtest-logger\SpeedTestLogger\SpeedTestLogger.csproj (in 121 ms).
 Restore succeeded.
 ```
 
