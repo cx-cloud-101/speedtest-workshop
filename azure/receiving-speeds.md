@@ -378,8 +378,6 @@ A POST-request can't send objects, so we need to serialize our TestResult as JSO
 
 `_client.PostAsync("/speedtest", result);` can fail, so we do some basic error-handling if that occurs.
 
-_Note how the previous functions are marked `async`, and use the `await`-keyword? This is en example of how to do [asynchronous programming in C#](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/). We'll see a lot more of this going forward._
-
 ### Updating Main() to use SpeedTestApiClient
 Open `Program.cs` and extend `Main()` with code sending the TestResult to SpeedTestApi.
 

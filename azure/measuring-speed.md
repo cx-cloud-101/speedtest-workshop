@@ -85,43 +85,42 @@ Open `SpeedTestLogger/Program.cs`. This is where `Main()` lives in most .NET con
 
 Add `using SpeedTest.Net;` to the top of the file, so .NET knows you want to use the SpeedTest.Net package.
 
-Before we can test download and upload -speed, we have to find a suitable test-server. The package can find the closest server for us:
+The package we are using can help us get the download speed. 
 
 
 ```csharp
 static void Main(string[] args)
 {
-    Console.WriteLine("Finding best test server");
-
-    var server = SpeedTestClient.GetServer();
+    Console.WriteLine("Finding our download-speed");
+    var speed = GetDownloadSpeed(SpeedTestUnit.MegaBitsPerSecond);
 
     // Code continues here
 }
 ```
 
-If you hover over the server variable, you see the return type of `GetServer()` is a `Task<SpeedTest.Net.Models.Server>`. A Task represents ongoing work that yield type inside the `<>` when the work is finished. The standard way to do [asynchronous programming in C#](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/) is to use the `async` and `await` keywords.
+If you hover over the speed variable, you see the return type of `GetServer()` is a `Task<SpeedTest.Net.Models.DownloadSpeed>`. A Task represents ongoing work that yield type inside the `<>` when the work is finished. The standard way to do [asynchronous programming in C#](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/) is to use the `async` and `await` keywords.
 
 ```csharp
 static async Task Main(string[] args)
 {
     Console.WriteLine("Finding best test server");
 
-    var server = await SpeedTestClient.GetServer();
+    var speed = await GetDownloadSpeed(SpeedTestUnit.MegaBitsPerSecond);
 
     // Code continues here
 }
 ```
 
-Hover over `server` now, and notice that the type has changed to `SpeedTest.Net.Models.Server`
+Hover over `speed` now, and notice that the type has changed to `SpeedTest.Net.Models.DownloadSpeed`
 
 On the way you'll probably have added using statements for System.Threading.Tasks.
 
 _Tip: Depending on your editor, you can usually get suggestions on which using statements you're missing by hovering over the keywords marked with red squiggly lines._
 
-Now that we have a suitable test-server, we can continue by testing the download and upload -speed. The number we are given by SpeedTest.Net is bits per second, but usually we want megabits per second (Mbps), so we'll convert the speeds into that unit of measure.
+<!-- Now that we have a suitable test-server, we can continue by testing the download and upload -speed. The number we are given by SpeedTest.Net is bits per second, but usually we want megabits per second (Mbps), so we'll convert the speeds into that unit of measure. -->
 
 ```csharp
-static void Main(string[] args)
+static async Task Main(string[] args)
 {
     // Previous code here
 
@@ -131,16 +130,18 @@ static void Main(string[] args)
 }
 ```
 
-Finally we're ready to test our SpeedTestLogger! Run it with `dotnet run`, and you should get something similar to the listing below.
+We are now ready to test our SpeedTestLogger! Run it with `dotnet run`, and you should get something similar to the listing below.
 
 ```shell
 $ az-speedtest-logger/SpeedTestLogger> dotnet run
 Hello SpeedTestLogger!
-Finding best test servers
 Testing download speed
-Download speed was: 15.64 Mbps
-Testing upload speed
-Upload speed was: 4.89 Mbps
+FastHttpClient Total bytes downloaded so far: 16 313 576
+FastHttpClient Total bytes downloaded so far: 16 275 476
+FastHttpClient Total bytes downloaded so far: 16 353 126
+FastHttpClient Total bytes downloaded so far: 16 324 628
+FastHttpClient Total bytes downloaded so far: 16 176 278
+Download speed was: 117,747 MBps
 ```
 
 Factor/Refactor
