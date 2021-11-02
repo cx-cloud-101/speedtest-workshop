@@ -66,18 +66,18 @@ Measuring internet speed with Speedtest.net
 Start by adding the SpeedTest package and resolving all dependencies:
 
 ```shell
-$ az-speedtest-logger/SpeedTestLogger> dotnet add package SpeedTest --version 1.4.0-build5
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package Cloud101.SpeedTest --version 1.0.1
 ```
 
-Open the `az-speedtest-logger/`-folder in VS Code, or any other preferred C# editor, and find `SpeedTestLogger/SpeedTestLogger.csproj`. Note that you now have a reference to the SpeedTest.Net package.
+Open the `az-speedtest-logger/`-folder in VS Code, or any other preferred C# editor, and find `SpeedTestLogger/SpeedTestLogger.csproj`. Note that you now have a reference to the Cloud101.SpeedTest package.
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="SpeedTest" Version="1.4.0-build5" />
+    <PackageReference Include="Cloud101.SpeedTest" Version="1.0.1" />
 </ItemGroup>
 ```
 
-Just adding a package won't get us far, so we'll quickly move on to writing some code that uses SpeedTest.Net.
+Just adding a package won't get us far, so we'll quickly move on to writing some code that uses Cloud101.SpeedTest.
 
 Printing speedtests to console
 ------------------------------
@@ -131,7 +131,7 @@ On the way you'll probably have added using statements for System.Globalization 
 
 _Tip: Depending on your editor, you can usually get suggestions on which using statements you're missing by hovering over the keywords marked with red squiggly lines._
 
-Now that we have a suitable test-server, we can continue by testing the download and upload -speed. The number we are given by SpeedTest.Net is bytes per second, but usually we want megabytes per second (Mbps), so we'll convert the speeds into that unit of measure.
+Now that we have a suitable test-server, we can continue by testing the download and upload -speed. The number we are given by SpeedTest.Net is bits per second, but usually we want megabits per second (Mbps), so we'll convert the speeds into that unit of measure.
 
 ```csharp
 static void Main(string[] args)
@@ -155,9 +155,9 @@ $ az-speedtest-logger/SpeedTestLogger> dotnet run
 Hello SpeedTestLogger!
 Finding best test servers
 Testing download speed
-Download speed was: 15.64 Mbps
+Download speed was: 272,13 Mbps
 Testing upload speed
-Upload speed was: 4.89 Mbps
+Upload speed was: 195,32 Mbps
 ```
 
 Factor/Refactor
@@ -314,9 +314,9 @@ $ az-speedtest-logger/SpeedTestLogger> dotnet run
 Hello SpeedTestLogger!
 Finding best test servers
 Testing download speed
-Download speed was: 18.99 Mbps
+Download speed was: 306,06 Mbps
 Testing upload speed
-Upload speed was: 4.91 Mbps
+Upload speed was: 166,23 Mbps
 ```
 
 Making stuff configurable
@@ -326,9 +326,9 @@ We might want to add some configuration to our logger. At the moment all we real
 Let's start by adding some .NET Core packages for handling configuration.
 
 ```shell
-$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration --version 3.1.1
-$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration.FileExtensions --version 3.1.1
-$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration.Json --version 3.1.1
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration --version 5.0.0
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration.FileExtensions --version 5.0.0
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration.Json --version 5.0.0
 ```
 
 Then create a LoggerConfiguration class in a new file called `SpeedTestLogger/LoggerConfiguration.cs` using, among others the configuration packages.
@@ -378,6 +378,18 @@ An avid reader might have spotted that we're missing something essential. We don
 }
 ```
 
+To be able to load the the appsettings.json file from the console app, we need to make sure that it is copied to the output folder. To do this, add the following to your SpeedTestLogger/SpeedTestLogger.csproj file.
+
+```xml
+<ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+</ItemGroup>
+```
+
+
+
 Now we can use the configuration value and create a new RegionInfo for our configured loggerLocationCountryCode.
 
 ```csharp
@@ -420,9 +432,9 @@ Hello SpeedTestLogger!
 Logger located in Norway
 Finding best test servers
 Testing download speed
-Download speed was: 19.3 Mbps
+Download speed was: 446,04 Mbps
 Testing upload speed
-Upload speed was: 4.83 Mbps
+Upload speed was: 190,55 Mbps
 ```
 
 Big, Bigger, Biggest Data
@@ -599,7 +611,7 @@ public class LoggerConfiguration
         // Omitting old code
 
         UserId = configuration["userId"];
-        LoggerId = int32.Parse(configuration["loggerId"]);
+        LoggerId = int.Parse(configuration["loggerId"]);
     }
 }
 ```
@@ -614,7 +626,7 @@ static void Main(string[] args)
 
     var results = new TestResult
     {
-        SessionId = new Guid(),
+        SessionId = Guid.NewGuid(),
         User = config.UserId,
         Device = config.LoggerId,
         Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
