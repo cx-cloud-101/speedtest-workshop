@@ -4,7 +4,7 @@ _Previously we have made a console application capable of running speedtests, an
 
 A class for storing speedtests
 ------------------------------
-We probably want a class describing the kind of data we expect to get from the logger. Let's start by creating a `SpeedTestApi/Models/`-folder, and copying TestResult.cs from `SpeedTestLogger/Models/TestResult.cs`.
+We probably want a class describing the kind of data we expect to get from the logger. Let's start by creating a `SpeedTestApi/Models/`-folder, and copying `TestResult.cs` from `SpeedTestLogger/Models/TestResult.cs`.
 
 Update the namespace from `SpeedTestLogger.Models` to `SpeedTestApi.Models`, so we're consistent with the folder location and the other namespaces in SpeedTestApi.
 

@@ -61,7 +61,7 @@ Nothing interesting going on here, so let's continue by actually measuring inter
 
 Measuring internet speed with Speedtest.net
 -------------------------------------------
-[Speedtest.net](http://www.speedtest.net/) is a site used by many (including major ISP's like Get) to measure internet speed from a user machine. Reliably measuring internet speed can be a tricky subject, as you need to download and upload a bunch of different files to measure the actual speed with any kind of repeatability. Luckily we can use the open source package [SpeedTest](https://www.nuget.org/packages/SpeedTest/), that replicates the test performed by speedtest.net, using their test-servers.
+[Speedtest.net](http://www.speedtest.net/) is a site used by many (including major ISP's like Get) to measure internet speed from a user machine. Reliably measuring internet speed can be a tricky subject, as you need to download and upload a bunch of different files to measure the actual speed with any kind of repeatability. Luckily we can use our open source package [SpeedTest](https://www.nuget.org/packages/Cloud101.SpeedTest/), that replicates the test performed by speedtest.net, using their test-servers.
 
 Start by adding the SpeedTest package and resolving all dependencies:
 
@@ -131,7 +131,7 @@ On the way you'll probably have added using statements for System.Globalization 
 
 _Tip: Depending on your editor, you can usually get suggestions on which using statements you're missing by hovering over the keywords marked with red squiggly lines._
 
-Now that we have a suitable test-server, we can continue by testing the download and upload -speed. The number we are given by SpeedTest.Net is bits per second, but usually we want megabits per second (Mbps), so we'll convert the speeds into that unit of measure.
+Now that we have a suitable test-server, we can continue by testing the download and upload -speed. The number we are given by SpeedTest.Net is in bits per second, but usually we want megabits per second (Mbps), so we'll convert the speeds into that unit of measure.
 
 ```csharp
 static void Main(string[] args)
@@ -171,7 +171,6 @@ using System;
 using System.Globalization;
 using System.Linq;
 using SpeedTest;
-using SpeedTest.Models;
 
 namespace SpeedTestLogger
 {
@@ -370,7 +369,7 @@ public class LoggerConfiguration
 }
 ```
 
-An avid reader might have spotted that we're missing something essential. We don't have an "appsettings.json" file yet! Lets create it. Make a new file called `SpeedTestLogger/appsettings.json`, containing the following.
+An avid reader might have spotted that we're missing something essential. We don't have an "appsettings.json" file yet! Lets create it. Make a new file called `SpeedTestLogger/appsettings.json`, containing the following:
 
 ```json
 {
@@ -387,7 +386,6 @@ To be able to load the the appsettings.json file from the console app, we need t
     </None>
 </ItemGroup>
 ```
-
 
 
 Now we can use the configuration value and create a new RegionInfo for our configured loggerLocationCountryCode.
@@ -534,7 +532,7 @@ public TestData RunSpeedTest()
 }
 ```
 
-So what are we going to do with TestServer.Country? This turns out to be more tricky than anticipated, but through the magic of previous programming, you'll just have to add the following private method to SpeedTestRunner, and un-comment the line about country in the constructor.
+So what are we going to do with `TestServer.Country`? This turns out to be more tricky than anticipated, but through the magic of previous programming, you'll just have to add the following private method to SpeedTestRunner, and un-comment the line about country in the constructor.
 
 ```csharp
 private string GetISORegionNameFromEnglishName(string englishName)
@@ -564,7 +562,7 @@ private string GetISORegionNameFromEnglishName(string englishName)
 ```
 
 ### Adding metadata in Main()
-Now we have to update `Main()` again. Add a using-statement to get the classes in SpeedTestLogger.Models, and create a new TestResult with the metadata and the TestData from `RunSpeedTest()`.
+Now we have to update `Main()` again. Add a using-statement to get the classes in `SpeedTestLogger.Models`, and create a new TestResult with the metadata and the TestData from `RunSpeedTest()`.
 
 ```csharp
 // Omitting class and namespace
@@ -584,7 +582,7 @@ static void Main(string[] args)
 }
 ```
 
-What? Hard-coded values for User and Device? This sounds like a case for LoggerConfiguration!
+What!? Hard-coded values for User and Device? This sounds like a case for LoggerConfiguration!
 
 Create two new properties in appsettings.json called `userId` and `loggerId`.
 
@@ -622,16 +620,19 @@ Finally we can update `Main()` to use the values from LoggerConfiguration
 // Omitting class and namespace
 static void Main(string[] args)
 {
-    // Omitting old code
+   Console.WriteLine("Hello SpeedTestLogger!");
 
-    var results = new TestResult
-    {
-        SessionId = Guid.NewGuid(),
-        User = config.UserId,
-        Device = config.LoggerId,
-        Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
-        Data = testData
-    };
+   var config = new LoggerConfiguration();
+   var runner = new SpeedTestRunner(config.LoggerLocation);
+   var testData = runner.RunSpeedTest();
+   var results = new TestResult
+   {
+       SessionId = Guid.NewGuid(),
+       User = config.UserId,
+       Device = config.LoggerId,
+       Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
+       Data = testData
+   };
 }
 ```
 
