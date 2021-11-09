@@ -36,9 +36,9 @@ Google Cloud Platform (GCP) and Kotlin
 --------------------------------------
 _To complete the GCP-part of the workshop, you'll need the following tools and accounts._
 
-### Java SE 8 JDK and IntelliJ IDEA
+### Java SE JDK and IntelliJ IDEA
 
-1. You'll need a version 8 of the Java Developer Kit (JDK). Go to [Oracle Java SE downloads](https://www.oracle.com/technetwork/java/javase/downloads/index.html), find "Java SE 8u241", choose "JDK Download" and pick the download that suits our system. The download unfortunately requires you to create an Oracle account. They only require the email to be valid, so feel free to get creative filling out the form.
+1. You'll need a version 8 or newer of the Java Developer Kit (JDK). You can use [OpenJDK](https://openjdk.java.net).
 1. If you don't have a Java IDE and Spring Boot installed, you should download [IntelliJ IDEA Ultimate](https://www.jetbrains.com/idea/download/). It's not free, but it has a 30 day trial and includes Spring Boot.
 
 ### GCP Free trial
@@ -53,8 +53,8 @@ _If you already have used the GCP free trial, then you'll have to register a new
 1. Install the [Cloud SDK](https://cloud.google.com/sdk/docs/quickstarts/)
 2. During the installation process you'll initialize Cloud SDK with `gcloud init`. Remember to log on with the account that has the free trial activated.
 
-### Node v8 (latest)
+### Node
 _If you have node installed, you can check the version with `node --version`._
-_Note that the GCP Cloud Function node runtime only supports v8.15.0, but you should be able to use a newer version in the v8.x.x series, like v8.17.0._
+_Note that the GCP Cloud Function node runtime only supports version 10, 12, 14 and 16, but you should be able to use a newer version._
 
 1. Install node from [nodejs.org](https://nodejs.org/dist/latest-v8.x/)

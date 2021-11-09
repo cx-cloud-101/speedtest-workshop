@@ -4,7 +4,8 @@ _This time we'll start with the API. The GCP Speedtest API application is an HTT
 
 Suggested implementation
 ------------------------
-We suggest that you implement the Speedtest API as a GCP Appengine Standard Java app using Spring Boot and Spring Cloud. The [reference application](https://github.com/cx-cloud-101/gcp-speedtest-api) is implemented using Kotlin and Gradle as the build tool, you may chose Java 8 and/or maven if you prefer.
+We suggest that you implement the Speedtest API as a GCP Appengine Standard Java app using Spring Boot and Spring Cloud. 
+The [reference application](https://github.com/cx-cloud-101/gcp-speedtest-api) is implemented using Kotlin and Maven as the build tool, you may choose Java and/or Gradle if you prefer.
 
 ### API
 Implement the following API.
@@ -57,7 +58,7 @@ Getting Started
 ---------------
 Use [Spring Initializr](https://start.spring.io/) to generate your project.
 
-1. Select setup of build tool and language. Our examples use Kotlin and Gradle, but you can choose between Java or Kotlin and Gradle or Maven if you prefer something else. Notice the selections in **bold**, especially **war** packaging.![](images/create-project-1b.png)
+1. Select setup of build tool and language. Our examples use Kotlin and Maven, but you can choose between Java or Kotlin and Gradle or Maven if you prefer something else. Notice the selections in **bold**, especially **jar** packaging.![](images/create-project-1b.png)
 
 1. Add dependencies: `Spring Web` and `GCP Messaging` ![](images/create-project-2b.png)
 
@@ -66,119 +67,36 @@ Use [Spring Initializr](https://start.spring.io/) to generate your project.
 1. Open IntelliJ, click "Open", and select your git repo folder, containing the unzipped files.
     ![](images/open-project.png)
 
-1. Open File -> Settings and search for Gradle. Check that the Gradle JVM version is set to the installed Java 8 JDK (shows up as 1.8 in the settings).![](images/gradle-jvm-project-setting.png)
+1. Modify `dependencies` in `pom.xml` so that Maven can find the appengine plugin.
+   ```xml
+    <dependency>
+	      <groupId>com.google.cloud.tools</groupId>
+	      <artifactId>appengine-maven-plugin</artifactId>
+	      <version>2.4.1</version>
+    </dependency>
+   ```
 
-1. Modify `pluginManagement` in `settings.gradle.kts` so that Gradle can find the appengine plugin.
-    ```kotlin
-    rootProject.name = "api"
-
-    pluginManagement {
-       repositories {
-           gradlePluginPortal()
-           mavenCentral()
-       }
-       resolutionStrategy {
-           eachPlugin {
-               if (requested.id.namespace == "com.google.cloud.tools") {
-                   useModule("com.google.cloud.tools:appengine-gradle-plugin:${requested.version}")
-               }
-           }
-       }
-    }
+1. Modify `pom.xml` to invoke the appengine plugin (Add the last line to the `plugins`-section). Remember to replace PROJECT_ID with your GCP project id.
+    ```xml
+    <plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+				<version>2.4.1</version>
+				<configuration>
+					<projectId>PROJECT_ID</projectId>
+					<version>GCLOUD_CONFIG</version>
+				</configuration>
+			</plugin>
     ```
-
-1. Modify `build.gradle.kts` to invoke the appengine plugin (Add the last line to the `plugins`-section).
-    ```kotlin
-    plugins {
-        // Other plugins omitted
-        id("com.google.cloud.tools.appengine") version "2.0.1"
-    }
-    ```
-
-1. Modify `dependencies` in `build.gradle.kts` to exclude tomcat so that it can be deployed to appengine (which uses jetty).
-    ```kotlin
-    dependencies {
-        implementation("org.springframework.boot:spring-boot-starter-web") {
-           exclude("org.springframework.boot", "spring-boot-starter-tomcat")
-        }
-        // Other dependencies omitted
-    }
-    ```
-```
-
-1. Add the following to the end of `build.gradle.kts` to configure appengine. (Replace <your-project-id> with the ID of your Google Cloud Project).
-
-```
-    appengine {
-        deploy {
-            version = "GCLOUD_CONFIG"
-            projectId = "<your-project-id>"
-        }
-    }
-```
-
 _You can find the project ID for your project by looking at the "Project info" tile shown on [console.cloud.google.com/home](https://console.cloud.google.com/home)._
 
 ![](images/project-info-gcp.png)
 
-1. Create the folders `/src/main/webapp/` and `/src/main/webapp/WEB-INF/`. Then add the following two files to `/src/main/webapp/WEB-INF`/
-
-    1. `appengine-web.xml`
-
-        ```xml
-        <?xml version="1.0" encoding="UTF-8"?>
-        <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
-            <threadsafe>true</threadsafe>
-            <runtime>java8</runtime>
-            <sessions-enabled>true</sessions-enabled>
-            <warmup-requests-enabled>true</warmup-requests-enabled>
-            <env-variables>
-                <env-var name="DEFAULT_ENCODING" value="UTF-8"/>
-            </env-variables>
-        </appengine-web-app>
-        ```
-
-   1. `web.xml`
-
-        ```xml
-        <?xml version="1.0" encoding="utf-8"?>
-        <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
-                    http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-                    version="3.1">
-
-            <servlet>
-                <servlet-name>speedtest-api</servlet-name>
-                <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-                <init-param>
-                    <param-name>contextAttribute</param-name>
-                    <param-value>org.springframework.web.context.WebApplicationContext.ROOT</param-value>
-                </init-param>
-                <load-on-startup>1</load-on-startup>
-            </servlet>
-
-            <servlet-mapping>
-                <servlet-name>speedtest-api</servlet-name>
-                <url-pattern>/*</url-pattern>
-            </servlet-mapping>
-
-            <welcome-file-list>
-                <welcome-file>index.html</welcome-file>
-            </welcome-file-list>
-
-            <security-constraint>
-                <web-resource-collection>
-                    <web-resource-name>all</web-resource-name>
-                    <url-pattern>/*</url-pattern>
-                </web-resource-collection>
-                <user-data-constraint>
-                    <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-                </user-data-constraint>
-            </security-constraint>
-
-        </web-app>
-        ```
+1. Create the folder `/src/main/appengine/`. Then add the following file in that folder:
+`app.yaml`
+```yaml
+runtime: java11
+```
 
 Testing the API
 ---------------
@@ -221,12 +139,11 @@ Application Default Credentials.
 ...
 ```
 
-Start the application either by running the `ApiApplication` class in your IDE, or running one of the following gradle commands:
+Start the application either by running the `ApiApplication` class in your IDE, or run the following maven command:
 
-* `./gradlew bootRun`
-* `./gradlew appengineRun`
+* `mvn spring-boot:run`
 
-_All the three ways of starting the application should work, so pick the one that works for you._
+_Both ways of starting the application should work, so pick the one that works for you._
 
 If the API started successfully, you should be able to open [http://localhost:8080/hello/speedtest](http://localhost:8080/hello/speedtest) in your browser and get a response.
 
@@ -238,50 +155,31 @@ If everything went well, you're ready to deploy the API to GCP.
 
 Start by creating an App Engine Application in your GCP Project by running the following command in a terminal, and selecting `europe-west` as the region.
 
-```shell
-$> gcloud app create
-You are creating an app for project [cloud-101-268020].
-WARNING: Creating an App Engine application for a project is irreversible and the region cannot be changed. More information about regions is at <https://cloud.google.com/appengine/docs/locations>.
+![](images/create-app-1.png)
 
-Please choose the region where you want your App Engine application located:
-
- [1] asia-east2    (supports standard and flexible)
- [2] asia-northeast1 (supports standard and flexible)
- [3] asia-northeast2 (supports standard and flexible)
- [4] asia-south1   (supports standard and flexible)
- [5] australia-southeast1 (supports standard and flexible)
- [6] europe-west   (supports standard and flexible)
- [7] europe-west2  (supports standard and flexible)
- [8] europe-west3  (supports standard and flexible)
- [9] europe-west6  (supports standard and flexible)
- [10] northamerica-northeast1 (supports standard and flexible)
- [11] southamerica-east1 (supports standard and flexible)
- [12] us-central    (supports standard and flexible)
- [13] us-east1      (supports standard and flexible)
- [14] us-east4      (supports standard and flexible)
- [15] us-west2      (supports standard and flexible)
- [16] cancel
-Please enter your numeric choice:  6
-
-Creating App Engine application in project [cloud-101-268020] and region [europe-west]....done.
-Success! The app is now created. Please use `gcloud app deploy` to deploy your first app.
-```
-
-Navigate to your gcp-speedtest-api repo folder, and use gradle to deploy your app to appengine.
+Navigate to your gcp-speedtest-api/api repo folder, and use maven to deploy your app to appengine.
 
 ```
-$ gcp-speedtest-api> .\gradlew appengineDeploy
-Welcome to Gradle 5.6.4!
+$ gcp-speedtest-api/api> mvn clean install appengine:deploy
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< com.speedtest:api >--------------------------
+[INFO] Building api 0.0.1-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
 
 // A lot more output omitted here
 
-BUILD SUCCESSFUL in 7m 46s
-7 actionable tasks: 5 executed, 2 up-to-date
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  03:42 min
+[INFO] Finished at: 2021-11-09T16:40:20+01:00
+[INFO] ------------------------------------------------------------------------
 ```
 
-_If you get an error saying that `JAVA_HOME` is not set, and that java is missing from `PATH`, you'll need to do both. `JAVA_HOME` should be the folder where you installed the Java SE 8 JDK, e.g. `C:\Program Files\Java\jdk1.8.0_241`. To the `PATH` variable, you'll need to add the `\bin` folder under the `JAVA_HOME` folder. e.g. `C:\Program Files\Java\jdk1.8.0_241\bin`._
+_If you get an error saying that `JAVA_HOME` is not set, and that java is missing from `PATH`, you'll need to do both. `JAVA_HOME` should be the folder where you installed the Java SE 11 JDK. To the `PATH` variable, you'll need to add the `\bin` folder under the `JAVA_HOME` folder._
 
-If everything worked, you should be able to open [https://your-project-id.appspot.com/hello/speedtest](https://your-project-id.appspot.com/hello/speedtest), replacing "your-project-id" with the ID of your GCP project.
+If everything worked, you should be able to open [https://your-project-id.ew.r.appspot.com/hello/speedtest](https://your-project-id.ew.r.appspot.com/hello/speedtest), replacing "your-project-id" with the ID of your GCP project.
 
 ![](images/gcp-hello-speedtest.png)
 
@@ -403,7 +301,7 @@ Now we can test if we're able to publish events to GCP. Start the API locally, a
 
 ![](images/pub-sub-hello.png)
 
-If everything went well, you can publish the updated API to GCP with `.\gradlew appengineDeploy` in the folder`/gcp-speedtest-api`, and test that it works there as well. Check n your changes and/or push them to github if you feel like doing that.
+If everything went well, you can publish the updated API to GCP with `mvn clean install appengine:deploy` in the folder`/gcp-speedtest-api/api`, and test that it works there as well. Check in your changes and/or push them to github if you feel like doing that.
 
 You have an API on GCP. What now?
 ---------------------------------

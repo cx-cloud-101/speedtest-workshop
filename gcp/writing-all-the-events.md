@@ -4,7 +4,7 @@ _The GCP Event Writer is a cloud function that subscribes to Speedtest Event mes
 
 Suggested implementation
 ------------------------
-Cloud Functions can be written either as Node.js 8 or Python 3.7.0, we suggest that you use Node.js.
+Cloud Functions can be written either as Node.js >= 12 or Python >= 3.7.0, we suggest that you use Node.js.
 
 As previously described, the Event Writer will receive messages in the following format.
 
@@ -58,7 +58,7 @@ Lets start our Cloud Function adventure by creating a `package.json` file in our
   "version": "0.0.1",
   "description": "Serverless function that writes messages from PubSub into BigQuery",
   "engines": {
-    "node": "^8"
+    "node": "^16"
   },
   "repository": {
     "type": "git",
@@ -67,7 +67,7 @@ Lets start our Cloud Function adventure by creating a `package.json` file in our
   "author": "GCP Testbruker",
   "license": "MIT",
   "dependencies": {
-    "@google-cloud/bigquery": "^1.3.0"
+    "@google-cloud/bigquery": "^5.9.1"
   }
 }
 ```
@@ -111,7 +111,7 @@ The exception to this rule is that any returned promise will be allowed to resol
 At the moment we don't have any code handling the speedtest events, but `const speedtest = require('speedtest')` indicates that we're going to implement that in a file called `speedtest.js`. But before we do that, we would like to create a table n BigQuery to store our speedtests.
 
 ### A table in BigQuery
-Navigate to [console.cloud.google.com/bigquery](https://console.cloud.google.com/bigquery) and create a new BigQuery dataset named `speedtest`.
+Navigate to [console.cloud.google.com/bigquery](https://console.cloud.google.com/bigquery) and create a new BigQuery dataset named `speedtest`. We recommend choosing a location close to your appengine instance, `eu (multiple regions in European Union)`
 
 ![](images/new-dataset.png)
 
@@ -119,7 +119,7 @@ Then create a table named `test_results` in the created dataset, using either th
 
 ![](images/new-table.png)
 
-If you want to use the suggested schema, just paste the folloing schema in as text when creating the table.
+If you want to use the suggested schema, just paste the following schema in as text when creating the table.
 
 ![](images/create-table-schema.png)
 
@@ -235,7 +235,7 @@ Now we're ready to implement `speedtest.js`. Create a new file named `speedtest.
 Start by importing (require) the bigquery library, and add a couple of constants declaring your GCP project, dataset and table.
 
 ```javascript
-const BigQuery = require('@google-cloud/bigquery');
+const {BigQuery} = require('@google-cloud/bigquery');
 
 const projectId = 'cloud-101-268020'; // Replace with your project ID
 const datasetId = 'speedtest';
@@ -300,7 +300,7 @@ Deploying the Event Writer
 To deploy gcp-event-writer to Google Cloud Platform you'll need to use gcloud functions deploy.
 
 ```shell
-$ gcp-event-writer> gcloud functions deploy processSpeedtestEvent --trigger-topic speedtest --runtime nodejs8 --region europe-west1
+$ gcp-event-writer> gcloud functions deploy processSpeedtestEvent --trigger-topic speedtest --runtime nodejs16 --region europe-west1
 
 API [cloudfunctions.googleapis.com] not enabled on project
 [1050850001017]. Would you like to enable and retry (this will take a
@@ -324,13 +324,13 @@ Deploying a new Cloud Function takes a few minutes, so while we wait, lets have 
 
 `--trigger-topic <topic>` specifies that this is a cloud function triggered by messages to the given Pub/Sub topic.
 
-`--runtime nodejs8` specifies that the function shall be executed using nodejs-8
+`--runtime nodejs16` specifies that the function shall be executed using nodejs-8
 
 `--entry-point <name>` specifies that the function exported from `index.js` with name `<name>` shall be deployed.
 
 ### When you're done
 
-When the deployment is complete, you can view your new funtion at [console.cloud.google.com/functions](https://console.cloud.google.com/functions).
+When the deployment is complete, you can view your new function at [console.cloud.google.com/functions](https://console.cloud.google.com/functions).
 
 ![](images/new-function.png)
 
