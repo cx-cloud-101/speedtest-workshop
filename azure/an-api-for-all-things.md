@@ -219,7 +219,7 @@ Search for "API App" and select API App from the list of results. Then press "Cr
 
 ![api-app-2](images/api-app-2.png)
 
-Give the new API App a nice name. This have to be unique across azure, since it determines the URL of your API. username-speedtest-api is one way to name it.
+Give the new API App a nice name. This have to be unique across azure, since it determines the URL of your API. `username-speedtest-api` is one way to name it.
 
 Also select the existing resource group "cx-cloud-101", and create a new App Service plan named "cloud-101-appservice". For Runtime stack go with .Net 5, and Windows OS. We also need to create the resource in "Europe West" as "Norway East" doesn't support this App for the free subscription type.
 
@@ -228,41 +228,20 @@ Also select the existing resource group "cx-cloud-101", and create a new App Ser
 Then press "Review + create" then "Create" on the next 'leaf' and wait a bit while the new API App is being set up.
 
 <!-- ![api-app-4](images/api-app-5.png) -->
+/When azure is ready a go to resource button pops up. Press it or navigate to the cx-cloud-101 resource group, and open the `username-101-speedtestapi`. 
 
-Navigate to the cx-cloud-101 resource group, and open the App Service "cloud-101-appservice". 
-
-![api-app-4](images/api-app-6.png)
+![api-app-6](images/api-app-6.png)
 
 Make a note of your URL, displayed towards the top right corner. This will be the base path of your new API on Azure.
 
-![api-app-4](images/api-app-7.png)
-
 <!-- Go to "Deployment Center", select GitHub and then authenticate with your GitHub user. Choose "Azure Pipelines (Preview)", select the az-speedtest-api project and master-branch as your deployment source, and give your DevOps organization a decent name. Then continue to the summary-page, and press "Finish". -->
-Go to "Deployment Center", select GitHub and then authenticate with your GitHub user.
-Choose your user as the Organization and the az-speedtest-api as Repository, with Main as the Branch.
+Go to "Deployment Center", select GitHub as source and then authenticate with your GitHub user.
+Change provider to `App Service Build Service`
+Then choose your user as the Organization and the az-speedtest-api as Repository, with Main as the Branch.
 
-![api-app-4](images/api-app-10.png)
+![api-app-10](images/api-app-10.png)
 
-We also need to select the project file so that azure knows which of our projects to build. We can do this in the .yaml file.
-Yaml is a 'human-readable data-serialization language'. It is often used to create configuration files and it is indeed what we are using it for here.
-
-Find the `dotnet build` command in the yaml file and specify which project to build and where to find it. You can do this by adding in the path in the dotnet build command, which you probably recognize.
-
-```shell
-run: dotnet build SpeedTestApi/SpeedTestApi.csproj --configuration Release
-```
-Do the same for dotnet publish, and we should be good to go!
-
-TODO: Litt usikker på om du kan gjøre dette når du oppretter fila, jeg fant fila på github å gjorde changes der. 
-
-```shell
-run: dotnet publish SpeedTestApi/SpeedTestApi.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
-```
-
-
-![api-yaml-1](images/api_yaml_01.png)
-
-Wait until the deployment finishes, and then visit [https://testuser-speedtest-api.azurewebsites.net/speedtest/ping](https://testuser-speedtest-api.azurewebsites.net/speedtest/ping) (Replace https://testuser-speedtest-api.azurewebsites.net with tha URL from your APP Service/API App)
+Press Save on top of the leafe, and wait until the deployment finishes which you can check under the logs tab. When the deploy is finished visit [https://testuser-speedtest-api.azurewebsites.net/speedtest/ping](https://testuser-speedtest-api.azurewebsites.net/speedtest/ping) (Replace https://testuser-speedtest-api.azurewebsites.net with the URL from your APP Service/API App)
 
 ![azure-ping-pong](images/azure-ping-pong.png)
 

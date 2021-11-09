@@ -34,8 +34,6 @@ Let's test our new route. Run SpeedTestApi with `dotnet run`, boot up [Postman](
 
 ![postman-1](images/postman-1.png)
 
-We can get away with just posting parts of a TestResult. This is because we're not validating the contents of the TestResult we're receiving. This is usually a bad thing when creating APIs. Luckily we can solve this by using [DataAnnotations](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/validation?view=aspnetcore-2.1).
-
 ```json
 {
 	"user": "cloud-101-testuser",
@@ -46,6 +44,9 @@ We can get away with just posting parts of a TestResult. This is because we're n
 	}
 }
 ```
+We can get away with just posting parts of a TestResult. This is because we're not validating the contents of the TestResult we're receiving. This is usually a bad thing when creating APIs. Luckily we can solve this by using [DataAnnotations](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/validation?view=aspnetcore-2.1).
+
+
 
 Adding DataAnnotations to TestResult and friends
 ------------------------------------------------
@@ -209,7 +210,7 @@ Logging in ASP.NET Core
 Before we try to send data from the logger to the API, we probably should implement some form of logging, so SpeedTestApi can inform us that it has received a TestResult. One way of doing this is just to use `Console.WriteLine(...)` like we did in the logger, but [ASP.NET Core supports a logging API](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-3.1) out of the box, so instead we'll try to be fancy this time.
 
 ### Injecting an instance of ILogger
-Most things in ASP.NET Core is composed using [dependency injection](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1). This means, without going into details, that ASP.NET Core can supply our controller (and other classes) with instances of objects we want to use for different things. This can be home made objects, like a database service for storing and retrieving information from a database, or built in objects, like the instance of `ILogger` that we need to use the logging API.
+Most things in ASP.NET Core is composed using [dependency injection](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1). This means, without going into details, that ASP.NET Core can supply our controller (and other classes) with instances of objects we want to use for different things. This can be homemade objects, like a database service for storing and retrieving information from a database, or built in objects, like the instance of `ILogger` that we need to use the logging API.
 
 Open SpeedTestController again, and add a using-statement declaring that we want to use the logging extensions in Microsoft.Extensions.Logging.
 
@@ -303,7 +304,7 @@ ApiUrl = new Uri(configuration["speedTestApiUrl"]);
 ```
 
 ### A client for POSTing TestResults
-Now we can start writing the code responsible for POSTing TestResults to SpeedTestApi. Create a new file and class called SpeedTestApi in SpeedTestLogger. We want it to contain an instance of System.Net.Http.HttpClient (a built-in class for performing http-requests), and we want that instance to be configures with the speedTestApiUrl. An instance of HttpClient holds on to some system resources, so we want to make sure that we dispose, or "clean up", that instance when we're done with it. The usual way of doing this is to implement the IDisposable interface, signalling that instances of SpeedTestApiClient should be disposed, and handling clean-up of the HttpClient instance there.
+Now we can start writing the code responsible for POSTing TestResults to SpeedTestApi. Create a new file and class called SpeedTestApi in SpeedTestLogger. We want it to contain an instance of System.Net.Http.HttpClient (a built-in class for performing http-requests), and we want that instance to be configured with the speedTestApiUrl. An instance of HttpClient holds on to some system resources, so we want to make sure that we dispose, or "clean up", that instance when we're done with it. The usual way of doing this is to implement the IDisposable interface, signalling that instances of SpeedTestApiClient should be disposed, and handling clean-up of the HttpClient instance there.
 
 ```csharp
 using System;
@@ -376,7 +377,7 @@ private async Task<bool> PostTestResult(StringContent result)
 
 A POST-request can't send objects, so we need to serialize our TestResult as JSON with `JsonSerializer.Serialize(result)`. We also add some request headers to the POST-request, declaring that we're sending JSON-data, encoded in UTF8.
 
-`_client.PostAsync("/speedtest", result);` can fail, so we do some basic error-handling if that occurs.
+`_client.PostAsync("/speedtest", result);` can also fail, so we do some basic error-handling if that occurs.
 
 _Note how the previous functions are marked `async`, and use the `await`-keyword? This is en example of how to do [asynchronous programming in C#](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/). We'll see a lot more of this going forward._
 
@@ -469,13 +470,15 @@ info: SpeedTestApi.Controllers.SpeedTestController[0]
 
 Putting it all up on Azure
 --------------------------
-Add and commit all changes to SpeedTestApi and then push to master. This will trigger a new deployment of testuser-speedtest-api on Azure. You can view in-progress deployments under "Deployment center".
+Add and commit all changes to SpeedTestApi and then push to main. This will trigger a new deployment of testuser-speedtest-api on Azure. You can view in-progress deployments under "Deployment center".
 
-![deployment-center](images/deployment-center-2.png)
+![deployment-center](images/deployment-center-3.png)
+
+<!-- ![deployment-center](images/deployment-center-2.png)
 
 You can also view the build or release in Azure DevOps by following the "Build Pipeline" or "Release Pipeline" link from the deployment center.
 
-![deployment-center](images/azure-devops.png)
+![deployment-center](images/azure-devops.png) -->
 
 When the deployment is a success, its time to test it all out. Try a quick POST with Postman first to check that all is well. Then update speedTestApiUrl in appsettings.json with the URL of your Azure API App.
 
