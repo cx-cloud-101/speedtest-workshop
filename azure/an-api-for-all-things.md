@@ -227,21 +227,20 @@ Also select the existing resource group "cx-cloud-101", and create a new App Ser
 
 Then press "Review + create" then "Create" on the next 'leaf' and wait a bit while the new API App is being set up.
 
-<!-- ![api-app-4](images/api-app-5.png) -->
 /When azure is ready a go to resource button pops up. Press it or navigate to the cx-cloud-101 resource group, and open the `username-101-speedtestapi`. 
 
 ![api-app-6](images/api-app-6.png)
 
 Make a note of your URL, displayed towards the top right corner. This will be the base path of your new API on Azure.
 
-<!-- Go to "Deployment Center", select GitHub and then authenticate with your GitHub user. Choose "Azure Pipelines (Preview)", select the az-speedtest-api project and master-branch as your deployment source, and give your DevOps organization a decent name. Then continue to the summary-page, and press "Finish". -->
+
 Go to "Deployment Center", select GitHub as source and then authenticate with your GitHub user.
 Change provider to `App Service Build Service`
 Then choose your user as the Organization and the az-speedtest-api as Repository, with Main as the Branch.
 
 ![api-app-10](images/api-app-10.png)
 
-Press Save on top of the leafe, and wait until the deployment finishes which you can check under the logs tab. When the deploy is finished visit [https://testuser-speedtest-api.azurewebsites.net/speedtest/ping](https://testuser-speedtest-api.azurewebsites.net/speedtest/ping) (Replace https://testuser-speedtest-api.azurewebsites.net with the URL from your APP Service/API App)
+Press Save on top of the leaf, and wait until the deployment finishes which you can check under the logs tab. When the deploy is finished visit [https://testuser-speedtest-api.azurewebsites.net/speedtest/ping](https://testuser-speedtest-api.azurewebsites.net/speedtest/ping) (Replace https://testuser-speedtest-api.azurewebsites.net with the URL from your APP Service/API App)
 
 ![azure-ping-pong](images/azure-ping-pong.png)
 
