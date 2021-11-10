@@ -28,7 +28,7 @@ public string UploadSpeedTest([FromBody] TestResult speedTest)
 }
 ```
 
-_Note how we're using the `[FromBody]` annotation in the route method? This will cause ASP.NET Core to automatically parse the JSON-object sent to speedtest/ into a TestResult._
+_Note how we're using the `[FromBody]` annotation in the route method? This will cause A<span>SP.N</span>ET Core to automatically parse the JSON-object sent to speedtest/ into a TestResult._
 
 Let's test our new route. Run SpeedTestApi with `dotnet run`, boot up [Postman](https://www.getpostman.com/), or your favorite API-testing tool, and try to POST a new TestResult to SpeedTestApi.
 
@@ -50,7 +50,7 @@ We can get away with just posting parts of a TestResult. This is because we're n
 
 Adding DataAnnotations to TestResult and friends
 ------------------------------------------------
-When creating an API for storing stuff, it's nice to be quite strict on what kind of data is allowed into the API. In ASP.NET Core, we can create restrictions on what kind of data is allowed in a class when receiving it in a request. We do this by using `System.ComponentModel.DataAnnotations`, and annotating our properties with annotations like `[Required]` and `[Range(1, int.MaxValue)]`.
+When creating an API for storing stuff, it's nice to be quite strict on what kind of data is allowed into the API. In A<span>SP.N</span>ET Core, we can create restrictions on what kind of data is allowed in a class when receiving it in a request. We do this by using `System.ComponentModel.DataAnnotations`, and annotating our properties with annotations like `[Required]` and `[Range(1, int.MaxValue)]`.
 
 Lets add DataAnnotations to the classes in `TestResult.cs`.
 
@@ -205,12 +205,12 @@ Now everything should validate correctly.
 
 ![postman-3](images/postman-3.png)
 
-Logging in ASP.NET Core
+Logging in A<span>SP.N</span>ET Core
 -----------------------
 Before we try to send data from the logger to the API, we probably should implement some form of logging, so SpeedTestApi can inform us that it has received a TestResult. One way of doing this is just to use `Console.WriteLine(...)` like we did in the logger, but [ASP.NET Core supports a logging API](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-5.0) out of the box, so instead we'll try to be fancy this time.
 
 ### Injecting an instance of ILogger
-Most things in ASP.NET Core is composed using [dependency injection](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-5.0). This means, without going into details, that ASP.NET Core can supply our controller (and other classes) with instances of objects we want to use for different things. This can be homemade objects, like a database service for storing and retrieving information from a database, or built in objects, like the instance of `ILogger` that we need to use the logging API.
+Most things in A<span>SP.N</span>ET Core is composed using [dependency injection](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-5.0). This means, without going into details, that A<span>SP.N</span>ET Core can supply our controller (and other classes) with instances of objects we want to use for different things. This can be homemade objects, like a database service for storing and retrieving information from a database, or built in objects, like the instance of `ILogger` that we need to use the logging API.
 
 Open SpeedTestController again, and add a using-statement declaring that we want to use the logging extensions in Microsoft.Extensions.Logging.
 

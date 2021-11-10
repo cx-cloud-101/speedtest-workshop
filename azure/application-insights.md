@@ -26,7 +26,7 @@ Check that SpeedTestLoger still builds, commit the changes and push to GitHub. W
 
 ![application-insights-1](images/application-insights-1.png)
 
-Create a new resource named speedtest-insights (we might want to use it for more speedtest-related logging than just SpeedTestApi). Choose ASP.NET Core under the section "Instrument your application".
+Create a new resource named speedtest-insights (we might want to use it for more speedtest-related logging than just SpeedTestApi). Choose A<span>SP.N</span>ET Core under the section "Instrument your application".
 
 ![application-insights-2](images/application-insights-2.png)
 

@@ -21,12 +21,12 @@ This time we'll ignore a couple more files, since these files usually are used t
 
 Creating an API
 ---------------
-Now we'll start on creating the API. Move into the `az-speedtest-api/`-folder, and execute the following command to create a new ASP.NET Core API named SpeedTestApi.
+Now we'll start on creating the API. Move into the `az-speedtest-api/`-folder, and execute the following command to create a new A<span>SP.N</span>ET Core API named SpeedTestApi.
 
 ```shell
 $> cd az-speedtest-api
 $ az-speedtest-api> dotnet new webapi -o SpeedTestApi
-The template "ASP.NET Core Web API" was created successfully.
+The template "A<span>SP.N</span>ET Core Web API" was created successfully.
 
 Processing post-creation actions...
 Running 'dotnet restore' on SpeedTestApi/SpeedTestApi.csproj...
@@ -55,11 +55,11 @@ info: Microsoft.Hosting.Lifetime[0]
       Content root path: /home/teodoran/cloud-101/testuser/az-speedtest-api/SpeedTestApi
 ```
 
-_Notice how ASP.NET Core creates two endpoints? One for http and one for https requests? This is quite useful as it enables https-redirection and http support, but when we develop locally, its definitely easiest to just use the http endpoint._
+_Notice how A<span>SP.N</span>ET Core creates two endpoints? One for http and one for https requests? This is quite useful as it enables https-redirection and http support, but when we develop locally, its definitely easiest to just use the http endpoint._
 
 Open [http://localhost:5000/WeatherForecast](http://localhost:5000/WeatherForecast) in your favorite browser. Notice how we got redirected to [https://localhost:5001/WeatherForecast](https://localhost:5001/WeatherForecast) and that the browser complains about an insecure connection? This is because we're forcing traffic on http to be upgraded to https if possible, but we don't have a valid certificate installed that enables our machine to make a true https connection. Here's one way we can fix this.
 
-Locate the file `Startup.cs`. This file contains, among other things, configuration and dependency injection in an ASP.NET Core API. There you'll find the method `Configure`. It's currently executing `app.UseHttpsRedirection();` in both development and production mode, so move this line in an else-statement, so it's only executed when the app is not in development.
+Locate the file `Startup.cs`. This file contains, among other things, configuration and dependency injection in an A<span>SP.N</span>ET Core API. There you'll find the method `Configure`. It's currently executing `app.UseHttpsRedirection();` in both development and production mode, so move this line in an else-statement, so it's only executed when the app is not in development.
 
 ```csharp
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -209,7 +209,7 @@ When the resource group is deployed, go to the resource groups page and open it 
 
 ### Deploying SpeedTestApi
 
-Now we're all set to deploy our API. We'll deploy it as an API App. An API App is a managed hosting environment for API's. It understands how ASP.NET Core applications work (among others), so it's quick and easy to set it up without too much low-level configuration. At the same time it has features for scaling, easy deploy and so on. API App is an example of a PaaS-component (Platform as a Service).
+Now we're all set to deploy our API. We'll deploy it as an API App. An API App is a managed hosting environment for API's. It understands how A<span>SP.N</span>ET Core applications work (among others), so it's quick and easy to set it up without too much low-level configuration. At the same time it has features for scaling, easy deploy and so on. API App is an example of a PaaS-component (Platform as a Service).
 
 Navigate to the new resource group and press "Create".
 
