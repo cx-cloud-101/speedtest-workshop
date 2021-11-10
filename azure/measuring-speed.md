@@ -573,7 +573,7 @@ static void Main(string[] args)
     var testData = runner.RunSpeedTest();
     var results = new TestResult
     {
-        SessionId = new Guid(),
+        SessionId = Guid.NewGuid(),
         User = "cloud-101-testuser",
         Device = 1,
         Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
