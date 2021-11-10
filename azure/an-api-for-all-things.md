@@ -225,7 +225,7 @@ Also select the existing resource group "cx-cloud-101", and create a new App Ser
 
 ![api-app-3](images/api-app-3.png)
 
-Then press "Review + create" then "Create" on the next 'leaf' and wait a bit while the new API App is being set up.
+Then press "Review + create" then "Create" on the next page and wait a bit while the new API App is being set up.
 
 /When azure is ready a go to resource button pops up. Press it or navigate to the cx-cloud-101 resource group, and open the `username-101-speedtestapi`. 
 
@@ -240,7 +240,7 @@ Then choose your user as the Organization and the az-speedtest-api as Repository
 
 ![api-app-10](images/api-app-10.png)
 
-Press Save on top of the leaf, and wait until the deployment finishes which you can check under the logs tab. When the deploy is finished visit [https://testuser-speedtest-api.azurewebsites.net/speedtest/ping](https://testuser-speedtest-api.azurewebsites.net/speedtest/ping) (Replace https://testuser-speedtest-api.azurewebsites.net with the URL from your APP Service/API App)
+Press Save on top of the page, and wait until the deployment finishes which you can check under the logs tab. When the deploy is finished visit [https://testuser-speedtest-api.azurewebsites.net/speedtest/ping](https://testuser-speedtest-api.azurewebsites.net/speedtest/ping) (Replace https://testuser-speedtest-api.azurewebsites.net with the URL from your APP Service/API App)
 
 ![azure-ping-pong](images/azure-ping-pong.png)
 
