@@ -17,7 +17,7 @@ The name of the event hub has to be unique across Azure, so name it username-spe
 
 Use standard pricing tier, the existing resource group, and make sure it's located in "West Europe".
 
-![event-hub-2](images/event-hub-2.png)
+![event-hub-2](images/eventhubs-2.png)
 
 When the event hub resource is finished creating, open it and add a new event hub named speedtest-events
 
@@ -87,7 +87,7 @@ In order to publish TestResults to the event hub, we'll create an ASP.NET Core s
 Before we start, we need to add the package Microsoft.Azure.EventHubs to SpeedTestApi. It contains code for connecting and sending messages to event hub.
 
 ```shell
-$ az-speedtest-api/SpeedTestApi> dotnet add package Microsoft.Azure.EventHubs --version 4.1.0
+$ az-speedtest-api/SpeedTestApi> dotnet add package Microsoft.Azure.EventHubs --version 4.3.2
 ```
 
 Let's start writing our service by opening SpeedTestApi, creating a folder named `Services/` containing two files `Services/ISpeedTestEvents.cs` and `Services/SpeedTestEvents.cs`.
