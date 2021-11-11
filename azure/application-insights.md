@@ -7,7 +7,7 @@ Adding Insights
 Start by adding the package `Microsoft.ApplicationInsights.AspNetCore` to SpeedTestApi.
 
 ```shell
-$ az-speedtest-api/SpeedTestApi> dotnet add package Microsoft.ApplicationInsights.AspNetCore --version 2.12.1
+$ az-speedtest-api/SpeedTestApi> dotnet add package Microsoft.ApplicationInsights.AspNetCore --version 2.19.0
 ```
 
 Then you need to add Application Insights in Startup.cs, by adding it to the service collection in `ConfigureServices(...)`.
