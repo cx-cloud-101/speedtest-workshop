@@ -26,7 +26,7 @@ Now we'll start on creating the API. Move into the `az-speedtest-api/`-folder, a
 ```shell
 $> cd az-speedtest-api
 $ az-speedtest-api> dotnet new webapi -o SpeedTestApi
-The template "A<span>SP.N</span>ET Core Web API" was created successfully.
+The template "ASP.NET Core Web API" was created successfully.
 
 Processing post-creation actions...
 Running 'dotnet restore' on SpeedTestApi/SpeedTestApi.csproj...
