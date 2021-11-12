@@ -2,7 +2,7 @@
 =====================================================
 _It's tedious to run SpeedTestLogger manually all the time. Let's fix that by making a system that schedules speedtests._
 
-In this section we'll try to let you figure out more on your. Some relevant documentation is linked in the text, and the basic outline of what you need to do is described below.
+In this section we'll try to let you figure out more on your own. Some relevant documentation is linked in the text, and the basic outline of what you need to do is described below.
 
 Creating a new Service Bus
 --------------------------
@@ -13,7 +13,7 @@ The service bus will deliver run-speedtest messages to SpeedTestLogger, telling 
 ![scheduling-speedtests-1](images/scheduling-speedtests-1.png)
 
 2. Create two new shared access policies on speedtest-command. One named SpeedTestLogger with "Listen" access, and one named SpeedTestScheduler with "Manage", "Send" and "Listen"
-3. Create a new subscription called speedtest-logger-subscription. 30 min message time to live and 5 min lock duration is a good place to start.
+3. Create a new subscription called speedtest-logger-subscription. 10 as max delivery count, 30 min message time to live and 5 min lock duration is a good place to start.
 
 Scheduling speedtests
 ---------------------
@@ -29,6 +29,6 @@ Read RUN_SPEEDTEST
 ------------------
 Finally we need to update SpeedTestLogger to trigger a new speedtest when given a run-speedtest message from the service bus.
 
-1. Add the package Microsoft.Azure.ServiceBus to SpeedTestLogger with `dotnet add package Microsoft.Azure.ServiceBus --version 4.1.1`
+1. Add the package Microsoft.Azure.ServiceBus to SpeedTestLogger with `dotnet add package Microsoft.Azure.ServiceBus --version 5.2.0`
 2. Update SpeedTestLogger to trigger speedtests when it receives a "RUN_SPEEDTEST"-message. [This section in the documentation](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-dotnet-how-to-use-topics-subscriptions#5-receive-messages-from-the-subscription) describes how you can go about receiving messages from service bus. If you're stuck, have a quick look at [this example implementation](https://github.com/cx-cloud-101/az-speedtest-logger/blob/master/SpeedTestLogger/Program.cs).
 3. You might want to update LoggerConfiguration to handle the service bus connection string.

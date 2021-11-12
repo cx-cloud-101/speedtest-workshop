@@ -1,6 +1,6 @@
 [Home](../) > [Azure](index) > Adding Analytics
 ===============================================
-_When needing to analyze data, its often worth having a quick look after suitable BI-tools instead of implementing a custom application. In this section we'll visualize speedtests using [Time Series Insights](https://docs.microsoft.com/en-us/azure/time-series-insights/time-series-insights-overview)._
+_When needing to analyze data, its often worth having a quick look after suitable BI-tools instead of implementing a custom application. In this section we'll visualize speedtests using [Time Series Insights](https://docs.microsoft.com/en-us/azure/time-series-insights/overview-what-is-tsi)._
 
 Preparing the Event Hub
 -----------------------
@@ -22,11 +22,11 @@ With all that out of the way, navigate to the cx-cloud-101 resource group, and a
 
 ![time-series-1](images/time-series-1.png)
 
-Name the environment speedtest-analytics and use the existing resource group cx-cloud-101.
+Name the environment speedtest-analytics and use the existing resource group cx-cloud-101. Set Time series ID property name to User (this is the property we use to group the time series). Finally create a new storageaccount.
 
 ![time-series-2](images/time-series-2.png)
 
-Click on "Next: Event Source" and configure an event source using your existing Event Hub. Use the access policy and consumer group you just created, and use `Timestamp` as the timestamp property name (casing is important!). Finally click on "Review + create" and "Create".
+Click on "Next: Event Source". Change "Source type" to "Event Hub" and configure an event source using your existing Event Hub. Use the access policy and consumer group you just created, and use `Timestamp` as the timestamp property name (casing is important!). Finally click on "Review + create" and "Create".
 
 ![event-source](images/event-source-1.png)
 
@@ -34,15 +34,16 @@ _Why are we using `Timestamp` as the timestamp property name? Time Series Insigh
 
 Finally we can go to the overview page and open the Time Series Insights environment.
 
-![time-series-10](images/time-series-10.png)
+<!-- ![time-series-10](images/time-series-10.png) -->
 
-Inside Time Series Insights we can view different properties/measures, grouped by/split by other properties. Try to view Download and Upload by User. We can also mark an area in the graph and view all events related to that section.
+Inside Time Series Insights we can view different properties/measures, grouped by User. Choose your user, and try to view Download and Upload spped.
 
-![time-series-11](images/time-series-11.png)
+![time-series-13](images/time-series-13.png)
 
-Run SpeedTestLogger a couple more times, so you get more data, and play around with the data in Time Series Insights. Explore the data in different ways. Can you create any interesting graphs?
+ We can also mark an area in the graph and view all events related to that section. Run SpeedTestLogger a couple more times, so you get more data, and play around with the data in Time Series Insights. Explore the data in different ways. Can you create any interesting graphs?
 
-![time-series-12](images/time-series-12.png)
+![time-series-14](images/time-series-14.png)
+
 
 Celebration time!
 -----------------

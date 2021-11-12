@@ -4,7 +4,7 @@ _Previously we have made a console application capable of running speedtests, an
 
 A class for storing speedtests
 ------------------------------
-We probably want a class describing the kind of data we expect to get from the logger. Let's start by creating a `SpeedTestApi/Models/`-folder, and copying TestResult.cs from `SpeedTestLogger/Models/TestResult.cs`.
+We probably want a class describing the kind of data we expect to get from the logger. Let's start by creating a `SpeedTestApi/Models/`-folder, and copying `TestResult.cs` from `SpeedTestLogger/Models/TestResult.cs`.
 
 Update the namespace from `SpeedTestLogger.Models` to `SpeedTestApi.Models`, so we're consistent with the folder location and the other namespaces in SpeedTestApi.
 
@@ -28,13 +28,11 @@ public string UploadSpeedTest([FromBody] TestResult speedTest)
 }
 ```
 
-_Note how we're using the `[FromBody]` annotation in the route method? This will cause ASP.NET Core to automatically parse the JSON-object sent to speedtest/ into a TestResult._
+_Note how we're using the `[FromBody]` annotation in the route method? This will cause A<span>SP.N</span>ET Core to automatically parse the JSON-object sent to speedtest/ into a TestResult._
 
 Let's test our new route. Run SpeedTestApi with `dotnet run`, boot up [Postman](https://www.getpostman.com/), or your favorite API-testing tool, and try to POST a new TestResult to SpeedTestApi.
 
 ![postman-1](images/postman-1.png)
-
-We can get away with just posting parts of a TestResult. This is because we're not validating the contents of the TestResult we're receiving. This is usually a bad thing when creating APIs. Luckily we can solve this by using [DataAnnotations](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/validation?view=aspnetcore-2.1).
 
 ```json
 {
@@ -47,9 +45,12 @@ We can get away with just posting parts of a TestResult. This is because we're n
 }
 ```
 
+We can get away with just posting parts of a TestResult. This is because we're not validating the contents of the TestResult we're receiving. This is usually a bad thing when creating APIs. Luckily we can solve this by using [DataAnnotations](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/validation?view=aspnetcore-5.0).
+
+
 Adding DataAnnotations to TestResult and friends
 ------------------------------------------------
-When creating an API for storing stuff, it's nice to be quite strict on what kind of data is allowed into the API. In ASP.NET Core, we can create restrictions on what kind of data is allowed in a class when receiving it in a request. We do this by using `System.ComponentModel.DataAnnotations`, and annotating our properties with annotations like `[Required]` and `[Range(1, int.MaxValue)]`.
+When creating an API for storing stuff, it's nice to be quite strict on what kind of data is allowed into the API. In A<span>SP.N</span>ET Core, we can create restrictions on what kind of data is allowed in a class when receiving it in a request. We do this by using `System.ComponentModel.DataAnnotations`, and annotating our properties with annotations like `[Required]` and `[Range(1, int.MaxValue)]`.
 
 Lets add DataAnnotations to the classes in `TestResult.cs`.
 
@@ -204,12 +205,12 @@ Now everything should validate correctly.
 
 ![postman-3](images/postman-3.png)
 
-Logging in ASP.NET Core
+Logging in A<span>SP.N</span>ET Core
 -----------------------
-Before we try to send data from the logger to the API, we probably should implement some form of logging, so SpeedTestApi can inform us that it has received a TestResult. One way of doing this is just to use `Console.WriteLine(...)` like we did in the logger, but [ASP.NET Core supports a logging API](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-3.1) out of the box, so instead we'll try to be fancy this time.
+Before we try to send data from the logger to the API, we probably should implement some form of logging, so SpeedTestApi can inform us that it has received a TestResult. One way of doing this is just to use `Console.WriteLine(...)` like we did in the logger, but [ASP.NET Core supports a logging API](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-5.0) out of the box, so instead we'll try to be fancy this time.
 
 ### Injecting an instance of ILogger
-Most things in ASP.NET Core is composed using [dependency injection](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1). This means, without going into details, that ASP.NET Core can supply our controller (and other classes) with instances of objects we want to use for different things. This can be home made objects, like a database service for storing and retrieving information from a database, or built in objects, like the instance of `ILogger` that we need to use the logging API.
+Most things in A<span>SP.N</span>ET Core is composed using [dependency injection](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-5.0). This means, without going into details, that A<span>SP.N</span>ET Core can supply our controller (and other classes) with instances of objects we want to use for different things. This can be homemade objects, like a database service for storing and retrieving information from a database, or built in objects, like the instance of `ILogger` that we need to use the logging API.
 
 Open SpeedTestController again, and add a using-statement declaring that we want to use the logging extensions in Microsoft.Extensions.Logging.
 
@@ -303,7 +304,7 @@ ApiUrl = new Uri(configuration["speedTestApiUrl"]);
 ```
 
 ### A client for POSTing TestResults
-Now we can start writing the code responsible for POSTing TestResults to SpeedTestApi. Create a new file and class called SpeedTestApi in SpeedTestLogger. We want it to contain an instance of System.Net.Http.HttpClient (a built-in class for performing http-requests), and we want that instance to be configures with the speedTestApiUrl. An instance of HttpClient holds on to some system resources, so we want to make sure that we dispose, or "clean up", that instance when we're done with it. The usual way of doing this is to implement the IDisposable interface, signalling that instances of SpeedTestApiClient should be disposed, and handling clean-up of the HttpClient instance there.
+Now we can start writing the code responsible for POSTing TestResults to SpeedTestApi. Create a new file and class called SpeedTestApi in SpeedTestLogger. We want it to contain an instance of System.Net.Http.HttpClient (a built-in class for performing http-requests), and we want that instance to be configured with the speedTestApiUrl. An instance of HttpClient holds on to some system resources, so we want to make sure that we [dispose](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-dispose), or "clean up", that instance when we're done with it. The usual way of doing this is to implement the IDisposable interface, signalling that instances of SpeedTestApiClient should be disposed, and handling clean-up of the HttpClient instance there.
 
 ```csharp
 using System;
@@ -315,7 +316,7 @@ using SpeedTestLogger.Models;
 
 namespace SpeedTestLogger
 {
-    public class SpeedTestApiClient : IDisposable
+    public sealed class SpeedTestApiClient : IDisposable
     {
         private readonly HttpClient _client;
 
@@ -433,19 +434,20 @@ info: Microsoft.Hosting.Lifetime[0]
 info: Microsoft.Hosting.Lifetime[0]
       Hosting environment: Development
 info: Microsoft.Hosting.Lifetime[0]
-      Content root path: /home/teodoran/cloud-101/testuser/az-speedtest-api/SpeedTestApi
+      Content root path: /home/cloud-101/testuser/az-speedtest-api/SpeedTestApi
 ```
 
 If everything went alright, you should get "Speedtest complete!".
 
 ```shell
 $ az-speedtest-logger/SpeedTestLogger> dotnet run
+
 Hello SpeedTestLogger!
 Finding best test servers
 Testing download speed
-Download speed was: 19.31 Mbps
+Download speed was: 301,71 Mbps
 Testing upload speed
-Upload speed was: 3.02 Mbps
+Upload speed was: 128,6 Mbps
 Speedtest complete!
 ```
 
@@ -464,7 +466,7 @@ info: Microsoft.Hosting.Lifetime[0]
 info: Microsoft.Hosting.Lifetime[0]
       Content root path: /home/teodoran/cloud-101/az-test/az-speedtest-api/SpeedTestApi
 info: SpeedTestApi.Controllers.SpeedTestController[0]
-      Got a TestResult from cloud-101-testuser with download 19.48 Mbps.
+      Got a TestResult from cloud-101-testuser with download 301,71 Mbps.
 ```
 
 Putting it all up on Azure
@@ -472,10 +474,6 @@ Putting it all up on Azure
 Add and commit all changes to SpeedTestApi and then push to master. This will trigger a new deployment of testuser-speedtest-api on Azure. You can view in-progress deployments under "Deployment center".
 
 ![deployment-center](images/deployment-center-2.png)
-
-You can also view the build or release in Azure DevOps by following the "Build Pipeline" or "Release Pipeline" link from the deployment center.
-
-![deployment-center](images/azure-devops.png)
 
 When the deployment is a success, its time to test it all out. Try a quick POST with Postman first to check that all is well. Then update speedTestApiUrl in appsettings.json with the URL of your Azure API App.
 

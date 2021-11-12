@@ -21,12 +21,12 @@ This time we'll ignore a couple more files, since these files usually are used t
 
 Creating an API
 ---------------
-Now we'll start on creating the API. Move into the `az-speedtest-api/`-folder, and execute the following command to create a new ASP.NET Core API named SpeedTestApi.
+Now we'll start on creating the API. Move into the `az-speedtest-api/`-folder, and execute the following command to create a new A<span>SP.N</span>ET Core API named SpeedTestApi.
 
 ```shell
 $> cd az-speedtest-api
 $ az-speedtest-api> dotnet new webapi -o SpeedTestApi
-The template "ASP.NET Core Web API" was created successfully.
+The template "A<span>SP.N</span>ET Core Web API" was created successfully.
 
 Processing post-creation actions...
 Running 'dotnet restore' on SpeedTestApi/SpeedTestApi.csproj...
@@ -55,11 +55,11 @@ info: Microsoft.Hosting.Lifetime[0]
       Content root path: /home/teodoran/cloud-101/testuser/az-speedtest-api/SpeedTestApi
 ```
 
-_Notice how ASP.NET Core creates two endpoints? One for http and one for https requests? This is quite useful as it enables https-redirection and http support, but when we develop locally, its definitely easiest to just use the http endpoint._
+_Notice how A<span>SP.N</span>ET Core creates two endpoints? One for http and one for https requests? This is quite useful as it enables https-redirection and http support, but when we develop locally, its definitely easiest to just use the http endpoint._
 
 Open [http://localhost:5000/WeatherForecast](http://localhost:5000/WeatherForecast) in your favorite browser. Notice how we got redirected to [https://localhost:5001/WeatherForecast](https://localhost:5001/WeatherForecast) and that the browser complains about an insecure connection? This is because we're forcing traffic on http to be upgraded to https if possible, but we don't have a valid certificate installed that enables our machine to make a true https connection. Here's one way we can fix this.
 
-Locate the file `Startup.cs`. This file contains, among other things, configuration and dependency injection in an ASP.NET Core API. There you'll find the method `Configure`. It's currently executing `app.UseHttpsRedirection();` in both development and production mode, so move this line in an else-statement, so it's only executed when the app is not in development.
+Locate the file `Startup.cs`. This file contains, among other things, configuration and dependency injection in an A<span>SP.N</span>ET Core API. There you'll find the method `Configure`. It's currently executing `app.UseHttpsRedirection();` in both development and production mode, so move this line in an else-statement, so it's only executed when the app is not in development.
 
 ```csharp
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -67,6 +67,8 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     if (env.IsDevelopment())
     {
         app.UseDeveloperExceptionPage();
+        app.UseSwagger();
+        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/vswagger.json", "SpeedTestApi v1"));
     }
     else
     {
@@ -84,7 +86,7 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 }
 ```
 
-Stop and start SpeedTestApi with `dotnet run`, and open [http://localhost:5000/WeatherForecast](http://localhost:5000/WeatherForecast) again. This time we're not redircted to https and we don't get any warnings, but we'll still use https-redirection when running in production.
+Stop and start SpeedTestApi with `dotnet run`, and open [http://localhost:5000/WeatherForecast](http://localhost:5000/WeatherForecast) again. This can be done with `ctrl + C` if run from the console. Now we're not redircted to https and we don't get any warnings, but we'll still use https-redirection when running in production.
 
 _Open question: Should you use https-redirection in development when working on "real" applications?_
 
@@ -184,10 +186,10 @@ Getting it on Azure
 -------------------
 Finally we're getting some Azure action! We're deploying SpeedTestApi to the cloud!
 
-### Creating an Resource Group
+### Creating a Resource Group
 Everything on Azure is organized under a resource group. A resource group is a collection of resources, and everything you make on Azure is a resource. Basically it's a way to organize the stuff you make on Azure into more manageable pieces.
 
-A resource group is connected to a subscription, and that's where the money's coming from. It's also where most of the access-control to editing stuff on Azure is done.
+A resource group is connected to a subscription, and that's where the money is coming from. It's also where most of the access-control to editing stuff on Azure is done.
 
 A quick example to make this all more concrete. Let's say you're a large organization with two consultancy firms developing Azure applications. You want the two firms to do as they please, but you want to keep track of each firms spending separately. Then you'll create two subscriptions, one for each firm. Within one firm, they might be several teams developing several applications, some that other teams shouldn't be able to edit or view, then they'll create different resource groups with different access restrictions.
 
@@ -197,9 +199,7 @@ Log on to [portal.azure.com](https://portal.azure.com), and navigate to "Resourc
 
 ![resource-group-1](images/resource-group-1.png)
 
-Press "Add" to create a new resource group. Name it "cx-cloud-101", and set the resource group location to "West Europe".
-
-_This is actually currently closer than North Europe, since West Europe is located in Amsterdam and North Europe in Ireland_
+Press "Add" to create a new resource group. Name it "cx-cloud-101", and set the resource group location to (Europe) Norway East.
 
 ![resource-group-2](images/resource-group-2.png)
 
@@ -209,9 +209,9 @@ When the resource group is deployed, go to the resource groups page and open it 
 
 ### Deploying SpeedTestApi
 
-Now we're all set to deploy our API. We'll deploy it as an API App. An API App is a managed hosting environment for API's. It understands how ASP.NET Core applications work (among others), so it's quick and easy to set it up without too much low-level configuration. At the same time it has features for scaling, easy deploy and so on. API App is an example of a PaaS-component (Platform as a Service).
+Now we're all set to deploy our API. We'll deploy it as an API App. An API App is a managed hosting environment for API's. It understands how A<span>SP.N</span>ET Core applications work (among others), so it's quick and easy to set it up without too much low-level configuration. At the same time it has features for scaling, easy deploy and so on. API App is an example of a PaaS-component (Platform as a Service).
 
-Navigate to the new resource group and press "Add".
+Navigate to the new resource group and press "Create".
 
 ![api-app-1](images/api-app-1.png)
 
@@ -219,27 +219,28 @@ Search for "API App" and select API App from the list of results. Then press "Cr
 
 ![api-app-2](images/api-app-2.png)
 
-Give the new API App a nice name. This have to be unique across azure, since it determines the URL of your API. username-speedtest-api is one way to name it.
+Give the new API App a nice name. This have to be unique across azure, since it determines the URL of your API. `username-speedtest-api` is one way to name it.
 
-Also select the existing resource group "cx-cloud-101", and create a new App Service plan named "cloud-101-appservice" located in "West Europe".
+Also select the existing resource group "cx-cloud-101", and create a new App Service plan named "cloud-101-appservice". For Runtime stack go with .Net 5, and Windows OS. We also need to create the resource in "Europe West" as "Norway East" doesn't support this App for the free subscription type.
 
-Then press "Ok" and "Create" and wait a bit while the new API App is being set up.
+![api-app-3](images/api-app-3.png)
 
-![api-app-4](images/api-app-5.png)
+Then press "Review + create" then "Create" on the next page and wait a bit while the new API App is being set up.
 
-Navigate to the resource group, and open "testuser-speedtest-api".
+/When azure is ready a go to resource button pops up. Press it or navigate to the cx-cloud-101 resource group, and open the `username-101-speedtestapi`. 
 
-![api-app-4](images/api-app-6.png)
+![api-app-6](images/api-app-6.png)
 
 Make a note of your URL, displayed towards the top right corner. This will be the base path of your new API on Azure.
 
-![api-app-4](images/api-app-7.png)
 
-Go to "Deployment Center", select GitHub and then authenticate with your GitHub user. Choose "Azure Pipelines (Preview)", select the az-speedtest-api project and master-branch as your deployment source, and give your DevOps organization a decent name. Then continue to the summary-page, and press "Finish".
+Go to "Deployment Center", select GitHub as source and then authenticate with your GitHub user.
+Change provider to `App Service Build Service`
+Then choose your user as the Organization and the az-speedtest-api as Repository, with Main as the Branch.
 
-![api-app-4](images/api-app-7-az.png)
+![api-app-10](images/api-app-10.png)
 
-Wait until the deployment finishes, and then visit [https://testuser-speedtest-api.azurewebsites.net/speedtest/ping](https://testuser-speedtest-api.azurewebsites.net/speedtest/ping) (Replace https://testuser-speedtest-api.azurewebsites.net with tha URL from your APP Service/API App)
+Press Save on top of the page, and wait until the deployment finishes which you can check under the logs tab. When the deploy is finished visit [https://testuser-speedtest-api.azurewebsites.net/speedtest/ping](https://testuser-speedtest-api.azurewebsites.net/speedtest/ping) (Replace https://testuser-speedtest-api.azurewebsites.net with the URL from your APP Service/API App)
 
 ![azure-ping-pong](images/azure-ping-pong.png)
 

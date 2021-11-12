@@ -18,17 +18,16 @@ When the repository is created, press the "Clone or download"-button, and copy t
 
 ![](images/create-repo-3.png)
 
-Finally load up your favorite terminal, and clone the repo with `git clone`. Remember to replace "https://github.com/cloud-101-testuser/az-speedtest-logger.git" with the url from your repo.
+Finally load up your favorite terminal, [navigate](https://www.digitalcitizen.life/command-prompt-how-use-basic-commands/) to an appropriate folder, and clone the repo with `git clone`. Remember to replace the url with the url from your repo.
 
 ```shell
-$> git clone https://github.com/cloud-101-testuser/az-speedtest-logger.git
+$> git clone https://github.com/<your github name>/az-speedtest-logger.git
 Cloning into 'az-speedtest-logger'...
 remote: Enumerating objects: 4, done.
 remote: Counting objects: 100% (4/4), done.
 remote: Compressing objects: 100% (4/4), done.
 remote: Total 4 (delta 0), reused 0 (delta 0), pack-reused 0
 Unpacking objects: 100% (4/4), done.
-Checking connectivity... done.
 ```
 
 At this point you should have an almost empty repo named az-speedtest-logger on your computer.
@@ -40,15 +39,13 @@ Now we'll start on creating the logger application. Move into the `az-speedtest-
 ```shell
 $> cd az-speedtest-logger
 $ az-speedtest-logger> dotnet new console -o SpeedTestLogger
+Getting ready...
 The template "Console Application" was created successfully.
 
 Processing post-creation actions...
-Running 'dotnet restore' on SpeedTestLogger/SpeedTestLogger.csproj...
-  Restoring packages for /home/teodoran/cloud-101/testuser/az-speedtest-logger/SpeedTestLogger/SpeedTestLogger.csproj...
-  Generating MSBuild file /home/teodoran/cloud-101/testuser/az-speedtest-logger/SpeedTestLogger/obj/SpeedTestLogger.csproj.nuget.g.props.
-  Generating MSBuild file /home/teodoran/cloud-101/testuser/az-speedtest-logger/SpeedTestLogger/obj/SpeedTestLogger.csproj.nuget.g.targets.
-  Restore completed in 646.98 ms for /home/teodoran/cloud-101/testuser/az-speedtest-logger/SpeedTestLogger/SpeedTestLogger.csproj.
-
+Running 'dotnet restore' on SpeedTestLogger\SpeedTestLogger.csproj...
+  Determining projects to restore...
+  Restored C:\az-speedtest-logger\SpeedTestLogger\SpeedTestLogger.csproj (in 121 ms).
 Restore succeeded.
 ```
 
@@ -64,23 +61,23 @@ Nothing interesting going on here, so let's continue by actually measuring inter
 
 Measuring internet speed with Speedtest.net
 -------------------------------------------
-[Speedtest.net](http://www.speedtest.net/) is a site used by many (including major ISP's like Get) to measure internet speed from a user machine. Reliably measuring internet speed can be a tricky subject, as you need to download and upload a bunch of different files to measure the actual speed with any kind of repeatability. Luckily we can use the open source package [SpeedTest](https://www.nuget.org/packages/SpeedTest/), that replicates the test performed by speedtest.net, using their test-servers.
+[Speedtest.net](http://www.speedtest.net/) is a site used by many (including major ISP's like Get) to measure internet speed from a user machine. Reliably measuring internet speed can be a tricky subject, as you need to download and upload a bunch of different files to measure the actual speed with any kind of repeatability. Luckily we can use our open source package [SpeedTest](https://www.nuget.org/packages/Cloud101.SpeedTest/), that replicates the test performed by speedtest.net, using their test-servers.
 
 Start by adding the SpeedTest package and resolving all dependencies:
 
 ```shell
-$ az-speedtest-logger/SpeedTestLogger> dotnet add package SpeedTest --version 1.4.0-build5
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package Cloud101.SpeedTest --version 1.0.1
 ```
 
-Open the `az-speedtest-logger/`-folder in VS Code, or any other preferred C# editor, and find `SpeedTestLogger/SpeedTestLogger.csproj`. Note that you now have a reference to the SpeedTest.Net package.
+Open the `az-speedtest-logger/`-folder in VS Code, or any other preferred C# editor, and find `SpeedTestLogger/SpeedTestLogger.csproj`. Note that you now have a reference to the Cloud101.SpeedTest package.
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="SpeedTest" Version="1.4.0-build5" />
+    <PackageReference Include="Cloud101.SpeedTest" Version="1.0.1" />
 </ItemGroup>
 ```
 
-Just adding a package won't get us far, so we'll quickly move on to writing some code that uses SpeedTest.Net.
+Just adding a package won't get us far, so we'll quickly move on to writing some code that uses Cloud101.SpeedTest.
 
 Printing speedtests to console
 ------------------------------
@@ -134,7 +131,7 @@ On the way you'll probably have added using statements for System.Globalization 
 
 _Tip: Depending on your editor, you can usually get suggestions on which using statements you're missing by hovering over the keywords marked with red squiggly lines._
 
-Now that we have a suitable test-server, we can continue by testing the download and upload -speed. The number we are given by SpeedTest.Net is bytes per second, but usually we want megabytes per second (Mbps), so we'll convert the speeds into that unit of measure.
+Now that we have a suitable test-server, we can continue by testing the download and upload -speed. The number we are given by SpeedTest.Net is in bits per second, but usually we want megabits per second (Mbps), so we'll convert the speeds into that unit of measure.
 
 ```csharp
 static void Main(string[] args)
@@ -158,9 +155,9 @@ $ az-speedtest-logger/SpeedTestLogger> dotnet run
 Hello SpeedTestLogger!
 Finding best test servers
 Testing download speed
-Download speed was: 15.64 Mbps
+Download speed was: 272,13 Mbps
 Testing upload speed
-Upload speed was: 4.89 Mbps
+Upload speed was: 195,32 Mbps
 ```
 
 Factor/Refactor
@@ -174,7 +171,6 @@ using System;
 using System.Globalization;
 using System.Linq;
 using SpeedTest;
-using SpeedTest.Models;
 
 namespace SpeedTestLogger
 {
@@ -317,9 +313,9 @@ $ az-speedtest-logger/SpeedTestLogger> dotnet run
 Hello SpeedTestLogger!
 Finding best test servers
 Testing download speed
-Download speed was: 18.99 Mbps
+Download speed was: 306,06 Mbps
 Testing upload speed
-Upload speed was: 4.91 Mbps
+Upload speed was: 166,23 Mbps
 ```
 
 Making stuff configurable
@@ -329,9 +325,9 @@ We might want to add some configuration to our logger. At the moment all we real
 Let's start by adding some .NET Core packages for handling configuration.
 
 ```shell
-$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration --version 3.1.1
-$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration.FileExtensions --version 3.1.1
-$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration.Json --version 3.1.1
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration --version 5.0.0
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration.FileExtensions --version 5.0.0
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration.Json --version 5.0.0
 ```
 
 Then create a LoggerConfiguration class in a new file called `SpeedTestLogger/LoggerConfiguration.cs` using, among others the configuration packages.
@@ -373,13 +369,24 @@ public class LoggerConfiguration
 }
 ```
 
-An avid reader might have spotted that we're missing something essential. We don't have an "appsettings.json" file yet! Lets create it. Make a new file called `SpeedTestLogger/appsettings.json`, containing the following.
+An avid reader might have spotted that we're missing something essential. We don't have an "appsettings.json" file yet! Lets create it. Make a new file called `SpeedTestLogger/appsettings.json`, containing the following:
 
 ```json
 {
     "loggerLocationCountryCode": "nb-NO"
 }
 ```
+
+To be able to load the the appsettings.json file from the console app, we need to make sure that it is copied to the output folder. To do this, add the following to your SpeedTestLogger/SpeedTestLogger.csproj file.
+
+```xml
+<ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+</ItemGroup>
+```
+
 
 Now we can use the configuration value and create a new RegionInfo for our configured loggerLocationCountryCode.
 
@@ -423,9 +430,9 @@ Hello SpeedTestLogger!
 Logger located in Norway
 Finding best test servers
 Testing download speed
-Download speed was: 19.3 Mbps
+Download speed was: 446,04 Mbps
 Testing upload speed
-Upload speed was: 4.83 Mbps
+Upload speed was: 190,55 Mbps
 ```
 
 Big, Bigger, Biggest Data
@@ -525,7 +532,7 @@ public TestData RunSpeedTest()
 }
 ```
 
-So what are we going to do with TestServer.Country? This turns out to be more tricky than anticipated, but through the magic of previous programming, you'll just have to add the following private method to SpeedTestRunner, and un-comment the line about country in the constructor.
+So what are we going to do with `TestServer.Country`? This turns out to be more tricky than anticipated, but through the magic of previous programming, you'll just have to add the following private method to SpeedTestRunner, and un-comment the line about country in the constructor.
 
 ```csharp
 private string GetISORegionNameFromEnglishName(string englishName)
@@ -555,7 +562,7 @@ private string GetISORegionNameFromEnglishName(string englishName)
 ```
 
 ### Adding metadata in Main()
-Now we have to update `Main()` again. Add a using-statement to get the classes in SpeedTestLogger.Models, and create a new TestResult with the metadata and the TestData from `RunSpeedTest()`.
+Now we have to update `Main()` again. Add a using-statement to get the classes in `SpeedTestLogger.Models`, and create a new TestResult with the metadata and the TestData from `RunSpeedTest()`.
 
 ```csharp
 // Omitting class and namespace
@@ -566,7 +573,7 @@ static void Main(string[] args)
     var testData = runner.RunSpeedTest();
     var results = new TestResult
     {
-        SessionId = new Guid(),
+        SessionId = Guid.NewGuid(),
         User = "cloud-101-testuser",
         Device = 1,
         Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
@@ -575,7 +582,7 @@ static void Main(string[] args)
 }
 ```
 
-What? Hard-coded values for User and Device? This sounds like a case for LoggerConfiguration!
+What!? Hard-coded values for User and Device? This sounds like a case for LoggerConfiguration!
 
 Create two new properties in appsettings.json called `userId` and `loggerId`.
 
@@ -602,7 +609,7 @@ public class LoggerConfiguration
         // Omitting old code
 
         UserId = configuration["userId"];
-        LoggerId = int32.Parse(configuration["loggerId"]);
+        LoggerId = int.Parse(configuration["loggerId"]);
     }
 }
 ```
@@ -613,16 +620,19 @@ Finally we can update `Main()` to use the values from LoggerConfiguration
 // Omitting class and namespace
 static void Main(string[] args)
 {
-    // Omitting old code
+   Console.WriteLine("Hello SpeedTestLogger!");
 
-    var results = new TestResult
-    {
-        SessionId = new Guid(),
-        User = config.UserId,
-        Device = config.LoggerId,
-        Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
-        Data = testData
-    };
+   var config = new LoggerConfiguration();
+   var runner = new SpeedTestRunner(config.LoggerLocation);
+   var testData = runner.RunSpeedTest();
+   var results = new TestResult
+   {
+       SessionId = Guid.NewGuid(),
+       User = config.UserId,
+       Device = config.LoggerId,
+       Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
+       Data = testData
+   };
 }
 ```
 
@@ -638,7 +648,7 @@ If you're happy with the SpeedTestLogger, create a file at the root of the repos
 **/obj
 ```
 
-This makes sure that git won't track the build output-files. Run `git status -u` at the root of the repository to check that `.gitignore` was set up correctly.
+This makes sure that git won't track the build output-files. If your using visual studio you might also want to ignore other temporary files generated by visual studio add-ons. Maybe copy [this](https://github.com/github/gitignore/blob/master/VisualStudio.gitignore) to your gitignore. Run `git status -u` at the root of the repository to check that `.gitignore` was set up correctly.
 
 ```shell
 $ az-speedtest-logger> git status -u
