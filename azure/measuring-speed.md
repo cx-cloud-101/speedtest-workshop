@@ -610,6 +610,7 @@ public class LoggerConfiguration
 
         UserId = configuration["userId"];
         LoggerId = int.Parse(configuration["loggerId"]);
+        LoggerLocation = new RegionInfo(configuration["loggerLocationCountryCode"]);
     }
 }
 ```
