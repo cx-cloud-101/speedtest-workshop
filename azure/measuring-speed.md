@@ -532,7 +532,7 @@ public TestData RunSpeedTest()
 }
 ```
 
-So what are we going to do with `TestServer.Country`? This turns out to be more tricky than anticipated, but through the magic of previous programming, you'll just have to add the following private method to SpeedTestRunner, and un-comment the line about country in the constructor.
+So what are we going to do with `TestServer.Country`? This turns out to be more tricky than anticipated, but through the magic of previous programming, you'll just have to add the following private method to SpeedTestRunner, and un-comment the line about country in RunSpeedTest().
 
 ```csharp
 private string GetISORegionNameFromEnglishName(string englishName)
