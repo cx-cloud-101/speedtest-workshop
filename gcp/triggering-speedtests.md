@@ -5,26 +5,24 @@ _As an optional step you can add a feature to trigger running Speedtest loggers.
 Suggested solution
 ------------------
 * Allow users to register and unregister devices through an HTTP requests
-* Store registrations in GCP Datastore
+* Store registrations in GCP Firestore
 * Simple endpoint to trigger Speedtest Loggers
-* Create a GCP Appengine Cron Job
+* Create a Cloud Scheduler
 
 Setup
 -----
 1. Create a trigger Pub/Sub topic: `gcloud pubsub topics create speedtest-trigger`
-1. Create Datastore
-    1. Goto [Datastore](https://console.cloud.google.com/datastore) in your project
-    1. Click on create Datastore and select Datastore Mode 
-1. Add `spring-cloud-gcp-starter-data-datastore` as a dependency in your `speedtest-api` (`build.gradle.kts`)
-    ```kotlin
-    //...
-    dependencies {
-       //...
-       implementation("org.springframework.cloud:spring-cloud-gcp-starter-data-datastore")
-       //...
-    }
-    //...
-    ```
+2. Create Firestore
+    1. Goto [Firestore](https://console.cloud.google.com/firestore) in your project
+    2. Create database and in Firestore Mode 
+    3. Add `spring-cloud-gcp-starter-data-firestore` as a dependency in your `speedtest-api` (`pom.xml`)
+        ```xml
+        <dependency>
+                <groupId>com.google.cloud</groupId>
+                <artifactId>spring-cloud-gcp-starter-data-firestore</artifactId>
+                <version>2.0.5</version>
+        </dependency>
+        ```
 
 Suggested API
 -------------
@@ -80,47 +78,42 @@ Removes registration for a device on the specified user.
 
 Implementation
 --------------
-We will use the spring-cloud-gcp-starter-data-datastore library (which you should have added in the `Setup` step. This library builds on the concepts from Spring Data and makes it very simple to add repositories that access Datastore.
+We will use the spring-cloud-gcp-starter-data-firestore library (which you should have added in the `Setup` step. This library builds on the concepts from Spring Data and makes it very simple to add repositories that access Firestore.
 
 ### Create an entity class
 ```kotlin
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.google.common.collect.ImmutableSet
-import org.springframework.cloud.gcp.data.datastore.core.mapping.Entity
-import org.springframework.cloud.gcp.data.datastore.core.mapping.Field
-import org.springframework.data.annotation.Id
+package com.speedtest.api
+
+import com.google.cloud.firestore.annotation.DocumentId
+import com.google.cloud.spring.data.firestore.Document
 import java.io.Serializable
 
-@Entity(name = "user") // The entity kind in Datastore (analogous to SQL tables)
-data class User(
-        @Id
-        @Field(name = "name")
-        val name: String,
-        
-        @Field(name = "devices")
-        val devices: Set<Int> = emptySet()
+@Document(collectionName = "users")
+data class User (
+
+   @DocumentId
+   var name: String = "",
+   var devices: MutableList<Int> = mutableListOf<Int>()
+
 ) : Serializable
 ```
 
 ### Create a repository
-Add the following attribute to `application.properties`: `spring.cloud.gcp.datastore.namespace=<name>` (name can be anything, e.g. speedtest).
 
 ```kotlin
-import org.springframework.cloud.gcp.data.datastore.repository.DatastoreRepository
+package com.speedtest.api
 
-interface UserRepository: DatastoreRepository<User, String>
+import com.google.cloud.spring.data.firestore.FirestoreReactiveRepository
+
+interface UserRepository: FirestoreReactiveRepository<User>
 ```
 
-Cron job
+Scheduler
 --------
-**Example**
-```yaml
-cron:
-  - description: Trigger registered speedtest loggers
-    url: /trigger
-    schedule: every 10 minutes
+Deploy the scheduler:
 ```
-Deploy it: `gcloud app deploy cron.yaml`
+gcloud scheduler jobs create app-engine trigger --schedule="*/10 * * * *" --relative-url="/trigger" --http-method=get
+```
 
 Making the logger use the trigger
 =================================
