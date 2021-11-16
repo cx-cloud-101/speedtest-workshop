@@ -112,7 +112,7 @@ Scheduler
 --------
 Deploy the scheduler:
 ```
-gcloud scheduler jobs create app-engine trigger --schedule="*/10 * * * *" --relative-url="/trigger" --http-method=get
+gcloud scheduler jobs create app-engine trigger --schedule="*/10 * * * *" --relative-url="/trigger" --http-method="get"
 ```
 
 Making the logger use the trigger
