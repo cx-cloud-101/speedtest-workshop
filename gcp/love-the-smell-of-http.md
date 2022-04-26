@@ -62,7 +62,7 @@ Use [Spring Initializr](https://start.spring.io/) to generate your project.
 
 1. Add dependencies: `Spring Web` and `GCP Messaging` ![](images/create-project-2b.png)
 
-1. Generate project and unzip the downloaded archive. Copy the unzipped file into your git repo folder.
+1. Generate project and unzip the downloaded archive. Copy the unzipped ´api´ folder (whole folder) into your git repo folder.
 
 1. Open IntelliJ, click "Open", and select your git repo folder, containing the unzipped files.
     ![](images/open-project.png)
@@ -78,7 +78,7 @@ Use [Spring Initializr](https://start.spring.io/) to generate your project.
 
 1. Modify `pom.xml` to invoke the appengine plugin (Add the last line to the `plugins`-section). Remember to replace PROJECT_ID with your GCP project id.
     ```xml
-    <plugin>
+    			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>appengine-maven-plugin</artifactId>
 				<version>2.4.1</version>
