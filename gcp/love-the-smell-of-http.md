@@ -62,7 +62,7 @@ Use [Spring Initializr](https://start.spring.io/) to generate your project.
 
 1. Add dependencies: `Spring Web` and `GCP Messaging` ![](images/create-project-2b.png)
 
-1. Generate project and unzip the downloaded archive. Copy the unzipped ´api´ folder (whole folder) into your git repo folder.
+1. Generate project and unzip the downloaded archive. Copy the unzipped `api` folder (whole folder) into your git repo folder.
 
 1. Open IntelliJ, click "Open", and select your git repo folder, containing the unzipped files.
     ![](images/open-project.png)
