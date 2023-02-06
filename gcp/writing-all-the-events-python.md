@@ -57,7 +57,8 @@ a specific project and has its own set of libraries. If you use a virtual enviro
 this repo. If not, the system Python installation or the standard one downloaded should be fine.
 
 For this Cloud Function, the only dependecy library we will need is the GCP BigQuery library, called `google-cloud-bigquery`.
-Go ahead and add it to the `requirements.txt` file. We then install the dependency by running `pyhton3 -m pip install -r requirements.txt`.
+Go ahead and create the `requirements.txt` file and add `google-cloud-bigquery` to it. We then install the dependency by 
+running `python3 -m pip install -r requirements.txt`.
 
 ### Rigging the project for Cloud Functions
 
@@ -86,7 +87,7 @@ def main(event, context):
     pubsub_message = json.loads(base64.b64decode(event['data']).decode('utf-8'))
 ```
 Notice how the received `event` is processed through `base64.decode` before it is read with the `json` library. The `event.['data']` 
-value is a base64 encoded string of the published message. PubSub will always encode messages down to bytearrys before sending them,
+value is a base64 encoded string of the published message. PubSub will always encode messages down to bytearrays before sending them,
 so decoding is needed before further use.
 
 An important concept to understand with how Cloud Functions are executed is that they are only allocated compute time as long as they are running. 
@@ -211,7 +212,7 @@ If you want to use the suggested schema, just paste the following schema in as t
 ]
 ```
 
-### Implementing insert into BigQuery
+### Implementing the insertion into BigQuery
 
 Now we are ready to implement the insertion of the message data to our newly created table. We will use the BigQuery Python library to do this.
 
@@ -226,7 +227,7 @@ from google.cloud import bigquery
 # Project ID
 project_id = "sfl-cloud-101" # Replace with your project id
 
-# bq client
+# Make BigQuery client
 bq_client = bigquery.Client(project=project_id)
 table_id = f"{project_id}.speedtest.test_results"
 ```
@@ -259,8 +260,8 @@ def main(event, context):
 Note that the `timestamp` field from the received message is converted to ISO format before being inserted to BigQuery. BigQuery expects a 
 timestamp in a string format, and not a raw integer value.
 
-Also note that the `insert_rows_json` method returns a list of errors, if any. We check for errors and print them if any. If no errors are 
-returned, we print a success message.
+Also note that the `insert_rows_json` method returns a list of errors, if any. If the list is empty, the insertion was successful.
+If not, we print the error message.
 
 With all that done, we are ready to deploy gcp-event-writer to GCP and see if it works.
 
@@ -296,7 +297,7 @@ The `--trigger-topic` flag is used to specify the Cloud Pub/Sub topic to trigger
 
 The `--runtime python3.10` flag specifies that the function will be executed using Python 3.10.
 
-The `--entry-point` flag is used to specify the function name to run when triggered. In our case, it is `main()`.
+The `--entry-point` flag is used to specify the function name to run when triggered. In our case, it is `main`.
 
 ### When you're done
 
