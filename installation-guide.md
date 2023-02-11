@@ -22,7 +22,7 @@ _To complete the Azure-part of the workshop, you'll need the following tools and
 ### .NET 5 SDK and VS Code
 _If you already have .NET Core installed, you can check the version with `dotnet --version`._
 
-1. Install the [.NET 5 SDK](https://www.microsoft.com/net/download)
+1. Install the [.NET 7 SDK](https://www.microsoft.com/net/download)
 2. If you don't already have a preferred editor for C# code, grab a copy of [VS Code](https://code.visualstudio.com/). You'll also want to get the [C# extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp). Install it by pressing Ctrl+P, pasting `ext install ms-vscode.csharp` into the window and pressing enter.
 
 
