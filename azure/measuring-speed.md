@@ -86,15 +86,16 @@ Open `SpeedTestLogger/Program.cs`. This is where `Main()` lives in most .NET con
 Add `using SpeedTest;` and `using SpeedTest.Models;` to the top of the file, so .NET knows you want to use the SpeedTest.Net package. Then we have to create a new SpeedTestClient, and get the setting for the new client.
 
 ```csharp
-static void Main(string[] args)
-{
-    Console.WriteLine("Hello SpeedTestLogger!");
+using SpeedTest;
+using SpeedTest.Models;
 
-    var client = new SpeedTestClient();
-    var settings = client.GetSettings();
+Console.WriteLine("Hello SpeedTestLogger!");
 
-    // Code continues here
-}
+var client = new SpeedTestClient();
+var settings = client.GetSettings();
+
+// Code continues here
+
 ```
 
 Before we can test download and upload -speed, we have to find a suitable test-server. We do this by first looking at all the test-servers in `settings.Servers`. We then select ten servers located in Norway.
@@ -102,29 +103,28 @@ Before we can test download and upload -speed, we have to find a suitable test-s
 When we have ten servers, we test the server latency, and sort them by latency. Finally we pick the server with the lowest latency.
 
 ```csharp
-static void Main(string[] args)
-{
-    // Previous code here
 
-    Console.WriteLine("Finding best test servers");
+// Previous code here
 
-    var location = new RegionInfo("nb-NO");
-    var tenLocalServers = settings.Servers
-        .Where(s => s.Country.Equals(location.EnglishName))
-        .Take(10);
+Console.WriteLine("Finding best test servers");
 
-    var serversOrdersByLatency = tenLocalServers
-        .Select(s =>
-        {
-            s.Latency = client.TestServerLatency(s);
-            return s;
-        })
-        .OrderBy(s => s.Latency);
+var location = new RegionInfo("nb-NO");
+var tenLocalServers = settings.Servers
+    .Where(s => s.Country.Equals(location.EnglishName))
+    .Take(10);
 
-    var server = serversOrdersByLatency.First();
+var serversOrdersByLatency = tenLocalServers
+    .Select(s =>
+    {
+        s.Latency = client.TestServerLatency(s);
+        return s;
+    })
+    .OrderBy(s => s.Latency);
 
-    // Code continues here
-}
+var server = serversOrdersByLatency.First();
+
+// Code continues here
+
 ```
 
 On the way you'll probably have added using statements for System.Globalization and System.Linq.
@@ -134,18 +134,15 @@ _Tip: Depending on your editor, you can usually get suggestions on which using s
 Now that we have a suitable test-server, we can continue by testing the download and upload -speed. The number we are given by SpeedTest.Net is in bits per second, but usually we want megabits per second (Mbps), so we'll convert the speeds into that unit of measure.
 
 ```csharp
-static void Main(string[] args)
-{
-    // Previous code here
+// Previous code here
 
-    Console.WriteLine("Testing download speed");
-    var downloadSpeed = client.TestDownloadSpeed(server, settings.Download.ThreadsPerUrl);
-    Console.WriteLine("Download speed was: {0} Mbps", Math.Round(downloadSpeed / 1024, 2));
+Console.WriteLine("Testing download speed");
+var downloadSpeed = client.TestDownloadSpeed(server, settings.Download.ThreadsPerUrl);
+Console.WriteLine("Download speed was: {0} Mbps", Math.Round(downloadSpeed / 1024, 2));
 
-    Console.WriteLine("Testing upload speed");
-    var uploadSpeed = client.TestUploadSpeed(server, settings.Upload.ThreadsPerUrl);
-    Console.WriteLine("Upload speed was: {0} Mbps", Math.Round(uploadSpeed / 1024, 2));
-}
+Console.WriteLine("Testing upload speed");
+var uploadSpeed = client.TestUploadSpeed(server, settings.Upload.ThreadsPerUrl);
+Console.WriteLine("Upload speed was: {0} Mbps", Math.Round(uploadSpeed / 1024, 2));
 ```
 
 Finally we're ready to test our SpeedTestLogger! Run it with `dotnet run`, and you should get something similar to the listing below.
@@ -167,24 +164,18 @@ Now is a good time to refactor our logger. We're going to do a lot more than jus
 Start by creating a new file `SpeedTestLogger/SpeedTestRunner.cs`, containing our using statements, and a public class SpeedTestRunner in the namespace SpeedTestLogger.
 
 ```csharp
-using System;
-using System.Globalization;
-using System.Linq;
-using SpeedTest;
+namespace SpeedTestLogger;
 
-namespace SpeedTestLogger
+public class SpeedTestRunner
 {
-    public class SpeedTestRunner
-    {
-        // Code continues here
-    }
+    // Code continues here
 }
+
 ```
 
 We'll probably need to create some private variables for the SpeedTestClient, settings, and the location of our logger, as well as initializing these variables when constructing a new SpeedTestRunner.
 
 ```csharp
-// Omitting namespace
 public class SpeedTestRunner
 {
     private readonly SpeedTestClient _client;
@@ -205,7 +196,6 @@ public class SpeedTestRunner
 Finding the best test-server was a good chunk of code, so let's make a private function for that.
 
 ```csharp
-// Omitting namespace
 public class SpeedTestRunner
 {
     // Previous code here
@@ -234,7 +224,6 @@ public class SpeedTestRunner
 Let's also create some private methods for testing download and upload -speed, and converting the result to Mbps.
 
 ```csharp
-// Omitting namespace
 public class SpeedTestRunner
 {
     // Previous code here
@@ -257,8 +246,6 @@ public class SpeedTestRunner
     {
         return Math.Round(speed / 1024, 2);
     }
-
-    // Code continues here
 }
 ```
 
@@ -292,18 +279,15 @@ public class SpeedTestRunner
 }
 ```
 
-Now we only have to rewrite `Main()` in Program.cs to use the new SpeedTestRunner.
+Now we only have to rewrite Program.cs to use the new SpeedTestRunner.
 
 ```csharp
-// Omitting class and namespace (bonus points for removing unused using statements)
-static void Main(string[] args)
-{
-    Console.WriteLine("Hello SpeedTestLogger!");
+// Omitting using statements. (bonus points for removing unused using statements)
+Console.WriteLine("Hello SpeedTestLogger!");
 
-    var location = new RegionInfo("nb-NO");
-    var runner = new SpeedTestRunner(location);
-    runner.RunSpeedTest();
-}
+var location = new RegionInfo("nb-NO");
+var runner = new SpeedTestRunner(location);
+runner.RunSpeedTest();
 ```
 
 Let's test our refactored SpeedTestLogger. With any luck it should do pretty much the same as before.
@@ -313,9 +297,9 @@ $ az-speedtest-logger/SpeedTestLogger> dotnet run
 Hello SpeedTestLogger!
 Finding best test servers
 Testing download speed
-Download speed was: 306,06 Mbps
+Download speed was: 318.49 Mbps
 Testing upload speed
-Upload speed was: 166,23 Mbps
+Upload speed was: 289.36 Mbps
 ```
 
 Making stuff configurable
@@ -325,9 +309,9 @@ We might want to add some configuration to our logger. At the moment all we real
 Let's start by adding some .NET Core packages for handling configuration.
 
 ```shell
-$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration --version 5.0.0
-$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration.FileExtensions --version 5.0.0
-$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration.Json --version 5.0.0
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration --version 7.0.0
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration.FileExtensions --version 7.0.0
+$ az-speedtest-logger/SpeedTestLogger> dotnet add package Microsoft.Extensions.Configuration.Json --version 7.0.0
 ```
 
 Then create a LoggerConfiguration class in a new file called `SpeedTestLogger/LoggerConfiguration.cs` using, among others the configuration packages.
@@ -338,13 +322,13 @@ using System.Globalization;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 
-namespace SpeedTestLogger
+namespace SpeedTestLogger;
+
+public class LoggerConfiguration
 {
-    public class LoggerConfiguration
-    {
-        // Code continues here
-    }
+    // Code continues here
 }
+
 ```
 
 We probably want a RegionInfo property to store the location of our logger. Let's make it readonly, so only the constructor in LoggerConfiguration can mess with it.
@@ -408,18 +392,16 @@ public class LoggerConfiguration
 }
 ```
 
-Let's update `Main()` in Program.cs to use the new LoggerConfiguration.
+Let's update Program.cs to use the new LoggerConfiguration.
 
 ```csharp
-// Omitting class and namespace
-static void Main(string[] args)
-{
-    Console.WriteLine("Hello SpeedTestLogger!");
+// Omitting usings and namespace
+Console.WriteLine("Hello SpeedTestLogger!");
 
-    var config = new LoggerConfiguration();
-    var runner = new SpeedTestRunner(config.LoggerLocation);
-    runner.RunSpeedTest();
-}
+var config = new LoggerConfiguration();
+var runner = new SpeedTestRunner(config.LoggerLocation);
+runner.RunSpeedTest();
+
 ```
 
 Let's test the SpeedTestLogger again. This time we should print the logger location.
@@ -442,52 +424,40 @@ Can we get more information from a our SpeedTestClient than just download and up
 We're going to organize this data into a class called TestResult, containing TestData, and some metadata about the speedtest. Start by creating a new folder `Models/`, containing a new file called `SpeedTestLogger/Models/TestResult.cs`. In order not to bore you with the details of writing a large model, the contents of `TestResults.cs` have been supplied for you below.
 
 ```csharp
-using System;
+namespace SpeedTestLogger.Models;
 
-namespace SpeedTestLogger.Models
-{
-    public class TestResult
-    {
-        public Guid SessionId { get; set; }
-        public string User { get; set; }
-        public int Device { get; set; }
-        public long Timestamp { get; set; }
-        public TestData Data { get; set; }
-    }
+public record TestResult(
+    Guid SessionId,
+    string User,
+    int Device,
+    long Timestamp,
+    TestData Data);
 
-    public class TestData
-    {
-        public TestSpeeds Speeds { get; set; }
-        public TestClient Client { get; set; }
-        public TestServer Server { get; set; }
-    }
+public record TestData(
+    TestSpeeds Speeds,
+    TestClient Client,
+    TestServer Server);
 
-    public class TestSpeeds
-    {
-        public double Download { get; set; }
-        public double Upload { get; set; }
-    }
+public record TestSpeeds(
+    double Download,
+    double Upload);
 
-    public class TestClient
-    {
-        public string Ip { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        public string Isp { get; set; }
-        public string Country { get; set; }
-    }
+public record TestClient(
+    string Ip,
+    double Latitude,
+    double Longitude,
+    string Isp,
+    string Country);
 
-    public class TestServer
-    {
-        public string Host { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        public string Country { get; set; }
-        public double Distance { get; set; }
-        public int Ping { get; set; }
-        public int Id { get; set; }
-    }
-}
+public record TestServer(
+    string Host,
+    double Latitude,
+    double Longitude,
+    string Country,
+    double Distance,
+    int Ping,
+    int Id);
+
 ```
 
 _Notice how the classes are located in the namespace `SpeedTestLogger.Models`, matching the folder structure we just created?_
@@ -503,32 +473,23 @@ public TestData RunSpeedTest()
 {
     // Old code omitted
 
-    return new TestData
-    {
-        Speeds = new TestSpeeds
-        {
-            Download = downloadSpeed,
-            Upload = uploadSpeed
-        },
-        Client = new TestClient
-        {
-            Ip = _settings.Client.Ip,
-            Latitude = _settings.Client.Latitude,
-            Longitude = _settings.Client.Longitude,
-            Isp = _settings.Client.Isp,
-            Country = _location.TwoLetterISORegionName
-        },
-        Server = new TestServer
-        {
-            Host = server.Host,
-            Latitude = server.Latitude,
-            Longitude = server.Longitude,
-            // What are we going to do with this? Country = GetISORegionNameFromEnglishName(server.Country),
-            Distance = server.Distance,
-            Ping = server.Latency,
-            Id = server.Id
-        }
-    };
+    return new TestData(
+            Speeds: new TestSpeeds(downloadSpeed, uploadSpeed),
+            Client: new TestClient(
+                Ip: _settings.Client.Ip,
+                Latitude: _settings.Client.Latitude,
+                Longitude: _settings.Client.Longitude,
+                Isp: _settings.Client.Isp,
+                Country: _location.TwoLetterISORegionName),
+            Server: new TestServer(
+                Host: server.Host,
+                Latitude: server.Latitude,
+                Longitude: server.Longitude,
+                // What are we going to do with this? Country: GetISORegionNameFromEnglishName(server.Country),
+                Distance: server.Distance,
+                Ping: server.Latency,
+                Id: server.Id));
+    }
 }
 ```
 
@@ -565,21 +526,15 @@ private string GetISORegionNameFromEnglishName(string englishName)
 Now we have to update `Main()` again. Add a using-statement to get the classes in `SpeedTestLogger.Models`, and create a new TestResult with the metadata and the TestData from `RunSpeedTest()`.
 
 ```csharp
-// Omitting class and namespace
-static void Main(string[] args)
-{
-    // Omitting old code
+// Omitting old code
 
-    var testData = runner.RunSpeedTest();
-    var results = new TestResult
-    {
-        SessionId = Guid.NewGuid(),
-        User = "cloud-101-testuser",
-        Device = 1,
-        Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
-        Data = testData
-    };
-}
+var testData = runner.RunSpeedTest();
+var results = new TestResult(
+    SessionId: Guid.NewGuid(),
+    User: "cloud-101-testuser",
+    Device: 1,
+    Timestamp: DateTimeOffset.Now.ToUnixTimeMilliseconds(),
+    Data: testData);
 ```
 
 What!? Hard-coded values for User and Device? This sounds like a case for LoggerConfiguration!
@@ -597,7 +552,7 @@ Create two new properties in appsettings.json called `userId` and `loggerId`.
 Then add two new properties to LoggerConfiguration, and update the constructor to read the values from appsettings.json
 
 ```csharp
-// Omitting class and namespace
+// Omitting namespace
 public class LoggerConfiguration
 {
     public readonly string UserId;
@@ -615,26 +570,21 @@ public class LoggerConfiguration
 }
 ```
 
-Finally we can update `Main()` to use the values from LoggerConfiguration
+Finally we can update Program.cs to use the values from LoggerConfiguration
 
 ```csharp
-// Omitting class and namespace
-static void Main(string[] args)
-{
-   Console.WriteLine("Hello SpeedTestLogger!");
+Console.WriteLine("Hello SpeedTestLogger!");
 
-   var config = new LoggerConfiguration();
-   var runner = new SpeedTestRunner(config.LoggerLocation);
-   var testData = runner.RunSpeedTest();
-   var results = new TestResult
-   {
-       SessionId = Guid.NewGuid(),
-       User = config.UserId,
-       Device = config.LoggerId,
-       Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
-       Data = testData
-   };
-}
+var config = new LoggerConfiguration();
+var runner = new SpeedTestRunner(config.LoggerLocation);
+var testData = runner.RunSpeedTest();
+var results = new TestResult(
+    SessionId: Guid.NewGuid(),
+    User: config.UserId,
+    Device: config.LoggerId,
+    Timestamp: DateTimeOffset.Now.ToUnixTimeMilliseconds(),
+    Data: testData);
+
 ```
 
 Try out SpeedTestLogger again with `dotnet run` and check that everything works as expected.
