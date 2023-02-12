@@ -38,23 +38,26 @@ _To complete the GCP-part of the workshop, you'll need the following tools and a
 
 ### Java SE JDK and IntelliJ IDEA
 
-1. You'll need a version 8 or newer of the Java Developer Kit (JDK). You can use [OpenJDK](https://openjdk.java.net).
-1. If you don't have a Java IDE and Spring Boot installed, you should download [IntelliJ IDEA Ultimate](https://www.jetbrains.com/idea/download/). It's not free, but it has a 30 day trial and includes Spring Boot.
+1. You'll need a version 17 or newer of the Java Developer Kit (JDK). You can use [OpenJDK](https://openjdk.java.net).
+2. If you don't have a Java IDE and Spring Boot installed, you should download [IntelliJ IDEA Ultimate](https://www.jetbrains.com/idea/download/). 
+It's not free, but it has a 30 day trial and includes Spring Boot and Kotlin. If you prefer another IDE, you can use that instead but you will need
+to set up envrionments for Maven, Sping Boot and Kotlin yourself.
 
-### GCP Free trial
+### Python
 
-1. Activate your [free trial at GCP](https://console.cloud.google.com/freetrial)
-2. Go through the registration process. At the end you should end up at [console.cloud.google.com](https://console.cloud.google.com/home/dashboard). You unfortunately have to register a debit or credit card. The GCP project will continue charging towards your free trial credits, so if you wish to retain the credits left after the workshop you should disable the project after finishing the workshop. (Google will not charge your credit card without an upgrade action).
+During the course you will use Python. If you run MacOS or Linux, you will already have an installation as part of the OS that will suffice. If
+you run Windows, you will need to install Python. You can download it from [here](https://www.python.org/downloads/windows).
 
-_If you already have used the GCP free trial, then you'll have to register a new account with a new email (and possibly another credit card)._
+If you struggle setting up either environments, feel free to reach out to course holders for help before the workshop.
+
+
+### Google Cloud Platform
+
+Course holders have already made a GCP project for you, so all you need is your Computas account.  
 
 ### Cloud SDK
 
 1. Install the [Cloud SDK](https://cloud.google.com/sdk/docs/quickstarts/)
-2. During the installation process you'll initialize Cloud SDK with `gcloud init`. Remember to log on with the account that has the free trial activated.
+2. During the installation process you'll initialize Cloud SDK with `gcloud init`. Remember to log on with your Computas account.
 
-### Node
-_If you have node installed, you can check the version with `node --version`._
-_Note that the GCP Cloud Function node runtime only supports version 10, 12, 14 and 16, but you should be able to use a newer version._
 
-1. Install node from [nodejs.org](https://nodejs.org/dist/latest-v8.x/)
