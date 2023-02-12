@@ -29,12 +29,9 @@ $ az-speedtest-api> dotnet new webapi -o SpeedTestApi
 The template "ASP.NET Core Web API" was created successfully.
 
 Processing post-creation actions...
-Running 'dotnet restore' on SpeedTestApi/SpeedTestApi.csproj...
-  Restoring packages for /home/teodoran/cloud-101/testuser/az-speedtest-api/SpeedTestApi/SpeedTestApi.csproj...
-  Generating MSBuild file /home/teodoran/cloud-101/testuser/az-speedtest-api/SpeedTestApi/obj/SpeedTestApi.csproj.nuget.g.props.
-  Generating MSBuild file /home/teodoran/cloud-101/testuser/az-speedtest-api/SpeedTestApi/obj/SpeedTestApi.csproj.nuget.g.targets.
-  Restore completed in 18.69 sec for /home/teodoran/cloud-101/testuser/az-speedtest-api/SpeedTestApi/SpeedTestApi.csproj.
-
+Restoring C:\Users\sma\code\az-speedtest-api\SpeedTestApi\SpeedTestApi.csproj:
+  Determining projects to restore...
+  Restored C:\Users\sma\code\az-speedtest-api\SpeedTestApi\SpeedTestApi.csproj (in 296 ms).
 Restore succeeded.
 ```
 
@@ -44,9 +41,9 @@ Try out your new API by moving into the `SpeedTestApi/`-folder and executing `do
 $ az-speedtest-api> cd SpeedTestApi
 $ az-speedtest-api/SpeedTestApi> dotnet run
 info: Microsoft.Hosting.Lifetime[0]
-      Now listening on: https://localhost:5001
+      Now listening on: https://localhost:5070
 info: Microsoft.Hosting.Lifetime[0]
-      Now listening on: http://localhost:5000
+      Now listening on: http://localhost:7185
 info: Microsoft.Hosting.Lifetime[0]
       Application started. Press Ctrl+C to shut down.
 info: Microsoft.Hosting.Lifetime[0]
@@ -57,38 +54,42 @@ info: Microsoft.Hosting.Lifetime[0]
 
 _Notice how A<span>SP.N</span>ET Core creates two endpoints? One for http and one for https requests? This is quite useful as it enables https-redirection and http support, but when we develop locally, its definitely easiest to just use the http endpoint._
 
-Open [http://localhost:5000/WeatherForecast](http://localhost:5000/WeatherForecast) in your favorite browser. Notice how we got redirected to [https://localhost:5001/WeatherForecast](https://localhost:5001/WeatherForecast) and that the browser complains about an insecure connection? This is because we're forcing traffic on http to be upgraded to https if possible, but we don't have a valid certificate installed that enables our machine to make a true https connection. Here's one way we can fix this.
+Open [http://localhost:5070/WeatherForecast](http://localhost:5070/WeatherForecast) in your favorite browser. Notice how we got redirected to [https://localhost:7185/WeatherForecast](https://localhost:7185/WeatherForecast) and that the browser complains about an insecure connection? This is because we're forcing traffic on http to be upgraded to https if possible, but we don't have a valid certificate installed that enables our machine to make a true https connection. Here's one way we can fix this.
 
-Locate the file `Startup.cs`. This file contains, among other things, configuration and dependency injection in an A<span>SP.N</span>ET Core API. There you'll find the method `Configure`. It's currently executing `app.UseHttpsRedirection();` in both development and production mode, so move this line in an else-statement, so it's only executed when the app is not in development.
+Locate the file `Program.cs`. This file contains, among other things, configuration and dependency injection in an A<span>SP.N</span>ET Core API. It's currently executing `app.UseHttpsRedirection();` in both development and production mode, so move this line in an else-statement, so it's only executed when the app is not in development.
 
 ```csharp
-public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
 {
-    if (env.IsDevelopment())
-    {
-        app.UseDeveloperExceptionPage();
-        app.UseSwagger();
-        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/vswagger.json", "SpeedTestApi v1"));
-    }
-    else
-    {
-        app.UseHttpsRedirection();
-    }
-
-    app.UseRouting();
-
-    app.UseAuthorization();
-
-    app.UseEndpoints(endpoints =>
-    {
-        endpoints.MapControllers();
-    });
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+else
+{
+    app.UseHttpsRedirection();
+}
+
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
 ```
 
-Stop and start SpeedTestApi with `dotnet run`, and open [http://localhost:5000/WeatherForecast](http://localhost:5000/WeatherForecast) again. This can be done with `ctrl + C` if run from the console. Now we're not redircted to https and we don't get any warnings, but we'll still use https-redirection when running in production.
-
-_Open question: Should you use https-redirection in development when working on "real" applications?_
+Stop and start SpeedTestApi with `dotnet run`, and open [http://localhost:5070/WeatherForecast](http://localhost:5070/WeatherForecast) again. This can be done with `ctrl + C` if run from the console. Now we're not redircted to https and we don't get any warnings, but we'll still use https-redirection when running in production.
 
 Playing Ping Pong
 -----------------
@@ -99,14 +100,13 @@ Start by deleting the `SpeedTestApi/WeatherForecast.cs`-file. We won't be needin
 ```csharp
 using Microsoft.AspNetCore.Mvc;
 
-namespace SpeedTestApi.Controllers
-{
-    [ApiController]
-    [Route("[controller]")]
-    public class SpeedTestController : ControllerBase
-    {
+namespace SpeedTestApi.Controllers;
 
-    }
+[ApiController]
+[Route("[controller]")]
+public class SpeedTestController : ControllerBase
+{
+
 }
 ```
 
@@ -119,24 +119,23 @@ Now we'll add a single route "ping":
 ```csharp
 using Microsoft.AspNetCore.Mvc;
 
-namespace SpeedTestApi.Controllers
+namespace SpeedTestApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class SpeedTestController : ControllerBase
 {
-    [Route("[controller]")]
-    [ApiController]
-    public class SpeedTestController : ControllerBase
+    // GET speedtest/ping
+    [Route("ping")]
+    [HttpGet]
+    public string Ping()
     {
-        // GET speedtest/ping
-        [Route("ping")]
-        [HttpGet]
-        public string Ping()
-        {
-            return "PONG";
-        }
+        return "PONG";
     }
 }
 ```
 
-Now we can test our ping-route. Restart SpeedTestApi, and open [http://localhost:5000/speedtest/ping](http://localhost:5000/speedtest/ping). It should display PONG.
+Now we can test our ping-route. Restart SpeedTestApi, and open [http://localhost:5070/speedtest/ping](http://localhost:5070/speedtest/ping). It should display PONG.
 
 ![ping-pong](images/ping-pong.png)
 
@@ -221,13 +220,13 @@ Search for "API App" and select API App from the list of results. Then press "Cr
 
 Give the new API App a nice name. This have to be unique across azure, since it determines the URL of your API. `username-speedtest-api` is one way to name it.
 
-Also select the existing resource group "cx-cloud-101", and create a new App Service plan named "cloud-101-appservice". For Runtime stack go with .Net 5, and Windows OS. We also need to create the resource in "Europe West" as "Norway East" doesn't support this App for the free subscription type.
+Also select the existing resource group "cx-cloud-101", and create a new App Service plan named "cloud-101-appservice". For Runtime stack go with .Net 7, and Windows OS. Create the resource in "Norway East".
 
 ![api-app-3](images/api-app-3.png)
 
 Then press "Review + create" then "Create" on the next page and wait a bit while the new API App is being set up.
 
-/When azure is ready a go to resource button pops up. Press it or navigate to the cx-cloud-101 resource group, and open the `username-101-speedtestapi`. 
+When azure is ready a go to resource button pops up. Press it or navigate to the cx-cloud-101 resource group, and open the `username-101-speedtestapi`. 
 
 ![api-app-6](images/api-app-6.png)
 
