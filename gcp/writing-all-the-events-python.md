@@ -311,4 +311,4 @@ Then for the most exiting part. POST a few speedtests to gcp-speedtest-api and c
 
 ## What's next?
 
-You now have a system with an API that can receive speedtests, and a system for storing the speedtests in Big Query. Next we'll [create a logger](return-of-the-logger) so we can get some real speedtests.
+You now have a system with an API that can receive speedtests, and a system for storing the speedtests in Big Query. Next we'll [create a logger](return-of-the-logger-python) so we can get some real speedtests.

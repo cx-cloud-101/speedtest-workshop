@@ -306,4 +306,4 @@ If everything went well, you can publish the updated API to GCP with `mvn clean 
 You have an API on GCP. What now?
 ---------------------------------
 
-Next we'll want to store our speedtest-messages somewhere suitable. Let's continue and [create a Cloud Functions that stores our speedtests in BigQuery](writing-all-the-events)
+Next we'll want to store our speedtest-messages somewhere suitable. Let's continue and [create a Cloud Functions that stores our speedtests in BigQuery](writing-all-the-events-python)
