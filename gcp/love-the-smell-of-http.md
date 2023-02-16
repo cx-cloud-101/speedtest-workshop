@@ -4,7 +4,7 @@ _This time we'll start with the API. The GCP Speedtest API application is an HTT
 
 Suggested implementation
 ------------------------
-We suggest that you implement the Speedtest API as a GCP Appengine Standard Java app using Spring Boot and Spring Cloud. 
+We suggest that you implement the Speedtest API as a Cloud Run using Spring Boot and Spring Cloud. 
 The [reference application](https://github.com/cx-cloud-101/gcp-speedtest-api) is implemented using Kotlin and Maven as the build tool, you may choose Java and/or Gradle if you prefer.
 
 ### API
@@ -58,45 +58,17 @@ Getting Started
 ---------------
 Use [Spring Initializr](https://start.spring.io/) to generate your project.
 
-1. Select setup of build tool and language. Our examples use Kotlin and Maven, but you can choose between Java or Kotlin and Gradle or Maven if you prefer something else. Notice the selections in **bold**, especially **jar** packaging.![](images/create-project-1b.png)
+1. Select setup of build tool and language. Our examples use Kotlin and Maven, but you can choose between Java or Kotlin and Gradle or Maven if you prefer something else. Notice the selections in **bold**, especially **jar** packaging. \
+![](images/create-project-1.png)
 
-1. Add dependencies: `Spring Web` and `GCP Messaging` ![](images/create-project-2b.png)
+2. Add dependencies: `Spring Web` and `GCP Messaging` \
+![](images/create-project-2b.png)
 
-1. Generate project and unzip the downloaded archive. Copy the unzipped `api` folder (whole folder) into your git repo folder.
+3. Generate project and unzip the downloaded archive. Copy the unzipped `api` folder (whole folder) into your git repo folder.
 
-1. Open IntelliJ, click "Open", and select your git repo folder, containing the unzipped files.
+4. Open IntelliJ, click "Open", and select your git repo folder, containing the unzipped files. \
     ![](images/open-project.png)
 
-1. Modify `dependencies` in `pom.xml` so that Maven can find the appengine plugin.
-   ```xml
-    <dependency>
-	      <groupId>com.google.cloud.tools</groupId>
-	      <artifactId>appengine-maven-plugin</artifactId>
-	      <version>2.4.1</version>
-    </dependency>
-   ```
-
-1. Modify `pom.xml` to invoke the appengine plugin (Add the last line to the `plugins`-section). Remember to replace PROJECT_ID with your GCP project id.
-    ```xml
-    			<plugin>
-				<groupId>com.google.cloud.tools</groupId>
-				<artifactId>appengine-maven-plugin</artifactId>
-				<version>2.4.1</version>
-				<configuration>
-					<projectId>PROJECT_ID</projectId>
-					<version>GCLOUD_CONFIG</version>
-				</configuration>
-			</plugin>
-    ```
-_You can find the project ID for your project by looking at the "Project info" tile shown on [console.cloud.google.com/home](https://console.cloud.google.com/home)._
-
-![](images/project-info-gcp.png)
-
-1. Create the folder `/src/main/appengine/`. Then add the following file in that folder:
-`app.yaml`
-```yaml
-runtime: java11
-```
 
 Testing the API
 ---------------
@@ -149,41 +121,58 @@ If the API started successfully, you should be able to open [http://localhost:80
 
 ![](images/hello-speedtest.png)
 
-### Deploy to GCP
-
-If everything went well, you're ready to deploy the API to GCP.
-
-Start by creating an App Engine Application in your GCP Project by running the following command in a terminal, and selecting `europe-west` as the region.
-
-![](images/create-app-1.png)
-
-Navigate to your gcp-speedtest-api/api repo folder, and use maven to deploy your app to appengine.
-
+### Secure it!
+You're nearly ready to deploy to Cloud Run! We want the Cloud Run application to be invoked by any user.
+When you create a Cloud Run it will use a default service account to gain access to GCP resources. This default service
+account has editor access to your GCP projects which gives it access to quite a lot of resources. 
+Following the security principle of least privilege we want to use a service account created only for this Cloud Run
+with the minimum requirement it needs. To create a service account run:
+```shell
+gcloud iam service-accounts create some-account-name --display-name="My Service Account"
 ```
-$ gcp-speedtest-api/api> mvn clean install appengine:deploy
-[INFO] Scanning for projects...
-[INFO] 
-[INFO] -------------------------< com.speedtest:api >--------------------------
-[INFO] Building api 0.0.1-SNAPSHOT
-[INFO] --------------------------------[ jar ]---------------------------------
+We can then deploy our Cloud Run with this service account.
 
-// A lot more output omitted here
+### Deploy to Cloud Run
 
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  03:42 min
-[INFO] Finished at: 2021-11-09T16:40:20+01:00
-[INFO] ------------------------------------------------------------------------
+If everything went well, you're ready to deploy the API to Cloud Run.
+We want to build the Docker image and deploy it as a Cloud Run.
+All of this can be done for us using Cloud Build! 
+In the root of your project create a file called `cloudbuild.yaml`. Here we will define all the steps that we want the build to execute. 
+The first step is to create a Docker image. Add the following to the Cloud Build file:
+```yaml
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/speedtest-api', '.']
+images: ['gcr.io/$PROJECT_ID/speedtest-api']
+```
+The PROJECT_ID is a globally set environment variable in cloud build and will auto resolve to your GCP project.
+To start your build run:
+```shell
+gcloud builds submit .
+```
+If this runs successfully you should be able to see the image in the container registry under the folder speedtest-api.
+Next step is to deploy it to Cloud Run. To do this we need the gcloud image from Cloud Build and then add the appropriate arguments to the step.
+```yaml
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/speedtest-api', '.']
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: [ ... ]
+images: ['gcr.io/$PROJECT_ID/speedtest-api']
 ```
 
-_If you get an error saying that `JAVA_HOME` is not set, and that java is missing from `PATH`, you'll need to do both. `JAVA_HOME` should be the folder where you installed the Java SE 11 JDK. To the `PATH` variable, you'll need to add the `\bin` folder under the `JAVA_HOME` folder._
+The args will be similar to writing a `gcloud run deploy` in the terminal, so try to add the proper arguments to deploy it.
+Consider getting the proper image, deploying in the correct region, making it available for unauthenticated users
+and setting the Cloud Run service account that you created earlier. 
+Hint you can use `gcloud --help` to see the options that are available.
 
-If everything worked, you should be able to open [https://your-project-id.ew.r.appspot.com/hello/speedtest](https://your-project-id.ew.r.appspot.com/hello/speedtest), replacing "your-project-id" with the ID of your GCP project.
+When you've added the arguments you should be ready for another submit. 
+If this is successful you should get a Cloud Run service under the Cloud Run tab in GCP. By clicking on it you should be
+able to see the url where you can post you request.
 
-![](images/gcp-hello-speedtest.png)
-
-You can also take a look at [console.cloud.google.com/appengine](https://console.cloud.google.com/appengine) to view metrics and trace logs about your newly created App Engine Application.
+![](images/cloud-run-url.png) \
+By adding /hello/speedtest to the url you should be able to make a call to the api.
 
 Implementing gcp-speedtest-api
 ------------------------------
@@ -232,7 +221,7 @@ Test the partially implemented /speedtest endpoint by using Postman, or a simila
 }
 ```
 
-Now it's up to you to extend the /speedtest endpoint so it will accept a full speedtest result. When you're done, it should be able to receive a JSON request body as shown below:
+Now it's up to you to extend the /speedtest endpoint, so it will accept a full speedtest result. When you're done, it should be able to receive a JSON request body as shown below:
 
 ```json
 {
@@ -275,8 +264,12 @@ Our Spring Boot project already includes the required packages to publish messag
 $> gcloud pubsub topics create speedtest
 Created topic [projects/you-project-id/topics/speedtest].
 ```
-
-Spring will automatically inject a bean into the `pubSub` field in the class `SpeedTestResource` below. You can achieve the same in Java by creating a class with the field `private final PubSubTemplate pubSub;` and a constructor that has a `PubSubTemplate` parameter that is assigned to the field. With this in mind, we can extend or API so it sends publishes speedtests to our Pub/Sub topic.
+If we want our Cloud Run to be able to publish messages to this topic the proper IAM role must be added to the service account that we've created.
+This can be done by running:
+```
+gcloud pubsub topics add-iam-policy-binding <TOPIC_NAME> --member='serviceAccount:some-account-name@<PROJECT_ID>.iam.gserviceaccount.com' --role='roles/pubsub.publisher'
+```
+Spring will automatically inject a bean into the `pubSub` field in the class `SpeedTestResource` below. We can now extend the API, so it sends publishes speedtests to our Pub/Sub topic.
 ```kotlin
 @RestController
 @RequestMapping("/speedtest")
@@ -301,7 +294,7 @@ Now we can test if we're able to publish events to GCP. Start the API locally, a
 
 ![](images/pub-sub-hello.png)
 
-If everything went well, you can publish the updated API to GCP with `mvn clean install appengine:deploy` in the folder`/gcp-speedtest-api/api`, and test that it works there as well. Check in your changes and/or push them to github if you feel like doing that.
+If everything went well, you can publish the updated API to GCP with `gcloud builds submit .` in the folder`/gcp-speedtest-api/api`, and test that it works there as well. Check in your changes and/or push them to GitHub if you feel like doing that.
 
 You have an API on GCP. What now?
 ---------------------------------
