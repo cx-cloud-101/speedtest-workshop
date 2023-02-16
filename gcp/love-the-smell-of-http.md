@@ -135,10 +135,10 @@ We can then deploy our Cloud Run with this service account.
 ### Deploy to Cloud Run
 
 If everything went well, you're ready to deploy the API to Cloud Run.
-We want to build the docker image and deploy it as a Cloud Run.
+We want to build the Docker image and deploy it as a Cloud Run.
 All of this can be done for us using Cloud Build! 
 In the root of your project create a file called cloudbuild.yaml. Here we will define all the steps that we want the build to execute. 
-The first step is to create a docker image. Add the following to the Cloud Build file:
+The first step is to create a Docker image. Add the following to the Cloud Build file:
 ```
 steps:
   - name: 'gcr.io/cloud-builders/docker'
