@@ -4,7 +4,7 @@ _This time we'll start with the API. The GCP Speedtest API application is an HTT
 
 Suggested implementation
 ------------------------
-We suggest that you implement the Speedtest API as a cloud run using Spring Boot and Spring Cloud. 
+We suggest that you implement the Speedtest API as a Cloud Run using Spring Boot and Spring Cloud. 
 The [reference application](https://github.com/cx-cloud-101/gcp-speedtest-api) is implemented using Kotlin and Maven as the build tool, you may choose Java and/or Gradle if you prefer.
 
 ### API
@@ -122,23 +122,23 @@ If the API started successfully, you should be able to open [http://localhost:80
 ![](images/hello-speedtest.png)
 
 ### Secure it!
-You're nearly ready to deploy to cloud run! We want the cloud run application to be invoked by any user.
-When you create a cloud run it will use a default service account to gain access to gcp resources. This default service
-account has editor access to your gcp projects which gives it access to quite a lot of resources. 
-Following the security principle of least privilege we want to use a service account created only for this cloud run
+You're nearly ready to deploy to Cloud Run! We want the Cloud Run application to be invoked by any user.
+When you create a Cloud Run it will use a default service account to gain access to GCP resources. This default service
+account has editor access to your GCP projects which gives it access to quite a lot of resources. 
+Following the security principle of least privilege we want to use a service account created only for this Cloud Run
 with the minimum requirement it needs. To create a service account run:
 ```
 gcloud iam service-accounts create some-account-name --display-name="My Service Account"
 ```
-We can then deploy our cloud run with this service account.
+We can then deploy our Cloud Run with this service account.
 
 ### Deploy to Cloud Run
 
 If everything went well, you're ready to deploy the API to Cloud Run.
-We want to build the docker image and deploy it as a cloud run.
-All of this can be done for us using cloud build! 
+We want to build the docker image and deploy it as a Cloud Run.
+All of this can be done for us using Cloud Build! 
 In the root of your project create a file called cloudbuild.yaml. Here we will define all the steps that we want the build to execute. 
-The first step is to create a docker image. Add the following to the cloud build file:
+The first step is to create a docker image. Add the following to the Cloud Build file:
 ```
 steps:
   - name: 'gcr.io/cloud-builders/docker'
@@ -150,7 +150,7 @@ To start your build run:
 gcloud builds submit .
 ```
 If this runs successfully you should be able to see the image in the container registry under the folder speedtest-api.
-Next step is to deploy it to cloud run. To do this we need the gcloud image from cloud build and then add the appropriate arguments to the step.
+Next step is to deploy it to Cloud Run. To do this we need the gcloud image from Cloud Build and then add the appropriate arguments to the step.
 ```
 steps:
   - name: 'gcr.io/cloud-builders/docker'
@@ -163,11 +163,11 @@ images: ['gcr.io/$PROJECT_ID/speedtest-api']
 
 The args will be similar to writing a gcloud run deploy in the terminal, so try to add the proper arguments to deploy it.
 Consider getting the proper image, deploying in the correct region, making it available for unauthenticated users
-and setting the cloud run service account that you created earlier. 
+and setting the Cloud Run service account that you created earlier. 
 Hint you can use gcloud --help to see the options that are available.
 
 When you've added the arguments you should be ready for another submit. 
-If this is successful you should get a cloud run service under the cloud run tab in gcp. By clicking on it you should be
+If this is successful you should get a Cloud Run service under the Cloud Run tab in GCP. By clicking on it you should be
 able to see the url where you can post you request.
 
 ![](images/cloud-run-url.png) \
@@ -263,7 +263,7 @@ Our Spring Boot project already includes the required packages to publish messag
 $> gcloud pubsub topics create speedtest
 Created topic [projects/you-project-id/topics/speedtest].
 ```
-If we want our cloud run to be able to publish messages to this topic the proper IAM role must be added to the service account that we've created.
+If we want our Cloud Run to be able to publish messages to this topic the proper IAM role must be added to the service account that we've created.
 This can be done by running:
 ```
 gcloud pubsub topics add-iam-policy-binding <TOPIC_NAME> --member='serviceAccount:some-account-name@<PROJECT_ID>.iam.gserviceaccount.com' --role='roles/pubsub.publisher'
