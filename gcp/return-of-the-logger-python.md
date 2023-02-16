@@ -8,7 +8,7 @@ See "[Love the smell of HTTP in the morning](love-the-smell-of-http)" for a desc
 Implementation
 ------------------------
 You can implement the application in any language you prefer, though you should consider if there are speedtest.net library implementations for 
-that language and whether the results you get from the library comply with the GCP Speedtest API. We reccomend using Python as it have such a library:
+that language and whether the results you get from the library comply with the GCP Speedtest API. We recommend using Python as it have such a library:
 
 * [speedtest-cli](https://github.com/sivel/speedtest-cli)
 
@@ -28,7 +28,7 @@ speedtest-cli
 requests
 ```
 
-Install these to your Python enviroment running: 
+Install these to your Python environment running: 
 
 ```bash
 pip install -r requirements.txt
@@ -133,4 +133,4 @@ python logger.py
 
 What's next?
 ------------
-When you have a logger capable of sending speedtests to the API, we can move forward and start [analyzing it all](analyzing-it-all).
+When you have a logger capable of sending speedtest results to the API, we can move forward and start [analyzing it all](analyzing-it-all).
