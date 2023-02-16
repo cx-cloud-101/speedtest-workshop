@@ -162,8 +162,9 @@ images: ['gcr.io/$PROJECT_ID/speedtest-api']
 ```
 
 The args will be similar to writing a gcloud run deploy in the terminal, so try to add the proper arguments to deploy it.
-Consider getting the proper image, deploying in the correct region, and setting the cloud run service account that you
-created earlier. Hint you can use gcloud --help to see the options that are available.
+Consider getting the proper image, deploying in the correct region, making it available for unauthenticated users
+and setting the cloud run service account that you created earlier. 
+Hint you can use gcloud --help to see the options that are available.
 
 When you've added the arguments you should be ready for another submit. 
 If this is successful you should get a cloud run service under the cloud run tab in gcp. By clicking on it you should be
