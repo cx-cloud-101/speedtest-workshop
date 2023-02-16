@@ -127,7 +127,7 @@ When you create a Cloud Run it will use a default service account to gain access
 account has editor access to your GCP projects which gives it access to quite a lot of resources. 
 Following the security principle of least privilege we want to use a service account created only for this Cloud Run
 with the minimum requirement it needs. To create a service account run:
-```
+```shell
 gcloud iam service-accounts create some-account-name --display-name="My Service Account"
 ```
 We can then deploy our Cloud Run with this service account.
@@ -137,34 +137,35 @@ We can then deploy our Cloud Run with this service account.
 If everything went well, you're ready to deploy the API to Cloud Run.
 We want to build the Docker image and deploy it as a Cloud Run.
 All of this can be done for us using Cloud Build! 
-In the root of your project create a file called cloudbuild.yaml. Here we will define all the steps that we want the build to execute. 
+In the root of your project create a file called `cloudbuild.yaml`. Here we will define all the steps that we want the build to execute. 
 The first step is to create a Docker image. Add the following to the Cloud Build file:
-```
+```yaml
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/speedtest-api', '.']
 images: ['gcr.io/$PROJECT_ID/speedtest-api']
 ```
+The PROJECT_ID is a globally set environment variable in cloud build and will auto resolve to your GCP project.
 To start your build run:
-```
+```shell
 gcloud builds submit .
 ```
 If this runs successfully you should be able to see the image in the container registry under the folder speedtest-api.
 Next step is to deploy it to Cloud Run. To do this we need the gcloud image from Cloud Build and then add the appropriate arguments to the step.
-```
+```yaml
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/speedtest-api', '.']
-    - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: [ ... ]
 images: ['gcr.io/$PROJECT_ID/speedtest-api']
 ```
 
-The args will be similar to writing a gcloud run deploy in the terminal, so try to add the proper arguments to deploy it.
+The args will be similar to writing a `gcloud run deploy` in the terminal, so try to add the proper arguments to deploy it.
 Consider getting the proper image, deploying in the correct region, making it available for unauthenticated users
 and setting the Cloud Run service account that you created earlier. 
-Hint you can use gcloud --help to see the options that are available.
+Hint you can use `gcloud --help` to see the options that are available.
 
 When you've added the arguments you should be ready for another submit. 
 If this is successful you should get a Cloud Run service under the Cloud Run tab in GCP. By clicking on it you should be
@@ -293,7 +294,7 @@ Now we can test if we're able to publish events to GCP. Start the API locally, a
 
 ![](images/pub-sub-hello.png)
 
-If everything went well, you can publish the updated API to GCP with `gcloud builds submit .` in the folder`/gcp-speedtest-api/api`, and test that it works there as well. Check in your changes and/or push them to github if you feel like doing that.
+If everything went well, you can publish the updated API to GCP with `gcloud builds submit .` in the folder`/gcp-speedtest-api/api`, and test that it works there as well. Check in your changes and/or push them to GitHub if you feel like doing that.
 
 You have an API on GCP. What now?
 ---------------------------------
