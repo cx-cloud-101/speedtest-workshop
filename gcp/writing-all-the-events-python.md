@@ -1,6 +1,6 @@
 [Home](../) > [GCP](index) > Writing all the events
 =========================================================
-_The GCP Event Writer is a cloud function that subscribes to Speedtest Event messages on a Pub/Sub topic and writes them as rows in a BigQuery table._
+_The GCP Event Writer is a Cloud Function that subscribes to Speedtest Event messages on a Pub/Sub topic and writes them as rows in a BigQuery table._
 
 Suggested implementation
 ------------------------
@@ -73,8 +73,6 @@ Let's start by making the `main.py` file.
 ```python
 import json
 import base64
-import datetime
-from google.cloud import bigquery
 
 def main(event, context):
     """Triggered from a message on the speedtest Cloud Pub/Sub topic.
