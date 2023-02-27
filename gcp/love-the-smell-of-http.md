@@ -5,7 +5,7 @@ _This time we'll start with the API. The GCP Speedtest API application is an HTT
 Suggested implementation
 ------------------------
 We suggest that you implement the Speedtest API as a Cloud Run using Spring Boot and Spring Cloud. 
-The [reference application](https://github.com/cx-cloud-101/gcp-speedtest-api) is implemented using Kotlin and Maven as the build tool, you may choose Java and/or Gradle if you prefer.
+The [reference application](https://github.com/cx-cloud-101/gcp-speedtest/tree/main/api) is implemented using Kotlin and Maven as the build tool, you may choose Java and/or Gradle if you prefer.
 
 ### API
 Implement the following API.
