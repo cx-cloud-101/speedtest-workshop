@@ -270,7 +270,7 @@ Deploying the Event Writer
 To deploy gcp-event-writer to Google Cloud Platform you'll need to use the terminal command `gcloud functions deploy`:
 
 ```shell
-$ gcp-event-writer> gcloud functions deploy processSpeedtestEvent --trigger-topic speedtest --entry-point main --runtime python3.10 --region europe-west1
+$ gcp-event-writer> gcloud functions deploy processSpeedtestEvent --trigger-topic speedtest --entry-point main --runtime python310 --region europe-west1
 
 API [cloudfunctions.googleapis.com] not enabled on project
 [1050850001017]. Would you like to enable and retry (this will take a
@@ -293,7 +293,7 @@ Deploying a new Cloud Function takes a few minutes, so while we wait, lets have 
 
 The `--trigger-topic` flag is used to specify the Cloud Pub/Sub topic to trigger the function. In our case, it is the `speedtest` topic created earlier.
 
-The `--runtime python3.10` flag specifies that the function will be executed using Python 3.10.
+The `--runtime python310` flag specifies that the function will be executed using Python 3.10.
 
 The `--entry-point` flag is used to specify the function name to run when triggered. In our case, it is `main`.
 
