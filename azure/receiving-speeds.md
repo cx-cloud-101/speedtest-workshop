@@ -36,16 +36,36 @@ Let's test our new route. Run SpeedTestApi with `dotnet run`, boot up [Postman](
 
 ```json
 {
-	"user": "cloud-101-testuser",
-	"data": {
-		"speeds": {
-			"download": 13.37
-		}
-	}
+    "sessionId": "5e91ac64-1010-4d31-91d1-41c84d0b69a2",
+    "user": "cloud-101-testuser",
+    "device": 1,
+    "timestamp": 123456789,
+    "data": {
+        "speeds": {
+            "download": 13.37,
+            "upload": 4.2
+        },
+        "client": {
+            "ip": "127.0.0.1",
+            "latitude": 1.2,
+            "longitude": 92.7,
+            "isp": "Get",
+            "country": "NO"
+        },
+        "server": {
+            "host": "get.speedtest.net",
+            "latitude": 1.3,
+            "longitude": 93.0,
+            "country": "NO",
+            "distance": 3001,
+            "ping": 12,
+            "id": 42
+        }
+    }
 }
 ```
 
-We can get away with just posting parts of a TestResult. This is because we're not validating the contents of the TestResult we're receiving. This is usually a bad thing when creating APIs. Luckily we can solve this by using [DataAnnotations](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/validation?view=aspnetcore-5.0).
+Using record types automatically adds validation that required parts are set in the request, so we can't get away with just posting parts of a TestResult. We can also validate the data in other ways by using [DataAnnotations](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/validation?view=aspnetcore-7.0).
 
 
 Adding DataAnnotations to TestResult and friends
@@ -55,111 +75,79 @@ When creating an API for storing stuff, it's nice to be quite strict on what kin
 Lets add DataAnnotations to the classes in `TestResult.cs`.
 
 ```csharp
-using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace SpeedTestApi.Models
-{
-    public class TestResult
-    {
-        [Required]
-        public Guid SessionId { get; set; }
+namespace SpeedTestLogger.Models;
 
-        [StringLength(500, MinimumLength = 2)]
-        [Required]
-        public string User { get; set; }
+public record TestResult(
+    Guid SessionId,
 
-        [Range(1, int.MaxValue)]
-        [Required]
-        public int Device { get; set; }
+    [StringLength(500, MinimumLength = 2)]
+    string User,
 
-        [Range(0, long.MaxValue)]
-        [Required]
-        public long Timestamp { get; set; }
+    [Range(1, int.MaxValue)]
+    int Device,
 
-        [Required]
-        public TestData Data { get; set; }
-    }
+    [Range(0, long.MaxValue)]
+    long Timestamp,
 
-    public class TestData
-    {
-        [Required]
-        public TestSpeeds Speeds { get; set; }
+    TestData Data);
 
-        [Required]
-        public TestClient Client { get; set; }
+public record TestData(
+    TestSpeeds Speeds,
 
-        [Required]
-        public TestServer Server { get; set; }
-    }
+    TestClient Client,
 
-    public class TestSpeeds
-    {
-        [Range(0, 3000)]
-        [Required]
-        public double Download { get; set; }
+    TestServer Server);
 
-        [Range(0, 3000)]
-        [Required]
-        public double Upload { get; set; }
-    }
+public record TestSpeeds(
+    [Range(0, 3000)]
+    double Download,
 
-    public class TestClient
-    {
-        [RegularExpression(@"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")]
-        [Required]
-        public string Ip { get; set; }
+    [Range(0, 3000)]
+    double Upload);
 
-        [Range(-90, 90)]
-        public double Latitude { get; set; }
+public record TestClient(
+    [RegularExpression(@"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")]
+    string Ip,
 
-        [Range(-180, 180)]
-        public double Longitude { get; set; }
+    [Range(-90, 90)]
+    double Latitude,
 
-        [StringLength(500, MinimumLength = 2)]
-        [Required]
-        public string Isp { get; set; }
+    [Range(-180, 180)]
+    double Longitude,
 
-        [RegularExpression(@"^([A-Z]){2}$")]
-        [Required]
-        public string Country { get; set; }
-    }
+    [StringLength(500, MinimumLength = 2)]
+    string Isp,
 
-    public class TestServer
-    {
-        [StringLength(500, MinimumLength = 2)]
-        [Required]
-        public string Host { get; set; }
+    [Required]
+    string Country);
 
-        [Range(-90, 90)]
-        [Required]
-        public double Latitude { get; set; }
+public record TestServer(
+    [StringLength(500, MinimumLength = 2)]
+    string Host,
 
-        [Range(-180, 180)]
-        [Required]
-        public double Longitude { get; set; }
+    [Range(-90, 90)]
+    double Latitude,
 
-        [RegularExpression(@"^([A-Z]){2}$")]
-        [Required]
-        public string Country { get; set; }
+    [Range(-180, 180)]
+    double Longitude,
 
-        [Range(0, 21000000)]
-        [Required]
-        public double Distance { get; set; }
+    [RegularExpression(@"^([A-Z]){2}$")]
+    string Country,
 
-        [Range(0, int.MaxValue)]
-        [Required]
-        public int Ping { get; set; }
+    [Range(0, 21000000)]
+    double Distance,
 
-        [Range(0, int.MaxValue)]
-        [Required]
-        public int Id { get; set; }
-    }
-}
+    [Range(0, int.MaxValue)]
+    int Ping,
+
+    [Range(0, int.MaxValue)]
+    int Id);
+
 ```
 
 Restrict the properties in a lot of different ways:
-* Want to enforce that a property is required? Use `[Required]`.
 * Want Device to only be positive integers? Use `[Range(1, int.MaxValue)]`.
 * Only want to store 500 characters of User (maybe this is a limit in your database) and require it to be at least 2 characters long? Use `[StringLength(500, MinimumLength = 2)]`.
 * You can even create crazy regex-expressions to enforce Ip to be a valid IP-address: `[RegularExpression(@"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")]`.
@@ -207,10 +195,10 @@ Now everything should validate correctly.
 
 Logging in A<span>SP.N</span>ET Core
 -----------------------
-Before we try to send data from the logger to the API, we probably should implement some form of logging, so SpeedTestApi can inform us that it has received a TestResult. One way of doing this is just to use `Console.WriteLine(...)` like we did in the logger, but [ASP.NET Core supports a logging API](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-5.0) out of the box, so instead we'll try to be fancy this time.
+Before we try to send data from the logger to the API, we probably should implement some form of logging, so SpeedTestApi can inform us that it has received a TestResult. One way of doing this is just to use `Console.WriteLine(...)` like we did in the logger, but [ASP.NET Core supports a logging API](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-7.0) out of the box, so instead we'll try to be fancy this time.
 
 ### Injecting an instance of ILogger
-Most things in A<span>SP.N</span>ET Core is composed using [dependency injection](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-5.0). This means, without going into details, that A<span>SP.N</span>ET Core can supply our controller (and other classes) with instances of objects we want to use for different things. This can be homemade objects, like a database service for storing and retrieving information from a database, or built in objects, like the instance of `ILogger` that we need to use the logging API.
+Most things in A<span>SP.N</span>ET Core is composed using [dependency injection](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-7.0). This means, without going into details, that A<span>SP.N</span>ET Core can supply our controller (and other classes) with instances of objects we want to use for different things. This can be homemade objects, like a database service for storing and retrieving information from a database, or built in objects, like the instance of `ILogger` that we need to use the logging API.
 
 Open SpeedTestController again, and add a using-statement declaring that we want to use the logging extensions in Microsoft.Extensions.Logging.
 
@@ -261,18 +249,16 @@ If you try to run SpeedTestApi again, and POST a new TestResult to the API, you 
 
 ```shell
 $ az-speedtest-api/SpeedTestApi> dotnet run
-info: Microsoft.Hosting.Lifetime[0]
-      Now listening on: https://localhost:5001
-info: Microsoft.Hosting.Lifetime[0]
-      Now listening on: http://localhost:5000
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5070
 info: Microsoft.Hosting.Lifetime[0]
       Application started. Press Ctrl+C to shut down.
 info: Microsoft.Hosting.Lifetime[0]
       Hosting environment: Development
 info: Microsoft.Hosting.Lifetime[0]
-      Content root path: /home/teodoran/cloud-101/az-test/az-speedtest-api/SpeedTestApi
+      Content root path: C:\Users\sma\code\az-speedtest-api\SpeedTestApi
 info: SpeedTestApi.Controllers.SpeedTestController[0]
-      Got a TestResult from cloud-101-testuser with download 19.48 Mbps.
+      Got a TestResult from cloud-101-testuser with download 13.37 Mbps.
 ```
 
 Calling SpeedTestApi from SpeedTestLogger
@@ -287,7 +273,7 @@ In order to call SpeedTestApi we need an URL. This should probably be configurab
     "userId": "cloud-101-testuser",
     "loggerId": 1,
     "loggerLocationCountryCode": "nb-NO",
-    "speedTestApiUrl": "http://localhost:5000"
+    "speedTestApiUrl": "http://localhost:5070"
 }
 ```
 
@@ -307,35 +293,28 @@ ApiUrl = new Uri(configuration["speedTestApiUrl"]);
 Now we can start writing the code responsible for POSTing TestResults to SpeedTestApi. Create a new file and class called SpeedTestApi in SpeedTestLogger. We want it to contain an instance of System.Net.Http.HttpClient (a built-in class for performing http-requests), and we want that instance to be configured with the speedTestApiUrl. An instance of HttpClient holds on to some system resources, so we want to make sure that we [dispose](https://docs.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-dispose), or "clean up", that instance when we're done with it. The usual way of doing this is to implement the IDisposable interface, signalling that instances of SpeedTestApiClient should be disposed, and handling clean-up of the HttpClient instance there.
 
 ```csharp
-using System;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using SpeedTestLogger.Models;
+namespace SpeedTestLogger;
 
-namespace SpeedTestLogger
+public sealed class SpeedTestApiClient : IDisposable
 {
-    public sealed class SpeedTestApiClient : IDisposable
+    private readonly HttpClient _client;
+
+    public SpeedTestApiClient(Uri speedTestApiUrl)
     {
-        private readonly HttpClient _client;
-
-        public SpeedTestApiClient(Uri speedTestApiUrl)
+        _client = new HttpClient
         {
-            _client = new HttpClient
-            {
-                BaseAddress = speedTestApiUrl
-            };
-        }
+            BaseAddress = speedTestApiUrl
+        };
+    }
 
-        // Code continues here
+    // Code continues here
 
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
+    public void Dispose()
+    {
+        _client.Dispose();
     }
 }
+
 ```
 
 With an instance of HttpClient in place, we can write the code that POST a TestResult to SpeedTestApi.
@@ -381,61 +360,30 @@ A POST-request can't send objects, so we need to serialize our TestResult as JSO
 
 _Note how the previous functions are marked `async`, and use the `await`-keyword? This is en example of how to do [asynchronous programming in C#](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/). We'll see a lot more of this going forward._
 
-### Updating Main() to use SpeedTestApiClient
+### Updating Program.cs to use SpeedTestApiClient
 Open `Program.cs` and extend `Main()` with code sending the TestResult to SpeedTestApi.
 
 ```csharp
-using System;
-using System.Globalization;
-using System.Threading.Tasks;
-using SpeedTestLogger.Models;
 
-namespace SpeedTestLogger
+// Omitting old code
+using var client = new SpeedTestApiClient(config.ApiUrl);
+
+var success = await client.PublishTestResult(results);
+
+if (success)
 {
-    class Program
-    {
-        static async Task Main(string[] args)
-        {
-            // Omitting old code
-            var success = false;
-            using (var client = new SpeedTestApiClient(config.ApiUrl))
-            {
-                success = await client.PublishTestResult(results);
-            }
-
-            if (success)
-            {
-                Console.WriteLine("Speedtest complete!");
-            }
-            else
-            {
-                Console.WriteLine("Speedtest failed!");
-            }
-        }
-    }
+    Console.WriteLine("Speedtest complete!");
+}
+else
+{
+    Console.WriteLine("Speedtest failed!");
 }
 ```
 
-Note how we suddenly got `static async Task Main(...)`? Since PublishTestResult is an async function, we need to wait for it to complete. Previously we had to do some tricks to evaluate async functions in a synchronous/regular function, but since C# 7.1, we can just make `Main()` an async function and use `await`.
-
-Also note that we're using `using (var client = new SpeedTestApiClient(config.ApiUrl)) { ... }` when creating the instance of SpeedTestApiClient. Remember the stuff about SpeedTestApiClient, HttpClient and IDispose? When we're using `using (...) { ... }`, we're making sure that `Dispose()` gets called as soon as we're done with the code inside the using-block.
+Note that we're using `using var client = new SpeedTestApiClient(config.ApiUrl);` when creating the instance of SpeedTestApiClient. Remember the stuff about SpeedTestApiClient, HttpClient and IDispose? When we're using `using (...);`, we're making sure that `Dispose()` gets called as soon as we're done with the code inside the scope of the using statement.
 
 ### Does it work?
 Let's try it out by first starting SpeedTestApi and then starting SpeedTestLogger.
-
-```shell
-$ az-speedtest-api/SpeedTestApi> dotnet run
-info: Microsoft.Hosting.Lifetime[0]
-      Now listening on: https://localhost:5001
-info: Microsoft.Hosting.Lifetime[0]
-      Now listening on: http://localhost:5000
-info: Microsoft.Hosting.Lifetime[0]
-      Application started. Press Ctrl+C to shut down.
-info: Microsoft.Hosting.Lifetime[0]
-      Hosting environment: Development
-info: Microsoft.Hosting.Lifetime[0]
-      Content root path: /home/cloud-101/testuser/az-speedtest-api/SpeedTestApi
-```
 
 If everything went alright, you should get "Speedtest complete!".
 
@@ -443,11 +391,12 @@ If everything went alright, you should get "Speedtest complete!".
 $ az-speedtest-logger/SpeedTestLogger> dotnet run
 
 Hello SpeedTestLogger!
+Logger located in Norway
 Finding best test servers
 Testing download speed
-Download speed was: 301,71 Mbps
+Download speed was: 306.84 Mbps
 Testing upload speed
-Upload speed was: 128,6 Mbps
+Upload speed was: 262.61 Mbps
 Speedtest complete!
 ```
 
@@ -455,18 +404,16 @@ Looking at the log-output from SpeedTestApi, you should get a single line inform
 
 ```shell
 $ az-speedtest-api/SpeedTestApi> dotnet run
-info: Microsoft.Hosting.Lifetime[0]
-      Now listening on: https://localhost:5001
-info: Microsoft.Hosting.Lifetime[0]
-      Now listening on: http://localhost:5000
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5070
 info: Microsoft.Hosting.Lifetime[0]
       Application started. Press Ctrl+C to shut down.
 info: Microsoft.Hosting.Lifetime[0]
       Hosting environment: Development
 info: Microsoft.Hosting.Lifetime[0]
-      Content root path: /home/teodoran/cloud-101/az-test/az-speedtest-api/SpeedTestApi
+      Content root path: C:\Users\sma\code\az-speedtest-api\SpeedTestApi
 info: SpeedTestApi.Controllers.SpeedTestController[0]
-      Got a TestResult from cloud-101-testuser with download 301,71 Mbps.
+      Got a TestResult from cloud-101-testuser with download 306.84 Mbps.
 ```
 
 Putting it all up on Azure

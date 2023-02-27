@@ -15,9 +15,9 @@ Log on to [portal.azure.com](https://portal.azure.com), navigate to the cx-cloud
 
 The name of the event hub has to be unique across Azure, so name it username-speedtest-events. Going forward we'll just refer to this as testuser-speedtest-events, since our example user has the username testuser.
 
-Use standard pricing tier, the existing resource group, and make sure it's located in "West Europe".
+Use standard pricing tier, the existing resource group, and make sure it's located in "Norway East".
 
-![event-hub-2](images/eventhubs-2.png)
+![event-hub-2](images/event-hub-2.png)
 
 When the event hub resource is finished creating, open it and add a new event hub named speedtest-events
 
@@ -43,8 +43,7 @@ Let's open it and add a section with event-hub configuration.
   "Logging": {
     "LogLevel": {
       "Default": "Information",
-      "Microsoft": "Warning",
-      "Microsoft.Hosting.Lifetime": "Information"
+      "Microsoft.AspNetCore": "Warning"
     }
   },
   "EventHub": {
@@ -52,6 +51,7 @@ Let's open it and add a section with event-hub configuration.
     "EntityPath": "speedtest-events"
   }
 }
+
 
 ```
 
@@ -62,8 +62,7 @@ It's good practice to add corresponding properties with empty values in appsetti
   "Logging": {
     "LogLevel": {
       "Default": "Information",
-      "Microsoft": "Warning",
-      "Microsoft.Hosting.Lifetime": "Information"
+      "Microsoft.AspNetCore": "Warning"
     }
   },
   "AllowedHosts": "*",
@@ -72,6 +71,7 @@ It's good practice to add corresponding properties with empty values in appsetti
     "EntityPath": "speedtest-events"
   }
 }
+
 ```
 
 Since we're not committing the connection string, we need to tell our API App running testuser-speedtest-api about it. Luckily API Apps know how appsettings work, so we can configure it from [portal.azure.com](https://portal.azure.com). Add a new setting under "Application settings". Name it "EventHub:ConnectionString". Then click Save.
@@ -82,12 +82,12 @@ _Why didn't we use the Connection strings section? Mainly because this tutorial 
 
 Publishing TestResults to Event Hub
 -----------------------------------
-In order to publish TestResults to the event hub, we'll create an A<span>SP.N</span>ET Core service. Services are used for a lot of different things in A<span>SP.N</span>ET Core applications, and ties together with the built-in system for [dependency injection](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-5.0).
+In order to publish TestResults to the event hub, we'll create an A<span>SP.N</span>ET Core service. Services are used for a lot of different things in A<span>SP.N</span>ET Core applications, and ties together with the built-in system for [dependency injection](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-7.0).
 
 Before we start, we need to add the package Azure.Messaging.EventHubs to SpeedTestApi. It contains code for connecting and sending messages to event hub.
 
 ```shell
-$ az-speedtest-api/SpeedTestApi> dotnet add package Azure.Messaging.EventHubs --version 5.6.2
+$ az-speedtest-api/SpeedTestApi> dotnet add package Azure.Messaging.EventHubs --version 5.7.5
 ```
 
 Let's start writing our service by opening SpeedTestApi, creating a folder named `Services/` containing two files `Services/ISpeedTestEvents.cs` and `Services/SpeedTestEvents.cs`.
@@ -95,51 +95,46 @@ Let's start writing our service by opening SpeedTestApi, creating a folder named
 We'll create the interface in ISpeedTestEvents first. It contains a single async function for publishing a TestResult to event hub.
 
 ```csharp
-using System.Threading.Tasks;
-using SpeedTestApi.Models;
+using SpeedTestLogger.Models;
 
-namespace SpeedTestApi.Services
+namespace SpeedTestApi.Services;
+
+public interface ISpeedTestEvents
 {
-    public interface ISpeedTestEvents
-    {
-        Task PublishSpeedTest(TestResult speedTest);
-    }
+    Task PublishSpeedTest(TestResult speedTest);
 }
+
 ```
 
-Now we can get started on the implementation. Open SpeedTestEvents and add a class implementing ISpeedTestEvents. Similarly as with SpeedTestApiClient, we want an instance of EventHubClient, and we want to create it in the constructor, based on the connection string and the entity path. As with HttpClient, EventHubClient is something that we need to dispose of, so we'll implement the IDisposable interface as well.
+Now we can get started on the implementation. Open SpeedTestEvents and add a class implementing ISpeedTestEvents. Similarly as with SpeedTestApiClient, we want an instance of EventHubClient, and we want to create it in the constructor, based on the connection string and the the entity path. As with HttpClient, EventHubClient is something that we need to dispose of, so we'll implement the IDisposable interface as well.
 
 _What's the entityPath? The entityPath tells event hub what event hub in the event hub namespace we're going to publish our message to._
 
 ```csharp
-using System;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using Azure.Messaging.EventHubs;
 using Azure.Messaging.EventHubs.Producer;
-using SpeedTestApi.Models;
+using Azure.Messaging.EventHubs;
+using SpeedTestLogger.Models;
 
-namespace SpeedTestApi.Services
+namespace SpeedTestApi.Services;
+
+public class SpeedTestEvents : ISpeedTestEvents, IDisposable
 {
-    public sealed class SpeedTestEvents : ISpeedTestEvents, IDisposable
+    private readonly EventHubProducerClient _client;
+
+    public SpeedTestEvents(string connectionString, string entityPath)
     {
-        private readonly EventHubProducerClient _client;
+        _client = new EventHubProducerClient(connectionString, entityPath);
+    }
 
-        public SpeedTestEvents(string connectionString, string entityPath)
-        {
-            _client = new EventHubProducerClient(connectionString, entityPath);
-        }
+    // code continues here
 
-        // Code continues here
-
-        public void Dispose()
-        {
-            _client.CloseAsync();
-        }
+    public void Dispose()
+    {
+        _client.CloseAsync();
     }
 }
-
 ```
 
 Now we can write PublishSpeedTest. It's very similar to PublishTestResult in SpeedTestLogger, we still have to serialize the TestResult as JSON, but this time we won't worry about exceptions, as they'll be caught by A<span>SP.N</span>ET Core.
@@ -156,20 +151,22 @@ public async Task PublishSpeedTest(TestResult speedTest)
 // Omitting old code
 ```
 
-SpeedTestEvents needs to be injected as part of the dependency injection in `Startup.cs`. Use SpeedTestApi.Services and extend ConfigureServices with code that adds a scoped instance of SpeedTestEvents.
+SpeedTestEvents needs to be injected as part of the dependency injection in `Program.cs`. Use SpeedTestApi.Services and extend ConfigureServices with code that adds a scoped instance of SpeedTestEvents.
 
 ```csharp
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddControllers();
 
-    var connectionString = Configuration.GetValue<string>("EventHub:ConnectionString");
-    var entityPath = Configuration.GetValue<string>("EventHub:EntityPath");
-    services.AddScoped<ISpeedTestEvents, SpeedTestEvents>(cts =>
-    {
-        return new SpeedTestEvents(connectionString, entityPath);
-    });
-}
+// Omitting old code
+builder.Services.AddControllers();
+
+var connectionString = builder.Configuration.GetValue<string>("EventHub:ConnectionString");
+var entityPath = builder.Configuration.GetValue<string>("EventHub:EntityPath");
+
+builder.Services.AddScoped<ISpeedTestEvents, SpeedTestEvents>(cts =>
+{
+    return new SpeedTestEvents(connectionString, entityPath);
+});
+
+// Omitting old code
 ```
 
 _Services can be added with different lifetimes. A scoped service, will for instance be instantiated, and live trough a singe http request._
@@ -178,25 +175,25 @@ Finally we need to use SpeedTestEvents in SpeedTestController. Use SpeedTestApi.
 
 ```csharp
 private readonly ILogger _logger;
-private readonly ISpeedTestEvents _eventHub;
+private readonly ISpeedTestEvents _speedTestEvents;
 
-public SpeedTestController(ILogger<SpeedTestController> logger, ISpeedTestEvents eventHub)
+public SpeedTestController(ILogger<SpeedTestController> logger, ISpeedTestEvents speedTestEvents)
 {
     _logger = logger;
-    _eventHub = eventHub;
+    _speedTestEvents = speedTestEvents;
 }
 ```
 
-Now we can use _eventHub in UploadSpeedTest. To do that, UploadSpeedTest needs to be an async function and we have to use System.Threading.Tasks.
+Now we can use _speedTestEvents in UploadSpeedTest. To do that, UploadSpeedTest needs to be an async function and we have to use System.Threading.Tasks.
 
 ```csharp
 // POST speedtest/
 [HttpPost]
 public async Task<string> UploadSpeedTest([FromBody] TestResult speedTest)
 {
-    await _eventHub.PublishSpeedTest(speedTest);
+    await _speedTestEvents.PublishSpeedTest(speedTest);
 
-    var response = $"Got a TestResult from { speedTest.User } with download { speedTest.Data.Speeds.Download } Mbps.";
+    var response = $"Got a TestResult from {speedTest.User} with download {speedTest.Data.Speeds.Download} Mbps.";
     _logger.LogInformation(response);
 
     return response;
@@ -205,7 +202,7 @@ public async Task<string> UploadSpeedTest([FromBody] TestResult speedTest)
 
 Testing it all out
 ------------------
-Try everything out locally first. Configure SpeedTestLogger to call your local instance of SpeedTestApi (`"speedTestApiUrl": "http://localhost:5000"` in appsettings.json). Run SpeedTestApi and then SpeedTestLogger. If everything worked, you should have successful requests showing on the speedtest-events overview page.
+Try everything out locally first. Configure SpeedTestLogger to call your local instance of SpeedTestApi (`"speedTestApiUrl": "http://localhost:5070"` in appsettings.json). Run SpeedTestApi and then SpeedTestLogger. If everything worked, you should have successful requests showing on the speedtest-events overview page.
 
 ![first-request](images/first-request.png)
 
