@@ -21,11 +21,11 @@ _Request body:_
 {
    "user": "STRING",
    "device": "NUMBER",
-   "timestamp": "NUMBER", // epoch time in ms
+   "timestamp": "NUMBER", // epoch time in s
    "data": {
         "speeds": {
-            "download": "NUMBER",
-            "upload": "NUMBER"
+            "download": "NUMBER", // bits per second (bps)
+            "upload": "NUMBER" // bps
         },
         "client": {
             "ip": "STRING?",
@@ -227,7 +227,7 @@ Now it's up to you to extend the /speedtest endpoint, so it will accept a full s
 {
    "user": "gcp-101-testuser",
    "device": 1,
-   "timestamp": 1581558456119,
+   "timestamp": 1581558456,
    "data": {
         "speeds": {
             "download": 60.4,
