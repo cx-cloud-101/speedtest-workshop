@@ -3,11 +3,11 @@
 
 Index
 -----
-1. [Measuring Speed](measuring-speed)
-2. [An API for All Things](an-api-for-all-things)
-3. [Receiving speeds](receiving-speeds)
-4. [Events! Events! Events!](events-events)
-5. [Adding Analytics](adding-analytics)
-6. [Scheduling SpeedTests](scheduling-speedtests)
-7. [Adding in Application Insights](application-insights)
-8. [The one with the Web Page](the-web-page)
+1. [Measuring Speed](measuring-speed.md)
+2. [An API for All Things](an-api-for-all-things.md)
+3. [Receiving speeds](receiving-speeds.md)
+4. [Events! Events! Events!](events-events.md)
+5. [Adding Analytics](adding-analytics.md)
+6. [Scheduling SpeedTests](scheduling-speedtests.md)
+7. [Adding in Application Insights](application-insights.md)
+8. [The one with the Web Page](the-web-page.md)

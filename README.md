@@ -10,11 +10,11 @@ Head on over to the [installation guide](https://cx-cloud-101.github.io/speedtes
 
 Azure workshop
 --------------
-Head on over to [Azure Workshop Home](azure/index)
+Head on over to [Azure Workshop Home](azure/index.md)
 
 Google Cloud Platform workshop
 ------------------------------
-Head on over to [GCP Workshop Home](gcp/index)
+Head on over to [GCP Workshop Home](gcp/index.md)
 
 Example implementation
 ----------------------
