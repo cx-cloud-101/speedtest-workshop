@@ -241,6 +241,11 @@ Then choose your user as the Organization and the az-speedtest-api as Repository
 
 Press Save on top of the page, and wait until the deployment finishes which you can check under the logs tab. When the deploy is finished visit [https://testuser-speedtest-api.azurewebsites.net/speedtest/ping](https://testuser-speedtest-api.azurewebsites.net/speedtest/ping) (Replace https://testuser-speedtest-api.azurewebsites.net with the URL from your APP Service/API App)
 
+> If your pipeline failes, try editing the github workflow configuration file, adding ```SpeedTestApi``` to the end of the build and publish step:<br />
+```run: dotnet build --configuration Release SpeedTestApi```<br />
+```run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp SpeedTestApi```
+
+
 ![azure-ping-pong](images/azure-ping-pong.png)
 
 Wohoo! Congratulations, you just deployed an API on Azure!
