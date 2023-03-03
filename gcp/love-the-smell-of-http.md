@@ -66,7 +66,7 @@ Use [Spring Initializr](https://start.spring.io/) to generate your project.
 
 3. Generate project and unzip the downloaded archive. Copy the unzipped `api` folder (whole folder) into your git repo folder.
 
-4. Open IntelliJ, click "Open", and select your git repo folder, containing the unzipped files. \
+4. Open IntelliJ, click "Open", locate your git repo folder, and select the api folder with your unzipped files. \
     ![](images/open-project.png)
 
 
@@ -98,7 +98,7 @@ class HelloResource {
 ```
 
 ### Locally
-Before we can start out API, we need to generate [Application Default Credentials](https://cloud.google.com/docs/authentication/production) for connecting to GCP. This is needed since the GCP Messaging plugin to Spring Boot will lock for the dependencies, and fail to start if they're not present. To generate the credentials, open a terminal and run the following command.
+Before we can start out API, we need to generate [Application Default Credentials](https://cloud.google.com/docs/authentication/production) for connecting to GCP. This is needed since the GCP Messaging plugin to Spring Boot will look for the dependencies, and fail to start if they're not present. To generate the credentials, open a terminal and run the following command.
 
 ```shell
 $> gcloud auth application-default login
@@ -115,7 +115,11 @@ Start the application either by running the `ApiApplication` class in your IDE, 
 
 * `mvn spring-boot:run`
 
-_Both ways of starting the application should work, so pick the one that works for you._
+_Both ways of starting the application should work, so pick the one that works for you._ 
+
+You should also make sure to build the JAR-file. To ensure that it gets built run
+`mvn clean package` or run it from intellij by clicking maven on the right hand sidebar, open api until you locate package, right-click and click run \
+![](images/create-jar.png)
 
 If the API started successfully, you should be able to open [http://localhost:8080/hello/speedtest](http://localhost:8080/hello/speedtest) in your browser and get a response.
 
