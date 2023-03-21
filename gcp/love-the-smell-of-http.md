@@ -118,7 +118,7 @@ Start the application either by running the `ApiApplication` class in your IDE, 
 _Both ways of starting the application should work, so pick the one that works for you._ 
 
 You should also make sure to build the JAR-file. To ensure that it gets built run
-`mvn clean package` or run it from intellij by clicking maven on the right hand sidebar, open api until you locate package, right-click and click run \
+`mvn clean package` or run it from IntelliJ by clicking maven on the right hand sidebar, open api until you locate package, right-click and click run \
 ![](images/create-jar.png)
 
 If the API started successfully, you should be able to open [http://localhost:8080/hello/speedtest](http://localhost:8080/hello/speedtest) in your browser and get a response.
@@ -147,7 +147,9 @@ FROM registry.access.redhat.com/ubi8/openjdk-17:1.14
 COPY target/*.jar /app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
 ```
-In the root of your project create a file called `cloudbuild.yaml`. Here we will define all the steps that we want the build to execute. 
+Note that the Dockerfile is copying your jar file from the target folder. Make sure that you don't have target in any .ignore files. Cloud build checks for ignore
+files when building locally.
+In the root of your project create a file called `cloudbuild.yaml`. Here we will define all the steps that we want the build to execute.
 The first step is to create a Docker image. Add the following to the Cloud Build file:
 ```yaml
 steps:
