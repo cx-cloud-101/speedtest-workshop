@@ -147,7 +147,7 @@ FROM registry.access.redhat.com/ubi8/openjdk-17:1.14
 COPY target/*.jar /app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
 ```
-Note that the Dockerfile is copying your jar file from the target folder. Make sure that you don't have target in any .ignore files. Cloud build checks for ignore
+Note that the Dockerfile is copying your `jar` file from the target folder. Make sure that you don't have target in any `.ignore` files. Cloud Build checks for ignore
 files when building locally.
 In the root of your project create a file called `cloudbuild.yaml`. Here we will define all the steps that we want the build to execute.
 The first step is to create a Docker image. Add the following to the Cloud Build file:
